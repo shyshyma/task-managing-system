@@ -1,11 +1,11 @@
-package org.itransition.todolist;
+package org.itransition.taskmanager;
 
 import org.springframework.boot.SpringApplication;
 import org.springframework.boot.autoconfigure.SpringBootApplication;
 
 @SpringBootApplication
-public class ToDoListApplication {
+public class TaskManagerApplication {
     public static void main(String[] args) {
-        SpringApplication.run(ToDoListApplication.class, args);
+        SpringApplication.run(TaskManagerApplication.class, args);
     }
 }

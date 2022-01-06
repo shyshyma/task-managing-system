@@ -1,4 +1,4 @@
-package org.itransition.todolist.config.mvc;
+package org.itransition.taskmanager.config.mvc;
 
 import org.springframework.core.MethodParameter;
 import org.springframework.web.context.request.NativeWebRequest;

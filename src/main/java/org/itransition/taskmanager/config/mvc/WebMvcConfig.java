@@ -1,4 +1,4 @@
-package org.itransition.todolist.config.mvc;
+package org.itransition.taskmanager.config.mvc;
 
 import org.springframework.context.annotation.Configuration;
 import org.springframework.web.method.support.HandlerMethodReturnValueHandler;

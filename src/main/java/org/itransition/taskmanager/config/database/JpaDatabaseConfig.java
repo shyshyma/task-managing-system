@@ -1,4 +1,4 @@
-package org.itransition.todolist.config.database;
+package org.itransition.taskmanager.config.database;
 
 import org.springframework.beans.factory.annotation.Qualifier;
 import org.springframework.boot.autoconfigure.jdbc.DataSourceProperties;
@@ -22,7 +22,7 @@ import java.util.Map;
 @EnableTransactionManagement
 @EnableJpaRepositories(transactionManagerRef = "jpaDatabaseTransactionManager",
         entityManagerFactoryRef = "jpaEntityManagerFactory",
-        basePackages = {"org.itransition.todolist.repositories.jpa"})
+        basePackages = {"org.itransition.taskmanager.repositories.jpa"})
 public class JpaDatabaseConfig {
 
 

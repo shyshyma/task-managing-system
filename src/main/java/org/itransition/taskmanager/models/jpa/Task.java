@@ -1,4 +1,4 @@
-package org.itransition.todolist.models.jpa;
+package org.itransition.taskmanager.models.jpa;
 
 import lombok.AllArgsConstructor;
 import lombok.Getter;

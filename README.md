@@ -1,1 +1,1 @@
-## "To Do List" application
+## "Task manager" application
