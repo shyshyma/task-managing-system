@@ -1,9 +1,6 @@
 package org.itransition.taskmanager.models.jpa;
 
-import lombok.AllArgsConstructor;
-import lombok.Getter;
-import lombok.NoArgsConstructor;
-import lombok.Setter;
+import lombok.*;
 
 import javax.persistence.Column;
 import javax.persistence.Embeddable;
@@ -11,15 +8,16 @@ import javax.persistence.Lob;
 
 @Getter
 @Setter
+@Builder
 @NoArgsConstructor
 @AllArgsConstructor
 @Embeddable
 public class EmbeddableFile {
 
     @Lob
-    @Column(name = "data", updatable = false, nullable = false)
+    @Column(name = "data", updatable = false, nullable = false, columnDefinition = "longblob")
     private byte[] data;
 
-    @Column(name = "name", updatable = false, nullable = false)
+    @Column(name = "name", unique = true, nullable = false, columnDefinition = "varchar(100)")
     private String name;
 }

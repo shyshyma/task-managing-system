@@ -1,0 +1,71 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<databaseChangeLog
+        xmlns="http://www.liquibase.org/xml/ns/dbchangelog"
+        xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+        xsi:schemaLocation="http://www.liquibase.org/xml/ns/dbchangelog
+         http://www.liquibase.org/xml/ns/dbchangelog/dbchangelog-3.8.xsd">
+
+    <property name="now" value="now()" dbms="mysql"/>
+    <property name="now" value="now()" dbms="postgresql"/>
+
+    <changeSet id="changeset-taskmanager-1" author="ashyshyma">
+        <createTable tableName="consumer">
+            <column name="consumer_id" type="bigint" autoIncrement="true">
+                <constraints primaryKey="true"/>
+            </column>
+            <column name="date_of_birth" type="date">
+                <constraints nullable="false"/>
+            </column>
+            <column name="email" type="varchar(40)">
+                <constraints unique="true" nullable="false"/>
+            </column>
+            <column name="first_name" type="varchar(40)" defaultValue="OMITTED"/>
+            <column name="second_name" type="varchar(40)" defaultValue="OMITTED"/>
+        </createTable>
+    </changeSet>
+    <changeSet id="changeset-taskmanager-2" author="ashyshyma">
+        <createTable tableName="task">
+            <column name="task_id" type="bigint" autoIncrement="true">
+                <constraints primaryKey="true"/>
+            </column>
+            <column name="creation_time" type="date" valueDate="${now}">
+                <constraints nullable="false"/>
+            </column>
+            <column name="expiration_time" type="date">
+                <constraints nullable="false"/>
+            </column>
+            <column name="description" type="varchar(100)"/>
+            <column name="done_percentage" type="tinyint">
+                <constraints nullable="false"/>
+            </column>
+            <column name="priority" type="varchar(25)" defaultValue="MEDIUM">
+                <constraints nullable="false"/>
+            </column>
+            <column name="status" type="varchar(25)" defaultValue="NEW">
+                <constraints nullable="false"/>
+            </column>
+            <column name="title" type="varchar(40)">
+                <constraints nullable="false" unique="true"/>
+            </column>
+            <column name="consumer_id" type="bigint">
+                <constraints nullable="false" foreignKeyName="fk_task_consumer"
+                             references="consumer(consumer_id)" deleteCascade="true"/>
+            </column>
+        </createTable>
+    </changeSet>
+    <changeSet id="changeset-taskmanager-3" author="ashyshyma">
+        <createTable tableName="attached_file_to_task">
+            <column name="data" type="longblob">
+                <constraints nullable="false"/>
+            </column>
+            <column name="name" type="varchar(100)">
+                <constraints nullable="false" unique="true"/>
+            </column>
+            <column name="task_id" type="bigint">
+                <constraints nullable="false" foreignKeyName="fk_task_attached_file_to_task"
+                             references="task(task_id)" deleteCascade="true"/>
+            </column>
+        </createTable>
+    </changeSet>
+
+</databaseChangeLog>
