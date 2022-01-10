@@ -1,7 +1,9 @@
 package org.itransition.taskmanager.config.database;
 
+import liquibase.integration.spring.SpringLiquibase;
 import org.springframework.beans.factory.annotation.Qualifier;
 import org.springframework.boot.autoconfigure.jdbc.DataSourceProperties;
+import org.springframework.boot.autoconfigure.liquibase.LiquibaseProperties;
 import org.springframework.boot.context.properties.ConfigurationProperties;
 import org.springframework.boot.orm.jpa.EntityManagerFactoryBuilder;
 import org.springframework.context.annotation.Bean;
@@ -23,26 +25,26 @@ import java.util.Map;
 @EnableJpaRepositories(transactionManagerRef = "jpaDatabaseTransactionManager",
         entityManagerFactoryRef = "jpaEntityManagerFactory",
         basePackages = {"org.itransition.taskmanager.repositories.jpa"})
-public class JpaDatabaseConfig {
+public class JpaConfig {
 
 
     @Primary
-    @Bean("jpaDatabaseProperties")
-    @ConfigurationProperties("database.jpa")
+    @Bean("jpaDatasourceProperties")
+    @ConfigurationProperties("database.jpa.datasource")
     public DataSourceProperties jpaDataSourceProperties() {
         return new DataSourceProperties();
     }
 
     @Primary
     @Bean("jpaDataSource")
-    public DataSource jpaDataSource(@Qualifier("jpaDatabaseProperties") DataSourceProperties dataSourceProperties) {
+    public DataSource jpaDataSource(@Qualifier("jpaDatasourceProperties") DataSourceProperties dataSourceProperties) {
         return dataSourceProperties.initializeDataSourceBuilder().build();
     }
 
 
     @Bean("jpaDatabaseConfiguration")
     @ConfigurationProperties("database.jpa.configuration")
-    public Map<String, String> jpaDataSourceConfiguration() {
+    public Map<String, String> jpaDatabaseConfiguration() {
         return new HashMap<>();
     }
 
@@ -54,7 +56,7 @@ public class JpaDatabaseConfig {
             @Qualifier("jpaDatabaseConfiguration") Map<String, ?> properties) {
 
         return builder.dataSource(dataSource)
-                .packages("org.itransition.todolist.models.jpa")
+                .packages("org.itransition.taskmanager.models.jpa")
                 .persistenceUnit("JPA_DATABASE")
                 .properties(properties)
                 .build();
@@ -66,6 +68,25 @@ public class JpaDatabaseConfig {
                                                                     EntityManagerFactory entityManagerFactory) {
 
         return new JpaTransactionManager(entityManagerFactory);
+    }
+
+    @Primary
+    @Bean(name = "jpaMigrationProperties")
+    @ConfigurationProperties("database.jpa.migration")
+    public LiquibaseProperties jpaLiquibaseProperties() {
+        return new LiquibaseProperties();
+    }
+
+    @Primary
+    @Bean
+    public SpringLiquibase springLiquibase(@Qualifier("jpaDataSource") DataSource dataSource,
+                                           @Qualifier("jpaMigrationProperties") LiquibaseProperties liquibaseProperties) {
+
+        SpringLiquibase springLiquibase = new SpringLiquibase();
+        springLiquibase.setDataSource(dataSource);
+        springLiquibase.setChangeLog(liquibaseProperties.getChangeLog());
+        springLiquibase.setChangeLogParameters(liquibaseProperties.getParameters());
+        return springLiquibase;
     }
 
 }
