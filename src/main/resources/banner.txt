@@ -6,4 +6,4 @@
   \_/   \__,_||___/|_|\_\\_|  |_/ \__,_||_| |_| \__,_| \__, | \___||_|
                                                         __/ |
                                                        |___/
-Version: ${banner.config.version}
+Version: ${banner.version}
