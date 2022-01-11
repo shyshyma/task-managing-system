@@ -25,11 +25,11 @@ public class Task extends AbstractEntityLongId {
 
     @Temporal(TemporalType.TIMESTAMP)
     @Column(name = "creation_time", nullable = false, updatable = false,
-            insertable = false, columnDefinition = "date")
+            insertable = false, columnDefinition = "timestamp")
     private Date creationDate;
 
     @Temporal(TemporalType.TIMESTAMP)
-    @Column(name = "expiration_time", nullable = false, columnDefinition = "date")
+    @Column(name = "expiration_time", nullable = false, columnDefinition = "timestamp")
     private Date expirationDate;
 
     @Column(name = "done_percentage", scale = 3,
@@ -61,7 +61,7 @@ public class Task extends AbstractEntityLongId {
     @ManyToOne(fetch = FetchType.LAZY, cascade = CascadeType.ALL)
     @JoinColumn(name = "consumer_id", referencedColumnName = "consumer_id",
             foreignKey = @ForeignKey(name = "fk_task_consumer"), nullable = false, updatable = false)
-    private Consumer consumer = new Consumer();
+    private Consumer consumer;
 
     @ElementCollection(fetch = FetchType.LAZY)
     @CollectionTable(name = "attached_file_to_task",

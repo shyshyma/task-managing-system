@@ -5,9 +5,6 @@
         xsi:schemaLocation="http://www.liquibase.org/xml/ns/dbchangelog
          http://www.liquibase.org/xml/ns/dbchangelog/dbchangelog-3.8.xsd">
 
-    <property name="now" value="now()" dbms="mysql"/>
-    <property name="now" value="now()" dbms="postgresql"/>
-
     <changeSet id="changeset-taskmanager-1" author="ashyshyma">
         <createTable tableName="consumer">
             <column name="consumer_id" type="bigint" autoIncrement="true">
@@ -28,10 +25,10 @@
             <column name="task_id" type="bigint" autoIncrement="true">
                 <constraints primaryKey="true"/>
             </column>
-            <column name="creation_time" type="date" valueDate="${now}">
+            <column name="creation_time" type="timestamp" defaultValueComputed="CURRENT_TIMESTAMP">
                 <constraints nullable="false"/>
             </column>
-            <column name="expiration_time" type="date">
+            <column name="expiration_time" type="timestamp">
                 <constraints nullable="false"/>
             </column>
             <column name="description" type="varchar(100)"/>
