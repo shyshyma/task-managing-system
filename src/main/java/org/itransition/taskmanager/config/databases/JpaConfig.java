@@ -19,13 +19,13 @@ import java.util.Map;
 
 @Configuration
 @EnableTransactionManagement
-@EnableJpaRepositories(transactionManagerRef = "jpaDatabaseTransactionManager",
+@EnableJpaRepositories(transactionManagerRef = "jpaTransactionManager",
         entityManagerFactoryRef = "jpaEntityManagerFactory",
         basePackages = {"org.itransition.taskmanager.repositories.jpa"})
 public class JpaConfig {
 
     @Bean
-    @ConfigurationProperties("database.relational.orm.jpa")
+    @ConfigurationProperties("database.relational.jpa")
     public Map<String, String> jpaProperties() {
         return new HashMap<>();
     }
