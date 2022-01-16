@@ -9,12 +9,10 @@ import java.util.List;
 
 @Getter
 @Setter
-@Builder
 @NoArgsConstructor
 @AllArgsConstructor
 @Entity
-@Table(name = "consumer")
-@AttributeOverride(name = "id", column = @Column(name = "consumer_id"))
+@Table(name = "consumer", uniqueConstraints = @UniqueConstraint(name = "uk_consumer", columnNames = {"email"}))
 public class Consumer extends AbstractEntityLongId {
 
     @Column(name = "first_name", nullable = false, columnDefinition = "varchar(40) default 'OMITTED'")
@@ -27,7 +25,7 @@ public class Consumer extends AbstractEntityLongId {
     @Column(name = "date_of_birth", nullable = false, columnDefinition = "date")
     private Date dateOfBirth;
 
-    @Column(name = "email", unique = true, nullable = false, columnDefinition = "varchar(40)")
+    @Column(name = "email", nullable = false, columnDefinition = "varchar(40)")
     private String email;
 
     @OneToMany(mappedBy = "consumer", fetch = FetchType.LAZY, cascade = CascadeType.ALL)

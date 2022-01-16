@@ -11,13 +11,11 @@ import java.util.List;
 @Setter
 @NoArgsConstructor
 @AllArgsConstructor
-@Builder
 @Entity
-@Table(name = "task")
-@AttributeOverride(name = "id", column = @Column(name = "task_id"))
+@Table(name = "task", uniqueConstraints = {@UniqueConstraint(name = "uk_title", columnNames = {"title"})})
 public class Task extends AbstractEntityLongId {
 
-    @Column(name = "title", unique = true, nullable = false, columnDefinition = "varchar(40)")
+    @Column(name = "title", nullable = false, columnDefinition = "varchar(40)")
     private String title;
 
     @Column(name = "description", columnDefinition = "varchar(100)")
@@ -59,14 +57,10 @@ public class Task extends AbstractEntityLongId {
     private Status status;
 
     @ManyToOne(fetch = FetchType.LAZY, cascade = CascadeType.ALL)
-    @JoinColumn(name = "consumer_id", referencedColumnName = "consumer_id",
-            foreignKey = @ForeignKey(name = "fk_task_consumer"), nullable = false, updatable = false)
+    @JoinColumn(name = "consumer_id", referencedColumnName = "id",
+            foreignKey = @ForeignKey(name = "fk_task_consumer"), nullable = false)
     private Consumer consumer;
 
-    @ElementCollection(fetch = FetchType.LAZY)
-    @CollectionTable(name = "attached_file_to_task",
-            joinColumns = @JoinColumn(name = "task_id", referencedColumnName = "task_id",
-                    foreignKey = @ForeignKey(name = "fk_task_attached_file_to_task"),
-                    nullable = false, updatable = false))
-    private List<EmbeddableFile> attachedFilesList = new ArrayList<>();
+    @OneToMany(mappedBy = "task", cascade = CascadeType.ALL, fetch = FetchType.LAZY)
+    private List<AttachedFile> attachedFilesList = new ArrayList<>();
 }

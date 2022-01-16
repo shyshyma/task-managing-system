@@ -7,22 +7,25 @@
 
     <changeSet id="changeset-taskmanager-1" author="ashyshyma">
         <createTable tableName="consumer">
-            <column name="consumer_id" type="bigint" autoIncrement="true">
+            <column name="id" type="bigint" autoIncrement="true">
                 <constraints primaryKey="true"/>
             </column>
             <column name="date_of_birth" type="date">
                 <constraints nullable="false"/>
             </column>
             <column name="email" type="varchar(40)">
-                <constraints unique="true" nullable="false"/>
+                <constraints nullable="false"/>
             </column>
             <column name="first_name" type="varchar(40)" defaultValue="OMITTED"/>
             <column name="second_name" type="varchar(40)" defaultValue="OMITTED"/>
         </createTable>
     </changeSet>
     <changeSet id="changeset-taskmanager-2" author="ashyshyma">
+        <addUniqueConstraint tableName="consumer" columnNames="email" constraintName="uk_consumer"/>
+    </changeSet>
+    <changeSet id="changeset-taskmanager-3" author="ashyshyma">
         <createTable tableName="task">
-            <column name="task_id" type="bigint" autoIncrement="true">
+            <column name="id" type="bigint" autoIncrement="true">
                 <constraints primaryKey="true"/>
             </column>
             <column name="creation_time" type="timestamp" defaultValueComputed="CURRENT_TIMESTAMP">
@@ -42,16 +45,22 @@
                 <constraints nullable="false"/>
             </column>
             <column name="title" type="varchar(40)">
-                <constraints nullable="false" unique="true"/>
+                <constraints nullable="false"/>
             </column>
             <column name="consumer_id" type="bigint">
                 <constraints nullable="false" foreignKeyName="fk_task_consumer"
-                             references="consumer(consumer_id)" deleteCascade="true"/>
+                             references="consumer(id)" deleteCascade="true"/>
             </column>
         </createTable>
     </changeSet>
-    <changeSet id="changeset-taskmanager-3" author="ashyshyma">
-        <createTable tableName="attached_file_to_task">
+    <changeSet id="changeset-taskmanager-4" author="ashyshyma">
+        <addUniqueConstraint tableName="task" columnNames="title" constraintName="uk_task"/>
+    </changeSet>
+    <changeSet id="changeset-taskmanager-5" author="ashyshyma">
+        <createTable tableName="attached_file">
+            <column name="id" type="bigint" autoIncrement="true">
+                <constraints primaryKey="true"/>
+            </column>
             <column name="data" type="longblob">
                 <constraints nullable="false"/>
             </column>
@@ -59,10 +68,12 @@
                 <constraints nullable="false" unique="true"/>
             </column>
             <column name="task_id" type="bigint">
-                <constraints nullable="false" foreignKeyName="fk_task_attached_file_to_task"
-                             references="task(task_id)" deleteCascade="true"/>
+                <constraints nullable="false" foreignKeyName="fk_attached_file_task"
+                             references="task(id)" deleteCascade="true"/>
             </column>
         </createTable>
     </changeSet>
-
+    <changeSet id="changeset-taskmanager-6" author="ashyshyma">
+        <addUniqueConstraint tableName="attached_file" columnNames="name" constraintName="uk_attached_file"/>
+    </changeSet>
 </databaseChangeLog>
