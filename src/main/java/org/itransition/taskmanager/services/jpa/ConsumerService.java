@@ -5,5 +5,5 @@ import org.itransition.taskmanager.repositories.jpa.ConsumerRepository;
 import org.springframework.stereotype.Service;
 
 @Service
-public class ConsumerService extends BaseService<Consumer, ConsumerRepository> {
+public class ConsumerService extends BaseCrudService<Consumer, ConsumerRepository> {
 }

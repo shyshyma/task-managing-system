@@ -12,10 +12,4 @@ import java.util.List;
 
 @NoRepositoryBean
 public interface BaseRepository<E extends AbstractEntityLongId> extends JpaRepository<E, Long> {
-
-    Page<E> findAll (Specification<E> specification, Pageable pageable);
-
-    List<E> findAll (Specification<E> specification, Sort sort);
-
-    List<E> findAll (Specification<E> specification);
 }
