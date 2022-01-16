@@ -2,7 +2,7 @@ package org.itransition.taskmanager.services.jpa;
 
 import lombok.Setter;
 import lombok.extern.slf4j.Slf4j;
-import org.itransition.taskmanager.exceptions.JpaModelNotFoundException;
+import org.itransition.taskmanager.exceptions.ModelNotFoundException;
 import org.itransition.taskmanager.models.jpa.AbstractEntityLongId;
 import org.itransition.taskmanager.repositories.jpa.BaseRepository;
 import org.springframework.beans.BeanUtils;
@@ -53,12 +53,12 @@ public abstract class BaseCrudService<E extends AbstractEntityLongId, R extends 
 
     public E findById(Long id) {
         log.info("Fetching entity with id {} from the JPA datastore unit", id);
-        return repository.findById(id).orElseThrow(() -> new JpaModelNotFoundException(id));
+        return repository.findById(id).orElseThrow(() -> new ModelNotFoundException(id));
     }
 
     public <T> T findById(Long id, Function<E, T> mapper) {
         log.info("Fetching entity with id {} from the JPA datastore unit", id);
-        return repository.findById(id).map(mapper).orElseThrow(() -> new JpaModelNotFoundException(id));
+        return repository.findById(id).map(mapper).orElseThrow(() -> new ModelNotFoundException(id));
     }
 
     public Page<E> findPage(Pageable pageable) {

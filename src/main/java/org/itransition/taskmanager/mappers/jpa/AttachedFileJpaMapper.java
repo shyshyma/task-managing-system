@@ -13,15 +13,15 @@ import java.io.IOException;
 @Mapper(componentModel = "spring")
 public abstract class AttachedFileJpaMapper {
 
-    private static final String JPA_MODEL_NOT_FOUND_EXCEPTION_PATH =
-            "org.itransition.taskmanager.exceptions.JpaModelNotFoundException";
+    private static final String MODEL_NOT_FOUND_EXCEPTION_PATH =
+            "org.itransition.taskmanager.exceptions.ModelNotFoundException";
 
     @Setter(onMethod_ = @Autowired)
     protected TaskRepository taskRepository;
 
     @Mapping(target = "data", expression = "java(multipartFile.getBytes())")
-    @Mapping(target = "name", expression = "java(multipartFile.getName())")
+    @Mapping(target = "name", expression = "java(multipartFile.getOriginalFilename())")
     @Mapping(target = "task", expression = "java(taskRepository.findById(taskId)" +
-            ".orElseThrow(()-> new " + JPA_MODEL_NOT_FOUND_EXCEPTION_PATH + "(taskId)))")
+            ".orElseThrow(()-> new " + MODEL_NOT_FOUND_EXCEPTION_PATH + "(taskId)))")
     public abstract AttachedFile map(MultipartFile multipartFile, Long taskId) throws IOException;
 }

@@ -14,6 +14,9 @@ import java.util.Date;
 @Builder
 public class TaskDto implements Dto {
 
+    @JsonProperty(value = "id", access = JsonProperty.Access.READ_ONLY)
+    private Long id;
+
     @JsonProperty(value = "title", access = JsonProperty.Access.READ_WRITE)
     private String title;
 
