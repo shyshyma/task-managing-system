@@ -76,7 +76,7 @@ public class TaskController {
                                                       @Valid @RequestBody final TaskDto taskDto) {
 
         if (!taskService.existsAndBelongsToConsumer(taskId, consumerId)) {
-            throw new ResourceNotFoundException();
+            throw new ResourceNotFoundException("No resource was found");
         }
 
         Task mappedTask = taskJpaMapper.map(taskDto, taskId, consumerId);

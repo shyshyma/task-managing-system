@@ -3,7 +3,7 @@ package org.itransition.taskmanager.exceptions;
 public class ResourceNotFoundException extends RuntimeException {
 
     public ResourceNotFoundException() {
-        super("");
+        super("Resource wasn't found");
     }
 
     public ResourceNotFoundException(String message) {

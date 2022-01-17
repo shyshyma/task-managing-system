@@ -1,7 +1,7 @@
 package org.itransition.taskmanager.controllers.rest;
 
 import lombok.Setter;
-import org.itransition.commons.web.HttpHelper;
+import org.itransition.commons.web.HttpUtilsBean;
 import org.itransition.taskmanager.dtos.jpa.AttachedFileDto;
 import org.itransition.taskmanager.exceptions.DuplicateNameException;
 import org.itransition.taskmanager.exceptions.ResourceNotFoundException;
@@ -27,9 +27,6 @@ import java.util.Map;
 public class AttachedFileController {
 
     @Setter(onMethod_ = @Autowired)
-    private HttpHelper httpHelper;
-
-    @Setter(onMethod_ = @Autowired)
     private TaskService taskService;
 
     @Setter(onMethod_ = @Autowired)
@@ -41,6 +38,9 @@ public class AttachedFileController {
     @Setter(onMethod_ = @Autowired)
     private AttachedFileDtoMapper attachedFileDtoMapper;
 
+    @Setter(onMethod_ = @Autowired)
+    private HttpUtilsBean httpUtilsBean;
+
     @ResponseStatus(HttpStatus.OK)
     @GetMapping("{consumerId}/tasks/{taskId}/attached-files/{attachedFileName}")
     public void getConsumerTaskAttachedFile(@PathVariable("consumerId") final Long consumerId,
@@ -50,11 +50,11 @@ public class AttachedFileController {
 
         if (!(taskService.existsAndBelongsToConsumer(taskId, consumerId)
                 || attachedFileService.existsAndBelongsToTask(filename, taskId))) {
-            throw new ResourceNotFoundException();
+            throw new ResourceNotFoundException("No resource");
         }
 
         AttachedFileDto fileDto = attachedFileService.findByName(filename, attachedFileDtoMapper::map);
-        httpHelper.writeFileToResponse(fileDto, response);
+        httpUtilsBean.writeFileToResponse(fileDto, response);
     }
 
     @ResponseStatus(HttpStatus.OK)
@@ -71,7 +71,7 @@ public class AttachedFileController {
         List<AttachedFileDto> result = attachedFileService.findPageByTaskId(taskId, pageable).stream()
                 .map(attachedFileDtoMapper::map)
                 .toList();
-        httpHelper.writeZipFileToResponse(result, response, "data.zip");
+        httpUtilsBean.writeZipFileToResponse(result, response, "data.zip");
     }
 
     @ResponseStatus(HttpStatus.CREATED)

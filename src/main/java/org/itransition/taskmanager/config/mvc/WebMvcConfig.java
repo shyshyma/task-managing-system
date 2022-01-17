@@ -1,6 +1,6 @@
 package org.itransition.taskmanager.config.mvc;
 
-import org.itransition.commons.web.HttpHelper;
+import org.itransition.commons.web.HttpUtilsBean;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.web.servlet.config.annotation.InterceptorRegistry;
@@ -15,7 +15,7 @@ public class WebMvcConfig implements WebMvcConfigurer {
     }
 
     @Bean
-    public HttpHelper httpHelper() {
-        return new HttpHelper();
+    public HttpUtilsBean httpHelper() {
+        return new HttpUtilsBean();
     }
 }

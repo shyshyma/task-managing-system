@@ -58,7 +58,7 @@ public class ConsumerController {
                                                       @Valid @RequestBody final ConsumerDto consumerDto) {
 
         if (!consumerService.existsById(consumerId)) {
-            throw new ResourceNotFoundException();
+            throw new ResourceNotFoundException("No resource was found");
         }
 
         Consumer consumer = consumerJpaMapper.map(consumerDto, consumerId);
@@ -70,7 +70,7 @@ public class ConsumerController {
     public ResponseEntity<ConsumerDto> deleteConsumer(@PathVariable("id") final Long consumerId) {
 
         if (!consumerService.existsById(consumerId)) {
-            throw new ResourceNotFoundException();
+            throw new ResourceNotFoundException("Resource wasn't found");
         }
 
         consumerService.deleteById(consumerId);
