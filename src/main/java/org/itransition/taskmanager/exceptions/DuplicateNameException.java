@@ -1,13 +1,16 @@
 package org.itransition.taskmanager.exceptions;
 
 
-public class DuplicateNameException extends RuntimeException {
+public class DuplicateNameException extends DuplicateException {
+
+    private static final String DUPLICATE_NAME_EXCEPTION_MESSAGE =
+            "Name already exists, duplicate cannot be!";
 
     public DuplicateNameException() {
-        super("Name already exists, duplicate cannot be!");
+        super(DUPLICATE_NAME_EXCEPTION_MESSAGE);
     }
 
     public DuplicateNameException(String message) {
-        super(message);
+        super(DUPLICATE_NAME_EXCEPTION_MESSAGE + " " + message);
     }
 }
