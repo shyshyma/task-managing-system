@@ -22,8 +22,7 @@ public class Task extends AbstractEntityLongId {
     private String description;
 
     @Temporal(TemporalType.TIMESTAMP)
-    @Column(name = "creation_time", nullable = false, updatable = false,
-            insertable = false, columnDefinition = "timestamp")
+    @Column(name = "creation_time", nullable = false, updatable = false, columnDefinition = "timestamp")
     private Date creationDate;
 
     @Temporal(TemporalType.TIMESTAMP)
