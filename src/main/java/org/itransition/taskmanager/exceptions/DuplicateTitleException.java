@@ -10,6 +10,6 @@ public class DuplicateTitleException extends DuplicateException {
     }
 
     public DuplicateTitleException(String message) {
-        super(DUPLICATE_TITLE_EXCEPTION_MESSAGE + " " + message);
+        super(message);
     }
 }

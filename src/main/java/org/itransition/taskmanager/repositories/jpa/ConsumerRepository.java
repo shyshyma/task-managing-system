@@ -5,4 +5,6 @@ import org.springframework.stereotype.Repository;
 
 @Repository
 public interface ConsumerRepository extends BaseRepository<Consumer> {
+
+    boolean existsByEmail(String email);
 }

@@ -1,19 +1,20 @@
 package org.itransition.taskmanager.repositories.jpa;
 
 import org.itransition.taskmanager.models.jpa.AttachedFile;
-import org.itransition.taskmanager.models.jpa.Task;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Repository;
 
+import java.util.Optional;
+
 @Repository
 public interface AttachedFileRepository extends BaseRepository<AttachedFile> {
 
-    AttachedFile findByName(String name);
+    boolean existsByNameAndTaskIdAndTaskConsumerId(String name, Long taskId, Long consumerId);
 
-    boolean existsByName(String name);
+    Optional<AttachedFile> findByNameAndTaskIdAndTaskConsumerId(String name, Long taskId, Long consumerId);
 
-    void deleteByName(String name);
+    Page<AttachedFile> findByTaskIdAndTaskConsumerId(Long taskId, Long consumerId, Pageable pageable);
 
-    Page<AttachedFile> findByTaskId(Long taskId, Pageable pageable);
+    void deleteByNameAndTaskIdAndTaskConsumerId(String name, Long taskId, Long consumerId);
 }
