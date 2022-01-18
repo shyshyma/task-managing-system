@@ -23,7 +23,7 @@ public class TaskDto implements Dto {
     @JsonProperty(value = "description", access = JsonProperty.Access.READ_WRITE)
     private String description;
 
-    @JsonProperty(value = "creationDate", access = JsonProperty.Access.READ_ONLY)
+    @JsonProperty(value = "creationDate", access = JsonProperty.Access.READ_WRITE)
     @JsonFormat(shape = JsonFormat.Shape.STRING, pattern = "dd/MM/yyyy HH:mm:ss")
     private Date creationDate;
 

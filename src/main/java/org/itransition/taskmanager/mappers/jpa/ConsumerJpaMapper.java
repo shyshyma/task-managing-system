@@ -8,12 +8,12 @@ import org.mapstruct.Mapping;
 @Mapper(componentModel = "spring")
 public abstract class ConsumerJpaMapper {
 
-    @Mapping(target = "firstName", source = "consumerDto.name")
-    @Mapping(target = "secondName", source = "consumerDto.surname")
-    @Mapping(target = "id", source = "consumerId")
-    public abstract Consumer map(ConsumerDto consumerDto, Long consumerId);
-
     @Mapping(target = "firstName", source = "name")
     @Mapping(target = "secondName", source = "surname")
     public abstract Consumer map(ConsumerDto consumerDto);
+
+    @Mapping(target = "id", source = "consumerId")
+    @Mapping(target = "firstName", source = "consumerDto.name")
+    @Mapping(target = "secondName", source = "consumerDto.surname")
+    public abstract Consumer mapWithId(ConsumerDto consumerDto, Long consumerId);
 }
