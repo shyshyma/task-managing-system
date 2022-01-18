@@ -1,15 +1,20 @@
 package org.itransition.taskmanager.services.jpa;
 
+import lombok.Setter;
 import lombok.extern.slf4j.Slf4j;
+import org.itransition.taskmanager.exceptions.ModelNotFoundException;
 import org.itransition.taskmanager.models.jpa.AttachedFile;
 import org.itransition.taskmanager.models.jpa.Task;
 import org.itransition.taskmanager.repositories.jpa.AttachedFileRepository;
+import org.springframework.beans.BeanUtils;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
 
-import java.util.Objects;
+import java.util.List;
 import java.util.function.Function;
+import java.util.stream.Collectors;
 
 @Slf4j
 @Service
@@ -18,61 +23,82 @@ public class AttachedFileService extends BaseCrudService<AttachedFile, AttachedF
     private static final String ENTITY_NAME = "attached_file";
     private static final String PARENT_ENTITY_NAME = "task";
 
+    @Setter(onMethod_ = @Autowired)
+    private TaskService taskService;
 
-    public boolean existsByName(String name) {
-        log.info("Verifying that '" + ENTITY_NAME + "' entity with name" +
-                " {} exists inside of the JPA datastore unit", name);
-        return repository.existsByName(name);
-    }
+    /**
+     * Saves attached file entity and sets task parent( by task id)
+     * that must have consumer(by consumer id)
+     */
+    public AttachedFile saveToTaskWithConsumer(AttachedFile attachedFile, Long taskId, Long consumerId) {
+        log.info("Saving '" + ENTITY_NAME + "' entity with unique name {} and with task id {}" +
+                " and with consumer id {}", attachedFile.getName(), taskId, consumerId);
 
-    public AttachedFile findByName(String name) {
-        log.info("Fetching '" + ENTITY_NAME + "' entity" + " with name {} from" +
-                " the JPA datastore unit", name);
-        return repository.findByName(name);
-    }
-
-    public <T> T findByName(String name, Function<AttachedFile, T> mapper) {
-        log.info("Fetching '" + ENTITY_NAME + "' entity" +
-                " with name {} from the JPA datastore unit", name);
-        return mapper.apply(repository.findByName(name));
-    }
-
-    public void deleteByName(String name) {
-        log.info("Deleting '" + ENTITY_NAME + "' entity with name {} from the" +
-                " JPA datastore unit", name);
-        repository.deleteByName(name);
-    }
-
-    public Page<AttachedFile> findPageByTaskId(Long taskId, Pageable pageable) {
-        log.info("Fetching page of '" + ENTITY_NAME + "' entities who have relationship to '" +
-                PARENT_ENTITY_NAME + "' parent entity with id {} from the JPA datastore unit", taskId);
-        return repository.findByTaskId(taskId, pageable);
+        Task byIdAndConsumerId = taskService.findByIdAndConsumerId(taskId, consumerId);
+        attachedFile.setTask(byIdAndConsumerId);
+        return repository.save(attachedFile);
     }
 
     /**
-     * Verifies that 'attached_file' entity exists and it also has relationship
-     * with 'task' table
+     * Updates attached file entity, if it has task parent( by task id)
+     * that has relationship with consumer entity(by consumer id)
      */
-    public boolean existsAndBelongsToTask(String attachedFileName, Long taskId) {
+    public AttachedFile updateToTaskWithConsumer(AttachedFile attachedFile, Long taskId, Long consumerId) {
+        log.info("Updating '" + ENTITY_NAME + "' entity with unique name {} and with task id {}" +
+                " and with consumer id {}", attachedFile.getName(), taskId, consumerId);
 
-        log.info("Verifying that '" + ENTITY_NAME + "' entity with unique name {} exists" +
-                        " and definitely belongs to '" + PARENT_ENTITY_NAME + "' entity with id {}",
-                attachedFileName, taskId);
+        AttachedFile attachedFileFromRepo = repository.findByNameAndTaskIdAndTaskConsumerId(attachedFile.getName(), taskId, consumerId)
+                .orElseThrow(() -> new ModelNotFoundException(attachedFile.getName()));
+        BeanUtils.copyProperties(attachedFile, attachedFileFromRepo, "id", "task");
+        return repository.save(attachedFileFromRepo);
+    }
 
-        if (!repository.existsByName(attachedFileName)) {
-            log.error("'" + PARENT_ENTITY_NAME + "' entity with unique name {} doesn't" +
-                    " exists in JPA database unit", attachedFileName);
-            return false;
+    public <T> List<T> findByTaskIdAndConsumerId(Pageable pageable,
+                                                 Long taskId,
+                                                 Long consumerId,
+                                                 Function<AttachedFile, T> mapper) {
+
+        return findByTaskIdAndConsumerId(taskId, consumerId, pageable).stream()
+                .map(mapper)
+                .collect(Collectors.toList());
+    }
+
+    /**
+     * Finds page of task entities, which belong to task parent(by task id)
+     * that has relationship with consumer entity(by consumer id)
+     */
+    public Page<AttachedFile> findByTaskIdAndConsumerId(Long taskId, Long consumerId, Pageable pageable) {
+        log.info("Fetching page of '" + ENTITY_NAME + "' entities who have relationship with '" +
+                PARENT_ENTITY_NAME + "' entity with id {} and with 'consumer' with id" +
+                " {} from the JPA datastore unit", taskId, consumerId);
+
+        return repository.findByTaskIdAndTaskConsumerId(taskId, consumerId, pageable);
+    }
+
+    /**
+     * Finds task entity, who belongs to task parent(by task id)
+     * that has relationship with consumer entity(by consumer id)
+     */
+    public AttachedFile findByNameAndTaskIdAndConsumerId(String name, Long taskId, Long consumerId) {
+        log.info("Fetching '" + ENTITY_NAME + "' entity with unique name {} and with task id {}" +
+                " and with consumer id {}", name, taskId, consumerId);
+
+        return repository.findByNameAndTaskIdAndTaskConsumerId(name, taskId, consumerId)
+                .orElseThrow(() -> new ModelNotFoundException(name));
+    }
+
+    /**
+     * Deletes task entity, who belongs to task parent(by task id)
+     * that has relationship with consumer entity(by consumer id)
+     */
+    public void deleteByNameAndTaskIdAndConsumerId(String name, Long taskId, Long consumerId) {
+        log.info("Deleting '" + ENTITY_NAME + "' entity with name {} from the" +
+                " JPA datastore unit", name);
+
+        if(repository.existsByNameAndTaskIdAndTaskConsumerId(name, taskId, consumerId)) {
+            throw new ModelNotFoundException(name);
         }
 
-        Task taskByFileName = findByName(attachedFileName).getTask();
-        boolean belongsToTask = Objects.equals(taskByFileName.getId(), taskId);
-
-        if (!belongsToTask) {
-            log.error("'" + PARENT_ENTITY_NAME + "' entity with unique name {} doesn't belongs to" +
-                    " '" + PARENT_ENTITY_NAME + "' in JPA database unit", attachedFileName);
-        }
-
-        return belongsToTask;
+        repository.deleteByNameAndTaskIdAndTaskConsumerId(name, taskId, consumerId);
     }
 }

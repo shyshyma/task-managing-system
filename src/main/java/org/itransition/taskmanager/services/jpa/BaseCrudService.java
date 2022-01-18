@@ -29,26 +29,19 @@ public abstract class BaseCrudService<E extends AbstractEntityLongId, R extends 
     @Setter(onMethod_ = @Autowired)
     protected R repository;
 
-    public E save(E o) {
-        log.info("Saving entity to the JPA datastore unit");
-        return repository.save(o);
-    }
-
-    public E update(E e, String... ignoredProperties) {
-        log.info("Updating JPA entity with id {}", e.getId());
-        E entityById = findById(e.getId());
-        BeanUtils.copyProperties(e, entityById, ignoredProperties);
-        return repository.save(entityById);
-    }
-
     public boolean existsById(Long id) {
         log.info("Verifying that entity exists by id {} inside of the JPA datastore unit", id);
         return repository.existsById(id);
     }
 
-    public void deleteById(Long id) {
-        log.info("Deleting entity with id {} from the JPA datastore unit", id);
-        repository.deleteById(id);
+    public E save(E o) {
+        log.info("Saving entity to the JPA datastore unit");
+        return repository.save(o);
+    }
+
+    public <T> T save(E e, Function<E, T> mapper) {
+        E savedEntity = save(e);
+        return mapper.apply(savedEntity);
     }
 
     public E findById(Long id) {
@@ -57,17 +50,32 @@ public abstract class BaseCrudService<E extends AbstractEntityLongId, R extends 
     }
 
     public <T> T findById(Long id, Function<E, T> mapper) {
-        log.info("Fetching entity with id {} from the JPA datastore unit", id);
-        return repository.findById(id).map(mapper).orElseThrow(() -> new ModelNotFoundException(id));
+        return mapper.apply(findById(id));
+    }
+
+    public <T> T update(E e, Function<E, T> mapper, String... ignoredProperties) {
+        E updatedEntity = update(e, ignoredProperties);
+        return mapper.apply(updatedEntity);
+    }
+
+    public E update(E e, String... ignoredProperties) {
+        log.info("Updating JPA entity with id {}", e.getId());
+
+        E entityById = repository.findById(e.getId())
+                .orElseThrow(() -> new ModelNotFoundException("there is no entity with id: " + e.getId()));
+        BeanUtils.copyProperties(e, entityById, ignoredProperties);
+        return repository.save(entityById);
     }
 
     public Page<E> findPage(Pageable pageable) {
         log.info("Fetching page of entities from the JPA datastore unit");
+
         return repository.findAll(pageable);
     }
 
     public <T> Page<T> findPage(Pageable pageable, Function<E, T> mapper) {
         log.info("Fetching page of entities from the JPA datastore unit");
+
         Page<E> entitiesPage = repository.findAll(pageable);
         return new PageImpl<>(entitiesPage.getContent().stream()
                 .map(mapper).collect(toList()), pageable, entitiesPage.getTotalElements());
@@ -75,10 +83,23 @@ public abstract class BaseCrudService<E extends AbstractEntityLongId, R extends 
 
     public List<E> findPage(Boolean asc, String... sortBy) {
         log.info("Fetching page of entities from the JPA datastore unit");
-        Sort.Direction direction = Boolean.TRUE.equals(asc) ? Sort.Direction.ASC : Sort.Direction.DESC;
+
         if (Objects.isNull(sortBy) || sortBy.length == 0) {
             sortBy = new String[]{ENTITY_IDENTIFIER_COLUMN_NAME};
         }
+
+        Sort.Direction direction = Boolean.TRUE.equals(asc) ? Sort.Direction.ASC : Sort.Direction.DESC;
         return repository.findAll(Sort.by(direction, sortBy));
+    }
+
+    public void deleteById(Long id) {
+
+        if (!repository.existsById(id)) {
+            throw new ModelNotFoundException("there is no entity with id: " + id);
+        }
+
+        log.info("Deleting entity with id {} from the JPA datastore unit", id);
+
+        repository.deleteById(id);
     }
 }
