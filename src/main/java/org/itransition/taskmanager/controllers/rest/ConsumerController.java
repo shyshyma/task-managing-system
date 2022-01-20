@@ -1,12 +1,8 @@
 package org.itransition.taskmanager.controllers.rest;
 
-import lombok.Setter;
-import org.itransition.taskmanager.dtos.jpa.ConsumerDto;
-import org.itransition.taskmanager.mappers.dto.ConsumerDtoMapper;
-import org.itransition.taskmanager.mappers.jpa.ConsumerJpaMapper;
-import org.itransition.taskmanager.models.jpa.Consumer;
-import org.itransition.taskmanager.services.jpa.ConsumerService;
-import org.springframework.beans.factory.annotation.Autowired;
+import lombok.RequiredArgsConstructor;
+import org.itransition.taskmanager.models.dto.ConsumerDto;
+import org.itransition.taskmanager.services.dto.ConsumerService;
 import org.springframework.data.domain.Pageable;
 import org.springframework.data.web.PageableDefault;
 import org.springframework.http.HttpStatus;
@@ -15,40 +11,30 @@ import org.springframework.web.bind.annotation.*;
 
 import javax.validation.Valid;
 import java.util.List;
-import java.util.stream.Collectors;
 
 @RestController
+@RequiredArgsConstructor
 @RequestMapping(value = "/api/consumers", produces = MediaType.APPLICATION_JSON_VALUE)
 public class ConsumerController {
 
-    @Setter(onMethod_ = @Autowired)
-    private ConsumerService consumerService;
-
-    @Setter(onMethod_ = @Autowired)
-    private ConsumerJpaMapper consumerJpaMapper;
-
-    @Setter(onMethod_ = @Autowired)
-    private ConsumerDtoMapper consumerDtoMapper;
+    private final ConsumerService consumerService;
 
     @ResponseStatus(HttpStatus.OK)
     @GetMapping("{id}")
     public ConsumerDto getConsumer(@PathVariable("id") final Long id) {
-        return consumerService.findById(id, consumerDtoMapper::map);
+        return consumerService.findById(id);
     }
 
     @ResponseStatus(HttpStatus.OK)
     @GetMapping
     public List<ConsumerDto> getConsumers(@PageableDefault(size = 100) Pageable pageable) {
-        return consumerService.findPage(pageable, consumerDtoMapper::map)
-                .stream()
-                .collect(Collectors.toList());
+        return consumerService.find(pageable);
     }
 
     @ResponseStatus(HttpStatus.CREATED)
     @PostMapping
     public ConsumerDto saveConsumer(@Valid @RequestBody final ConsumerDto consumerDto) {
-        Consumer mappedConsumer = consumerJpaMapper.map(consumerDto);
-        return consumerService.save(mappedConsumer, consumerDtoMapper::map);
+        return consumerService.save(consumerDto);
     }
 
     @ResponseStatus(HttpStatus.OK)
@@ -56,8 +42,7 @@ public class ConsumerController {
     public ConsumerDto updateConsumer(final @PathVariable("consumerId") Long consumerId,
                                       @Valid @RequestBody final ConsumerDto consumerDto) {
 
-        Consumer consumer = consumerJpaMapper.mapWithId(consumerDto, consumerId);
-        return consumerService.update(consumer, consumerDtoMapper::map);
+        return consumerService.updateById(consumerId, consumerDto);
     }
 
     @ResponseStatus(HttpStatus.NO_CONTENT)
