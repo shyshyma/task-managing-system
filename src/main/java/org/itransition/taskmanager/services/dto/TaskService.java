@@ -2,7 +2,7 @@ package org.itransition.taskmanager.services.dto;
 
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
-import org.itransition.taskmanager.models.dtos.TaskDto;
+import org.itransition.taskmanager.models.dto.TaskDto;
 import org.itransition.taskmanager.exceptions.DuplicateTitleException;
 import org.itransition.taskmanager.exceptions.ModelNotFoundException;
 import org.itransition.taskmanager.mappers.dto.TaskDtoMapper;
@@ -62,14 +62,13 @@ public class TaskService {
     /**
      * Updates task entity, if it has consumer parent(by consumer id),
      */
-    public TaskDto updateToConsumer(TaskDto taskDto, Long consumerId) {
+    public TaskDto updateByIdAndConsumerId(Long id, Long consumerId, TaskDto taskDto) {
         log.info("Updating '" + ENTITY_NAME + "' entity with unique title {} " +
                 "for consumer with id {} to the JPA datasource unit", taskDto.getTitle(), consumerId);
 
-        Long taskId = taskDto.getId();
-        Task taskFromRepo = taskRepository.findByIdAndConsumerId(taskId, consumerId)
+        Task taskFromRepo = taskRepository.findByIdAndConsumerId(id, consumerId)
                 .orElseThrow(() -> new ModelNotFoundException("there is no '" + ENTITY_NAME
-                        + "' entity with id " + taskId + ", who has parent" +
+                        + "' entity with id " + id + ", who has parent" +
                         " '" + PARENT_ENTITY_NAME + "' entity with id " + consumerId));
 
         BeanUtils.copyProperties(taskDto, taskFromRepo, "id", "creationDate", "consumer");

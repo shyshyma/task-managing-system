@@ -2,7 +2,7 @@ package org.itransition.taskmanager.services.dto;
 
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
-import org.itransition.taskmanager.models.dtos.ConsumerDto;
+import org.itransition.taskmanager.models.dto.ConsumerDto;
 import org.itransition.taskmanager.exceptions.DuplicateEmailException;
 import org.itransition.taskmanager.exceptions.ModelNotFoundException;
 import org.itransition.taskmanager.mappers.dto.ConsumerDtoMapper;
@@ -58,16 +58,16 @@ public class ConsumerService {
                 " already exists");
     }
 
-    public ConsumerDto update(ConsumerDto consumerDto, String... ignoredProperties) {
+    public ConsumerDto updateById(Long consumerId, ConsumerDto consumerDto) {
         log.info("Updating entity '" + ENTITY_NAME + "' with name '{}', surname '{}'" +
                         " and unique email '{}' to the JPA datastore unit", consumerDto.getName(),
                 consumerDto.getSurname(), consumerDto.getEmail());
 
-        Consumer consumerById = consumerRepository.findById(consumerDto.getId())
+        Consumer consumerById = consumerRepository.findById(consumerId)
                 .orElseThrow(() -> new ModelNotFoundException("there is no entity '" + ENTITY_NAME +
-                        "' with id: " + consumerDto.getId()));
+                        "' with id: " + consumerId));
 
-        BeanUtils.copyProperties(consumerDto, consumerById, ignoredProperties);
+        BeanUtils.copyProperties(consumerDto, consumerById,  "id");
         Consumer savedConsumer = consumerRepository.save(consumerById);
 
         return consumerDtoMapper.map(savedConsumer);

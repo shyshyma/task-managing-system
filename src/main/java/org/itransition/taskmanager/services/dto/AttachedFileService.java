@@ -2,8 +2,8 @@ package org.itransition.taskmanager.services.dto;
 
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
-import org.itransition.taskmanager.models.dtos.FileMetadataDto;
-import org.itransition.taskmanager.models.dtos.AttachedFileDto;
+import org.itransition.taskmanager.models.dto.FileMetadataDto;
+import org.itransition.taskmanager.models.dto.AttachedFileDto;
 import org.itransition.taskmanager.exceptions.ModelNotFoundException;
 import org.itransition.taskmanager.mappers.dto.AttachedFileDtoMapper;
 import org.itransition.taskmanager.mappers.dto.FileMetadataDtoMapper;
@@ -64,7 +64,7 @@ public class AttachedFileService {
      * Updates attached file entity, if it has task parent( by task id)
      * that has relationship with consumer entity(by consumer id)
      */
-    public FileMetadataDto updateToTaskWithConsumer(MultipartFile file, Long taskId, Long consumerId) throws IOException {
+    public FileMetadataDto updateToTaskWithConsumer(Long taskId, Long consumerId, MultipartFile file) throws IOException {
         log.info("Saving '" + ENTITY_NAME + "' entity with unique name {} to '" + PARENT_ENTITY_NAME +
                 "' entity with id {} and to 'consumer' entity with id {} " +
                 "to the JPA datasource unit", file.getOriginalFilename(), taskId, consumerId);
