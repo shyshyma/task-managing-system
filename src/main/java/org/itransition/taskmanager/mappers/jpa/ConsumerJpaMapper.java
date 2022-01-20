@@ -1,6 +1,6 @@
 package org.itransition.taskmanager.mappers.jpa;
 
-import org.itransition.taskmanager.dtos.jpa.ConsumerDto;
+import org.itransition.taskmanager.models.dtos.ConsumerDto;
 import org.itransition.taskmanager.models.jpa.Consumer;
 import org.mapstruct.Mapper;
 import org.mapstruct.Mapping;
@@ -11,9 +11,4 @@ public abstract class ConsumerJpaMapper {
     @Mapping(target = "firstName", source = "name")
     @Mapping(target = "secondName", source = "surname")
     public abstract Consumer map(ConsumerDto consumerDto);
-
-    @Mapping(target = "id", source = "consumerId")
-    @Mapping(target = "firstName", source = "consumerDto.name")
-    @Mapping(target = "secondName", source = "consumerDto.surname")
-    public abstract Consumer mapWithId(ConsumerDto consumerDto, Long consumerId);
 }

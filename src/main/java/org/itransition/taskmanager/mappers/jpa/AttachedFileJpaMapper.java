@@ -9,8 +9,8 @@ import java.io.IOException;
 
 @Mapper(componentModel = "spring")
 public abstract class AttachedFileJpaMapper {
-
-    @Mapping(target = "data", expression = "java(multipartFile.getBytes())")
-    @Mapping(target = "name", expression = "java(multipartFile.getOriginalFilename())")
+    
+    @Mapping(target = "data", source = "bytes")
+    @Mapping(target = "name", source = "originalFilename")
     public abstract AttachedFile map(MultipartFile multipartFile) throws IOException;
 }
