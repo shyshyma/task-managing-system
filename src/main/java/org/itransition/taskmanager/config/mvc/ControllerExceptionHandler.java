@@ -1,7 +1,7 @@
 package org.itransition.taskmanager.config.mvc;
 
 import lombok.Setter;
-import org.itransition.taskmanager.dtos.ExceptionDto;
+import org.itransition.taskmanager.models.dto.ExceptionMetadataDto;
 import org.itransition.taskmanager.exceptions.*;
 import org.itransition.taskmanager.mappers.dto.ExceptionDtoMapper;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -18,31 +18,31 @@ public class ControllerExceptionHandler {
 
     @ResponseStatus(HttpStatus.NOT_FOUND)
     @ExceptionHandler(value = ModelNotFoundException.class)
-    public ExceptionDto handle(ModelNotFoundException exception) {
+    public ExceptionMetadataDto handle(ModelNotFoundException exception) {
        return exceptionDtoMapper.map(exception, HttpStatus.NOT_FOUND);
     }
 
     @ResponseStatus(HttpStatus.BAD_REQUEST)
     @ExceptionHandler(value = DuplicateNameException.class)
-    public ExceptionDto handle(DuplicateNameException exception) {
+    public ExceptionMetadataDto handle(DuplicateNameException exception) {
        return exceptionDtoMapper.map(exception, HttpStatus.BAD_REQUEST);
     }
 
     @ResponseStatus(HttpStatus.BAD_REQUEST)
     @ExceptionHandler(value = DuplicateEmailException.class)
-    public ExceptionDto handle(DuplicateEmailException exception) {
+    public ExceptionMetadataDto handle(DuplicateEmailException exception) {
         return exceptionDtoMapper.map(exception, HttpStatus.BAD_REQUEST);
     }
 
     @ResponseStatus(HttpStatus.BAD_REQUEST)
     @ExceptionHandler(value = DuplicateTitleException.class)
-    public ExceptionDto handle(DuplicateTitleException exception) {
+    public ExceptionMetadataDto handle(DuplicateTitleException exception) {
         return exceptionDtoMapper.map(exception, HttpStatus.BAD_REQUEST);
     }
 
     @ResponseStatus(HttpStatus.NOT_FOUND)
     @ExceptionHandler(value = ResourceNotFoundException.class)
-    public ExceptionDto handle(ResourceNotFoundException exception) {
+    public ExceptionMetadataDto handle(ResourceNotFoundException exception) {
         return exceptionDtoMapper.map(exception, HttpStatus.NOT_FOUND);
     }
 }
