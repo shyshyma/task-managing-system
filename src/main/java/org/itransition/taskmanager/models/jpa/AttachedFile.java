@@ -9,6 +9,7 @@ import javax.persistence.*;
 @NoArgsConstructor
 @AllArgsConstructor
 @Entity
+@EqualsAndHashCode(of = "name", callSuper = false)
 @Table(name = "attached_file", uniqueConstraints = @UniqueConstraint(name = "uk_attached_file", columnNames = "name"))
 public class AttachedFile extends AbstractEntityLongId {
 

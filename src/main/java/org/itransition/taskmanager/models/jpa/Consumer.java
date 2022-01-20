@@ -11,6 +11,7 @@ import java.util.List;
 @Setter
 @NoArgsConstructor
 @AllArgsConstructor
+@EqualsAndHashCode(of = "email", callSuper = false)
 @Entity
 @Table(name = "consumer", uniqueConstraints = @UniqueConstraint(name = "uk_consumer", columnNames = {"email"}))
 public class Consumer extends AbstractEntityLongId {

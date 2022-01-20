@@ -1,6 +1,8 @@
 package org.itransition.taskmanager.models.jpa;
 
 import lombok.*;
+import org.itransition.taskmanager.enums.Priority;
+import org.itransition.taskmanager.enums.Status;
 
 import javax.persistence.*;
 import java.util.ArrayList;
@@ -11,6 +13,7 @@ import java.util.List;
 @Setter
 @NoArgsConstructor
 @AllArgsConstructor
+@EqualsAndHashCode(of = "title", callSuper = false)
 @Entity
 @Table(name = "task", uniqueConstraints = {@UniqueConstraint(name = "uk_title", columnNames = {"title"})})
 public class Task extends AbstractEntityLongId {
@@ -31,25 +34,11 @@ public class Task extends AbstractEntityLongId {
 
     @Column(name = "done_percentage", scale = 3,
             nullable = false, columnDefinition = "tinyint")
-    private Byte donePercentage;
-
-    public enum Priority {
-        LOW,
-        MEDIUM,
-        HIGH,
-        URGENT
-    }
+    private Integer donePercentage;
 
     @Enumerated(EnumType.STRING)
     @Column(name = "priority", nullable = false, columnDefinition = "varchar(25) default 'MEDIUM'")
     private Priority priority;
-
-    public enum Status {
-        NEW,
-        IN_PROGRESS,
-        FINISHED,
-        ABANDONED
-    }
 
     @Enumerated(EnumType.STRING)
     @Column(name = "status", nullable = false, columnDefinition = "varchar(25) default 'NEW'")
