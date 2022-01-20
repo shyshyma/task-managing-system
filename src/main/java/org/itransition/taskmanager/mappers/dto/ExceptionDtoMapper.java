@@ -1,6 +1,6 @@
 package org.itransition.taskmanager.mappers.dto;
 
-import org.itransition.taskmanager.models.dtos.ExceptionMetadataDto;
+import org.itransition.taskmanager.models.dto.ExceptionMetadataDto;
 import org.mapstruct.Mapper;
 import org.mapstruct.Mapping;
 import org.springframework.http.HttpStatus;

@@ -1,6 +1,6 @@
 package org.itransition.taskmanager.mappers.jpa;
 
-import org.itransition.taskmanager.models.dtos.ConsumerDto;
+import org.itransition.taskmanager.models.dto.ConsumerDto;
 import org.itransition.taskmanager.models.jpa.Consumer;
 import org.mapstruct.Mapper;
 import org.mapstruct.Mapping;

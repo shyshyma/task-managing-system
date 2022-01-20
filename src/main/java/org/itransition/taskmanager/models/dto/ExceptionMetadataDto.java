@@ -1,4 +1,4 @@
-package org.itransition.taskmanager.models.dtos;
+package org.itransition.taskmanager.models.dto;
 
 import lombok.Getter;
 import lombok.Setter;

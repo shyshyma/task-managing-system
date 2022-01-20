@@ -1,6 +1,6 @@
 package org.itransition.taskmanager.mappers.dto;
 
-import org.itransition.taskmanager.models.dtos.AttachedFileDto;
+import org.itransition.taskmanager.models.dto.AttachedFileDto;
 import org.itransition.taskmanager.models.jpa.AttachedFile;
 import org.mapstruct.Mapper;
 
