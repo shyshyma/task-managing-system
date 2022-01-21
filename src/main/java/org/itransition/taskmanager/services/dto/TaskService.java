@@ -2,6 +2,8 @@ package org.itransition.taskmanager.services.dto;
 
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
+import org.itransition.taskmanager.mappers.jpa.ConsumerJpaMapper;
+import org.itransition.taskmanager.models.dto.ConsumerDto;
 import org.itransition.taskmanager.models.dto.TaskDto;
 import org.itransition.taskmanager.exceptions.DuplicateTitleException;
 import org.itransition.taskmanager.exceptions.ModelNotFoundException;
@@ -9,7 +11,6 @@ import org.itransition.taskmanager.mappers.dto.TaskDtoMapper;
 import org.itransition.taskmanager.mappers.jpa.TaskJpaMapper;
 import org.itransition.taskmanager.models.jpa.Consumer;
 import org.itransition.taskmanager.models.jpa.Task;
-import org.itransition.taskmanager.repositories.jpa.ConsumerRepository;
 import org.itransition.taskmanager.repositories.jpa.TaskRepository;
 import org.springframework.beans.BeanUtils;
 import org.springframework.data.domain.Pageable;
@@ -31,9 +32,11 @@ public class TaskService {
 
     private final TaskDtoMapper taskDtoMapper;
     private final TaskJpaMapper taskJpaMapper;
+    private final ConsumerJpaMapper consumerJpaMapper;
+
+    private final ConsumerService consumerService;
 
     private final TaskRepository taskRepository;
-    private final ConsumerRepository consumerRepository;
 
     /**
      * Saves task entity and sets consumer parent( by consumer id)
@@ -48,9 +51,8 @@ public class TaskService {
                     + "' entity with title" + title);
         }
 
-        Consumer consumer = consumerRepository.findById(consumerId)
-                .orElseThrow(() -> new ModelNotFoundException("there is no entity '"
-                        + PARENT_ENTITY_NAME + "' with id: " + consumerId));
+        ConsumerDto consumerDto = consumerService.findById(consumerId);
+        Consumer consumer = consumerJpaMapper.map(consumerDto);
 
         Task mappedTask = taskJpaMapper.map(taskDto);
         mappedTask.setConsumer(consumer);

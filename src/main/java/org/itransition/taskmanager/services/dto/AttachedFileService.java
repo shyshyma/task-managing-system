@@ -2,16 +2,17 @@ package org.itransition.taskmanager.services.dto;
 
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
+import org.itransition.taskmanager.mappers.jpa.TaskJpaMapper;
 import org.itransition.taskmanager.models.dto.FileMetadataDto;
 import org.itransition.taskmanager.models.dto.AttachedFileDto;
 import org.itransition.taskmanager.exceptions.ModelNotFoundException;
 import org.itransition.taskmanager.mappers.dto.AttachedFileDtoMapper;
 import org.itransition.taskmanager.mappers.dto.FileMetadataDtoMapper;
 import org.itransition.taskmanager.mappers.jpa.AttachedFileJpaMapper;
+import org.itransition.taskmanager.models.dto.TaskDto;
 import org.itransition.taskmanager.models.jpa.AttachedFile;
 import org.itransition.taskmanager.models.jpa.Task;
 import org.itransition.taskmanager.repositories.jpa.AttachedFileRepository;
-import org.itransition.taskmanager.repositories.jpa.TaskRepository;
 import org.springframework.beans.BeanUtils;
 import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
@@ -33,10 +34,13 @@ public class AttachedFileService {
     private static final String PARENT_ENTITY_NAME = "task";
 
     private final FileMetadataDtoMapper fileMetadataDtoMapper;
+
+    private final TaskJpaMapper taskJpaMapper;
     private final AttachedFileDtoMapper attachedFileDtoMapper;
     private final AttachedFileJpaMapper attachedFileJpaMapper;
 
-    private final TaskRepository taskRepository;
+    private final TaskService taskService;
+
     private final AttachedFileRepository attachedFileRepository;
 
     /**
@@ -48,12 +52,11 @@ public class AttachedFileService {
                 "' entity with id {} and to 'consumer' entity with id {}" +
                 " to the JPA datasource unit", file.getOriginalFilename(), taskId, consumerId);
 
-        Task byIdAndConsumerId = taskRepository.findByIdAndConsumerId(taskId, consumerId)
-                .orElseThrow(() -> new ModelNotFoundException("couldn't find ' " + PARENT_ENTITY_NAME +
-                        " ', who attached to 'consumer' entity"));
+        TaskDto byIdAndConsumerId = taskService.findByIdAndConsumerId(taskId, consumerId);
+        Task task = taskJpaMapper.map(byIdAndConsumerId);
 
         AttachedFile attachedFile = attachedFileJpaMapper.map(file);
-        attachedFile.setTask(byIdAndConsumerId);
+        attachedFile.setTask(task);
         attachedFileRepository.save(attachedFile);
 
         return fileMetadataDtoMapper.map(attachedFile,
