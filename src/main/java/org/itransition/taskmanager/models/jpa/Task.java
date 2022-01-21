@@ -44,11 +44,11 @@ public class Task extends AbstractEntityLongId {
     @Column(name = "status", nullable = false, columnDefinition = "varchar(25) default 'NEW'")
     private Status status;
 
-    @ManyToOne(fetch = FetchType.LAZY, cascade = CascadeType.ALL)
+    @ManyToOne(fetch = FetchType.LAZY, cascade = CascadeType.MERGE)
     @JoinColumn(name = "consumer_id", referencedColumnName = "id",
             foreignKey = @ForeignKey(name = "fk_task_consumer"), nullable = false)
     private Consumer consumer;
 
-    @OneToMany(mappedBy = "task", cascade = CascadeType.ALL, fetch = FetchType.LAZY)
+    @OneToMany(mappedBy = "task", fetch = FetchType.LAZY)
     private List<AttachedFile> attachedFilesList = new ArrayList<>();
 }

@@ -20,7 +20,7 @@ public class AttachedFile extends AbstractEntityLongId {
     @Column(name = "name", nullable = false, columnDefinition = "varchar(100)")
     private String name;
 
-    @ManyToOne(fetch = FetchType.LAZY, cascade = CascadeType.ALL)
+    @ManyToOne(fetch = FetchType.LAZY, cascade = CascadeType.MERGE)
     @JoinColumn(name = "task_id", referencedColumnName = "id",
             foreignKey = @ForeignKey(name = "fk_attached_file_task"), nullable = false)
     private Task task;

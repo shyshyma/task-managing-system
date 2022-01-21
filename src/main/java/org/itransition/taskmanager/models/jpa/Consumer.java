@@ -29,6 +29,6 @@ public class Consumer extends AbstractEntityLongId {
     @Column(name = "email", nullable = false, columnDefinition = "varchar(40)")
     private String email;
 
-    @OneToMany(mappedBy = "consumer", fetch = FetchType.LAZY, cascade = CascadeType.ALL)
+    @OneToMany(mappedBy = "consumer", fetch = FetchType.LAZY)
     private List<Task> taskList = new ArrayList<>();
 }
