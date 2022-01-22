@@ -2,7 +2,7 @@ package org.itransition.taskmanager.controllers.rest;
 
 import lombok.RequiredArgsConstructor;
 import org.itransition.taskmanager.models.dto.TaskDto;
-import org.itransition.taskmanager.services.dto.TaskService;
+import org.itransition.taskmanager.service.dto.TaskDtoService;
 import org.springframework.data.domain.Pageable;
 import org.springframework.data.web.PageableDefault;
 import org.springframework.http.HttpStatus;
@@ -17,14 +17,14 @@ import java.util.List;
 @RequestMapping(value = "/api/consumers", produces = MediaType.APPLICATION_JSON_VALUE)
 public class TaskController {
 
-    private final TaskService taskService;
+    private final TaskDtoService taskDtoService;
 
     @ResponseStatus(HttpStatus.OK)
     @GetMapping("{consumerId}/tasks/{taskId}")
     public TaskDto getConsumerTask(@PathVariable("consumerId") final Long consumerId,
                                    @PathVariable("taskId") final Long taskId) {
 
-        return taskService.findByIdAndConsumerId(taskId, consumerId);
+        return taskDtoService.findByIdAndConsumerId(taskId, consumerId);
     }
 
     @ResponseStatus(HttpStatus.OK)
@@ -32,7 +32,7 @@ public class TaskController {
     public List<TaskDto> getConsumerTasks(@PathVariable("consumerId") final Long consumerId,
                                           @PageableDefault(size = 100) final Pageable pageable) {
 
-        return taskService.findByConsumerId(consumerId, pageable);
+        return taskDtoService.findByConsumerId(consumerId, pageable);
     }
 
     @ResponseStatus(HttpStatus.CREATED)
@@ -40,7 +40,7 @@ public class TaskController {
     public TaskDto saveConsumerTask(@PathVariable("consumerId") final Long consumerId,
                                     @Valid @RequestBody final TaskDto taskDto) {
 
-        return taskService.saveToConsumer(taskDto, consumerId);
+        return taskDtoService.saveToConsumer(taskDto, consumerId);
     }
 
     @ResponseStatus(HttpStatus.OK)
@@ -49,7 +49,7 @@ public class TaskController {
                                       @PathVariable("taskId") final Long taskId,
                                       @Valid @RequestBody final TaskDto taskDto) {
         
-        return taskService.updateByIdAndConsumerId(taskId, consumerId, taskDto);
+        return taskDtoService.updateByIdAndConsumerId(taskId, consumerId, taskDto);
     }
 
     @ResponseStatus(HttpStatus.NO_CONTENT)
@@ -57,6 +57,6 @@ public class TaskController {
     public void deleteConsumerTask(@PathVariable("consumerId") final Long consumerId,
                                    @PathVariable("taskId") final Long taskId) {
 
-        taskService.deleteByIdAndConsumerId(consumerId, taskId);
+        taskDtoService.deleteByIdAndConsumerId(consumerId, taskId);
     }
 }

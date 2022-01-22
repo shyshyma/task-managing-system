@@ -1,4 +1,4 @@
-package org.itransition.taskmanager.services.dto;
+package org.itransition.taskmanager.service.dto;
 
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
@@ -22,7 +22,7 @@ import java.util.stream.Collectors;
 @Service
 @RequiredArgsConstructor
 @Transactional(propagation = Propagation.REQUIRED)
-public class ConsumerService {
+public class ConsumerDtoService {
 
     private static final String ENTITY_NAME = "consumer";
 
@@ -79,6 +79,13 @@ public class ConsumerService {
         return consumerRepository.findAll(pageable).stream()
                 .map(consumerDtoMapper::map)
                 .collect(Collectors.toList());
+    }
+
+    public boolean existsById(Long id) {
+        log.info("Verifying that '" + ENTITY_NAME + "' with id {} exists" +
+                " in the JPA datastore unit ", id);
+
+        return consumerRepository.existsById(id);
     }
 
     public void deleteById(Long id) {

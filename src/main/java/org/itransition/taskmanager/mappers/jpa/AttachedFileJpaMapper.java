@@ -1,16 +1,21 @@
 package org.itransition.taskmanager.mappers.jpa;
 
+import org.itransition.taskmanager.models.dto.AttachedFileDto;
 import org.itransition.taskmanager.models.jpa.AttachedFile;
 import org.mapstruct.Mapper;
 import org.mapstruct.Mapping;
-import org.springframework.web.multipart.MultipartFile;
+import org.mapstruct.Named;
 
-import java.io.IOException;
+import java.util.Base64;
 
 @Mapper(componentModel = "spring")
 public abstract class AttachedFileJpaMapper {
-    
-    @Mapping(target = "data", source = "bytes")
-    @Mapping(target = "name", source = "originalFilename")
-    public abstract AttachedFile map(MultipartFile multipartFile) throws IOException;
+
+    @Mapping(target = "data", source = "content", qualifiedByName = "decodeBase64")
+    public abstract AttachedFile map(AttachedFileDto attachedFileDto);
+
+    @Named("decodeBase64")
+    public byte[] decodeBase64(String content) {
+        return Base64.getDecoder().decode(content);
+    }
 }

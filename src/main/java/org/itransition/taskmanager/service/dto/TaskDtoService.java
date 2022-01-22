@@ -1,4 +1,4 @@
-package org.itransition.taskmanager.services.dto;
+package org.itransition.taskmanager.service.dto;
 
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
@@ -25,7 +25,7 @@ import java.util.stream.Collectors;
 @Service
 @RequiredArgsConstructor
 @Transactional(propagation = Propagation.REQUIRED)
-public class TaskService {
+public class TaskDtoService {
 
     private static final String ENTITY_NAME = "task";
     private static final String PARENT_ENTITY_NAME = "consumer";
@@ -34,9 +34,20 @@ public class TaskService {
     private final TaskJpaMapper taskJpaMapper;
     private final ConsumerJpaMapper consumerJpaMapper;
 
-    private final ConsumerService consumerService;
+    private final ConsumerDtoService consumerDtoService;
 
     private final TaskRepository taskRepository;
+
+    /**
+     * Verifies that task entity exists by 'taskId' and has
+     * relationship with consumer by 'consumerId' param
+     */
+    public boolean existsByIdAndConsumerId(Long taskId, Long consumerId) {
+        log.info("Verifying that '" + ENTITY_NAME + "' with id {} exists and belongs to '"
+                + PARENT_ENTITY_NAME + "' by id {}", taskId, consumerId);
+
+        return taskRepository.existsByIdAndConsumerId(taskId, consumerId);
+    }
 
     /**
      * Saves task entity and sets consumer parent( by consumer id)
@@ -51,7 +62,12 @@ public class TaskService {
                     + "' entity with title" + title);
         }
 
-        ConsumerDto consumerDto = consumerService.findById(consumerId);
+        if(!consumerDtoService.existsById(consumerId)) {
+            throw new ModelNotFoundException("No entity '" + PARENT_ENTITY_NAME
+                    + "' found by id " + consumerId);
+        }
+
+        ConsumerDto consumerDto = consumerDtoService.findById(consumerId);
         Consumer consumer = consumerJpaMapper.map(consumerDto);
 
         Task mappedTask = taskJpaMapper.map(taskDto);

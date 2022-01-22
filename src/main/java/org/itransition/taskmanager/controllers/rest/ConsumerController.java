@@ -2,7 +2,7 @@ package org.itransition.taskmanager.controllers.rest;
 
 import lombok.RequiredArgsConstructor;
 import org.itransition.taskmanager.models.dto.ConsumerDto;
-import org.itransition.taskmanager.services.dto.ConsumerService;
+import org.itransition.taskmanager.service.dto.ConsumerDtoService;
 import org.springframework.data.domain.Pageable;
 import org.springframework.data.web.PageableDefault;
 import org.springframework.http.HttpStatus;
@@ -17,24 +17,24 @@ import java.util.List;
 @RequestMapping(value = "/api/consumers", produces = MediaType.APPLICATION_JSON_VALUE)
 public class ConsumerController {
 
-    private final ConsumerService consumerService;
+    private final ConsumerDtoService consumerDtoService;
 
     @ResponseStatus(HttpStatus.OK)
     @GetMapping("{id}")
     public ConsumerDto getConsumer(@PathVariable("id") final Long id) {
-        return consumerService.findById(id);
+        return consumerDtoService.findById(id);
     }
 
     @ResponseStatus(HttpStatus.OK)
     @GetMapping
     public List<ConsumerDto> getConsumers(@PageableDefault(size = 100) Pageable pageable) {
-        return consumerService.find(pageable);
+        return consumerDtoService.find(pageable);
     }
 
     @ResponseStatus(HttpStatus.CREATED)
     @PostMapping
     public ConsumerDto saveConsumer(@Valid @RequestBody final ConsumerDto consumerDto) {
-        return consumerService.save(consumerDto);
+        return consumerDtoService.save(consumerDto);
     }
 
     @ResponseStatus(HttpStatus.OK)
@@ -42,12 +42,12 @@ public class ConsumerController {
     public ConsumerDto updateConsumer(final @PathVariable("consumerId") Long consumerId,
                                       @Valid @RequestBody final ConsumerDto consumerDto) {
 
-        return consumerService.updateById(consumerId, consumerDto);
+        return consumerDtoService.updateById(consumerId, consumerDto);
     }
 
     @ResponseStatus(HttpStatus.NO_CONTENT)
     @DeleteMapping("{id}")
     public void deleteConsumer(@PathVariable("id") final Long consumerId) {
-        consumerService.deleteById(consumerId);
+        consumerDtoService.deleteById(consumerId);
     }
 }
