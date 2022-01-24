@@ -68,7 +68,8 @@ public class AttachedFileDtoService {
         attachedFileRepository.save(attachedFile);
 
         return fileMetadataDtoMapper.map(attachedFile,
-                "api/consumers/" + consumerId + "/tasks" + taskId + "/attached-files/");
+                "api/consumers/" + consumerId + "/tasks/" + taskId + "/files/"
+                        + attachedFileDto.getName());
     }
 
     /**
@@ -95,7 +96,7 @@ public class AttachedFileDtoService {
         attachedFileRepository.save(attachedFileFromRepo);
 
         return fileMetadataDtoMapper.map(attachedFileFromRepo,
-                "api/consumers/" + consumerId + "/tasks" + taskId + "/attached-files/");
+                "api/consumers/" + consumerId + "/tasks/" + taskId + "/files/" + fileName);
     }
 
     /**

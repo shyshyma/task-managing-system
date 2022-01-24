@@ -41,7 +41,7 @@ public class AttachedFileController {
     @PostMapping("{consumerId}/tasks/{taskId}/files")
     public FileMetadataDto saveConsumerTaskAttachedFile(@PathVariable("consumerId") final Long consumerId,
                                                         @PathVariable("taskId") final Long taskId,
-                                                        @RequestParam("file") final AttachedFileDto fileDto) {
+                                                        @RequestBody final AttachedFileDto fileDto) {
 
         return attachedFileDtoService.saveToTaskWithConsumer(fileDto, taskId, consumerId);
     }
@@ -50,7 +50,7 @@ public class AttachedFileController {
     @PutMapping("{consumerId}/tasks/{taskId}/files")
     public FileMetadataDto updateConsumerTaskAttachedFile(@PathVariable("consumerId") final Long consumerId,
                                                           @PathVariable("taskId") final Long taskId,
-                                                          @RequestParam("file") final AttachedFileDto fileDto) {
+                                                          @RequestBody final AttachedFileDto fileDto) {
 
         return attachedFileDtoService.updateToTaskWithConsumer(fileDto, taskId, consumerId);
     }
