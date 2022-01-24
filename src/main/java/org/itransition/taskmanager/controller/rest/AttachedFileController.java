@@ -22,13 +22,13 @@ import java.util.List;
 
 @RestController
 @RequiredArgsConstructor
+@ResponseStatus(HttpStatus.OK)
 @RequestMapping(value = "/api/consumers/{consumerId}/tasks/{taskId}/files",
         produces = MediaType.APPLICATION_JSON_VALUE, consumes = MediaType.APPLICATION_JSON_VALUE)
 public class AttachedFileController {
 
     private final AttachedFileService attachedFileService;
 
-    @ResponseStatus(HttpStatus.OK)
     @GetMapping(value = "{attachedFileName}")
     public AttachedFileDto getConsumerTaskAttachedFile(@PathVariable("consumerId") final Long consumerId,
                                                        @PathVariable("taskId") final Long taskId,
@@ -37,7 +37,6 @@ public class AttachedFileController {
         return attachedFileService.findByNameAndTaskIdAndConsumerId(filename, taskId, consumerId);
     }
 
-    @ResponseStatus(HttpStatus.OK)
     @GetMapping
     public List<AttachedFileDto> getConsumerTaskAttachedFiles(@PathVariable("consumerId") final Long consumerId,
                                                               @PathVariable("taskId") final Long taskId,
@@ -55,7 +54,6 @@ public class AttachedFileController {
         return attachedFileService.saveToTaskWithConsumer(fileDto, taskId, consumerId);
     }
 
-    @ResponseStatus(HttpStatus.OK)
     @PutMapping
     public FileMetadataDto updateConsumerTaskAttachedFile(@PathVariable("consumerId") final Long consumerId,
                                                           @PathVariable("taskId") final Long taskId,

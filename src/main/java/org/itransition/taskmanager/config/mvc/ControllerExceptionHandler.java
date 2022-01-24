@@ -23,7 +23,6 @@ public class ControllerExceptionHandler {
         return exceptionDtoMapper.map(exception, HttpStatus.NOT_FOUND);
     }
 
-
     @ResponseStatus(HttpStatus.BAD_REQUEST)
     @ExceptionHandler(value = DuplicateEmailException.class)
     public ExceptionMetadataDto handleDuplicateEmailException(DuplicateEmailException exception) {

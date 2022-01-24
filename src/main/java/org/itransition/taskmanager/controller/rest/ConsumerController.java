@@ -22,19 +22,18 @@ import java.util.List;
 
 @RestController
 @RequiredArgsConstructor
+@ResponseStatus(HttpStatus.OK)
 @RequestMapping(value = "/api/consumers",
         produces = MediaType.APPLICATION_JSON_VALUE, consumes = MediaType.APPLICATION_JSON_VALUE)
 public class ConsumerController {
 
     private final ConsumerService consumerService;
 
-    @ResponseStatus(HttpStatus.OK)
     @GetMapping("{id}")
     public ConsumerDto getConsumer(@PathVariable("id") final Long id) {
         return consumerService.findById(id);
     }
 
-    @ResponseStatus(HttpStatus.OK)
     @GetMapping
     public List<ConsumerDto> getConsumers(@PageableDefault(size = 100) Pageable pageable) {
         return consumerService.find(pageable);
@@ -46,7 +45,6 @@ public class ConsumerController {
         return consumerService.save(consumerDto);
     }
 
-    @ResponseStatus(HttpStatus.OK)
     @PutMapping("{consumerId}")
     public ConsumerDto updateConsumer(final @PathVariable("consumerId") Long consumerId,
                                       @Valid @RequestBody final ConsumerDto consumerDto) {

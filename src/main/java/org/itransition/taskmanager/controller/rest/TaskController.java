@@ -22,13 +22,13 @@ import java.util.List;
 
 @RestController
 @RequiredArgsConstructor
+@ResponseStatus(HttpStatus.OK)
 @RequestMapping(value = "/api/consumers/{consumerId}/tasks",
         produces = MediaType.APPLICATION_JSON_VALUE, consumes = MediaType.APPLICATION_JSON_VALUE)
 public class TaskController {
 
     private final TaskService taskService;
 
-    @ResponseStatus(HttpStatus.OK)
     @GetMapping("{taskId}")
     public TaskDto getConsumerTask(@PathVariable("consumerId") final Long consumerId,
                                    @PathVariable("taskId") final Long taskId) {
@@ -36,7 +36,6 @@ public class TaskController {
         return taskService.findByIdAndConsumerId(taskId, consumerId);
     }
 
-    @ResponseStatus(HttpStatus.OK)
     @GetMapping
     public List<TaskDto> getConsumerTasks(@PathVariable("consumerId") final Long consumerId,
                                           @PageableDefault(size = 100) final Pageable pageable) {
@@ -52,7 +51,6 @@ public class TaskController {
         return taskService.saveToConsumer(taskDto, consumerId);
     }
 
-    @ResponseStatus(HttpStatus.OK)
     @PutMapping("{taskId}")
     public TaskDto updateConsumerTask(@PathVariable("consumerId") final Long consumerId,
                                       @PathVariable("taskId") final Long taskId,
