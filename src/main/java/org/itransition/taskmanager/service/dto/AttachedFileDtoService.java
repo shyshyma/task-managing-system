@@ -2,15 +2,17 @@ package org.itransition.taskmanager.service.dto;
 
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
-import org.itransition.taskmanager.mappers.jpa.TaskJpaMapper;
-import org.itransition.taskmanager.models.dto.AttachedFileDto;
-import org.itransition.taskmanager.exceptions.ModelNotFoundException;
-import org.itransition.taskmanager.mappers.dto.AttachedFileDtoMapper;
-import org.itransition.taskmanager.mappers.jpa.AttachedFileJpaMapper;
-import org.itransition.taskmanager.models.dto.TaskDto;
-import org.itransition.taskmanager.models.jpa.AttachedFile;
-import org.itransition.taskmanager.models.jpa.Task;
-import org.itransition.taskmanager.repositories.jpa.AttachedFileRepository;
+import org.itransition.taskmanager.dto.FileMetadataDto;
+import org.itransition.taskmanager.mapper.dto.FileMetadataDtoMapper;
+import org.itransition.taskmanager.mapper.jpa.TaskJpaMapper;
+import org.itransition.taskmanager.dto.AttachedFileDto;
+import org.itransition.taskmanager.exception.ModelNotFoundException;
+import org.itransition.taskmanager.mapper.dto.AttachedFileDtoMapper;
+import org.itransition.taskmanager.mapper.jpa.AttachedFileJpaMapper;
+import org.itransition.taskmanager.dto.TaskDto;
+import org.itransition.taskmanager.jpa.entity.AttachedFile;
+import org.itransition.taskmanager.jpa.entity.Task;
+import org.itransition.taskmanager.jpa.dao.AttachedFileRepository;
 import org.springframework.beans.BeanUtils;
 import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
@@ -31,6 +33,8 @@ public class AttachedFileDtoService {
 
     private final TaskJpaMapper taskJpaMapper;
 
+    private final FileMetadataDtoMapper fileMetadataDtoMapper;
+
     private final AttachedFileDtoMapper attachedFileDtoMapper;
     private final AttachedFileJpaMapper attachedFileJpaMapper;
 
@@ -42,7 +46,7 @@ public class AttachedFileDtoService {
      * Saves attached file entity and sets task parent( by task id)
      * that must have consumer(by consumer id)
      */
-    public AttachedFileDto saveToTaskWithConsumer(AttachedFileDto attachedFileDto,
+    public FileMetadataDto saveToTaskWithConsumer(AttachedFileDto attachedFileDto,
                                                   Long taskId,
                                                   Long consumerId) {
 
@@ -63,14 +67,15 @@ public class AttachedFileDtoService {
         attachedFile.setTask(task);
         attachedFileRepository.save(attachedFile);
 
-        return attachedFileDtoMapper.map(attachedFile);
+        return fileMetadataDtoMapper.map(attachedFile,
+                "api/consumers/" + consumerId + "/tasks" + taskId + "/attached-files/");
     }
 
     /**
      * Updates attached file entity, if it has task parent( by task id)
      * that has relationship with consumer entity(by consumer id)
      */
-    public AttachedFileDto updateToTaskWithConsumer(AttachedFileDto attachedFileDto,
+    public FileMetadataDto updateToTaskWithConsumer(AttachedFileDto attachedFileDto,
                                                     Long taskId,
                                                     Long consumerId) {
 
@@ -89,7 +94,8 @@ public class AttachedFileDtoService {
         BeanUtils.copyProperties(mappedAttachedFile, attachedFileFromRepo, "id", "task");
         attachedFileRepository.save(attachedFileFromRepo);
 
-        return attachedFileDtoMapper.map(attachedFileFromRepo);
+        return fileMetadataDtoMapper.map(attachedFileFromRepo,
+                "api/consumers/" + consumerId + "/tasks" + taskId + "/attached-files/");
     }
 
     /**
