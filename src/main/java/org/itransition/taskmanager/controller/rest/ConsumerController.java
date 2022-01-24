@@ -35,7 +35,7 @@ public class ConsumerController {
     }
 
     @GetMapping
-    public List<ConsumerDto> getConsumers(@PageableDefault(size = 100) Pageable pageable) {
+    public List<ConsumerDto> getConsumers(@PageableDefault(size = 100) final Pageable pageable) {
         return consumerService.find(pageable);
     }
 

@@ -18,6 +18,7 @@ import org.springframework.web.bind.annotation.DeleteMapping;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.RequestBody;
 
+import javax.validation.Valid;
 import java.util.List;
 
 @RestController
@@ -49,7 +50,7 @@ public class AttachedFileController {
     @PostMapping
     public FileMetadataDto saveConsumerTaskAttachedFile(@PathVariable("consumerId") final Long consumerId,
                                                         @PathVariable("taskId") final Long taskId,
-                                                        @RequestBody final AttachedFileDto fileDto) {
+                                                        @Valid @RequestBody final AttachedFileDto fileDto) {
 
         return attachedFileService.saveToTaskWithConsumer(fileDto, taskId, consumerId);
     }
@@ -57,7 +58,7 @@ public class AttachedFileController {
     @PutMapping
     public FileMetadataDto updateConsumerTaskAttachedFile(@PathVariable("consumerId") final Long consumerId,
                                                           @PathVariable("taskId") final Long taskId,
-                                                          @RequestBody final AttachedFileDto fileDto) {
+                                                          @Valid @RequestBody final AttachedFileDto fileDto) {
 
         return attachedFileService.updateToTaskWithConsumer(fileDto, taskId, consumerId);
     }
