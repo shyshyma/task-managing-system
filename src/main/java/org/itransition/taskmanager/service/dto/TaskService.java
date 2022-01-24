@@ -25,7 +25,7 @@ import java.util.stream.Collectors;
 @Service
 @RequiredArgsConstructor
 @Transactional(propagation = Propagation.REQUIRED)
-public class TaskDtoService {
+public class TaskService {
 
     private static final String ENTITY_NAME = "task";
     private static final String PARENT_ENTITY_NAME = "consumer";
@@ -34,7 +34,7 @@ public class TaskDtoService {
     private final TaskJpaMapper taskJpaMapper;
     private final ConsumerJpaMapper consumerJpaMapper;
 
-    private final ConsumerDtoService consumerDtoService;
+    private final ConsumerService consumerService;
 
     private final TaskRepository taskRepository;
 
@@ -62,12 +62,12 @@ public class TaskDtoService {
                     + "' entity with title" + title);
         }
 
-        if(!consumerDtoService.existsById(consumerId)) {
+        if (!consumerService.existsById(consumerId)) {
             throw new ModelNotFoundException("No entity '" + PARENT_ENTITY_NAME
                     + "' found by id " + consumerId);
         }
 
-        ConsumerDto consumerDto = consumerDtoService.findById(consumerId);
+        ConsumerDto consumerDto = consumerService.findById(consumerId);
         Consumer consumer = consumerJpaMapper.map(consumerDto);
 
         Task mappedTask = taskJpaMapper.map(taskDto);
@@ -84,10 +84,7 @@ public class TaskDtoService {
         log.info("Updating '" + ENTITY_NAME + "' entity with unique title {} " +
                 "for consumer with id {} to the JPA datasource unit", taskDto.getTitle(), consumerId);
 
-        Task taskFromRepo = taskRepository.findByIdAndConsumerId(id, consumerId)
-                .orElseThrow(() -> new ModelNotFoundException("there is no '" + ENTITY_NAME
-                        + "' entity with id " + id + ", who has parent" +
-                        " '" + PARENT_ENTITY_NAME + "' entity with id " + consumerId));
+        Task taskFromRepo = findByIdAndConsumerIdOrExceptionThrown(id, consumerId);
 
         BeanUtils.copyProperties(taskDto, taskFromRepo, "id", "creationDate", "consumer");
         Task savedTask = taskRepository.save(taskFromRepo);
@@ -102,10 +99,7 @@ public class TaskDtoService {
         log.info("Fetching '" + ENTITY_NAME + "' entity with id {} who have relationship with '" +
                 PARENT_ENTITY_NAME + "' entity with id {} from the JPA datasource unit", id, consumerId);
 
-        Task taskByIdAndConsumerId = taskRepository.findByIdAndConsumerId(id, consumerId)
-                .orElseThrow(() -> new ModelNotFoundException("there is no '" + ENTITY_NAME
-                        + "' entity with id " + id + ", who has parent" +
-                        " '" + PARENT_ENTITY_NAME + "' entity with id " + consumerId));
+        Task taskByIdAndConsumerId = findByIdAndConsumerIdOrExceptionThrown(id, consumerId);
 
         return taskDtoMapper.map(taskByIdAndConsumerId);
     }
@@ -138,5 +132,12 @@ public class TaskDtoService {
         }
 
         taskRepository.deleteByIdAndConsumerId(id, consumerId);
+    }
+
+    private Task findByIdAndConsumerIdOrExceptionThrown(Long id, Long consumerId) {
+        return taskRepository.findByIdAndConsumerId(id, consumerId)
+                .orElseThrow(() -> new ModelNotFoundException("there is no '" + ENTITY_NAME
+                        + "' entity with id " + id + ", who has parent" +
+                        " '" + PARENT_ENTITY_NAME + "' entity with id " + consumerId));
     }
 }

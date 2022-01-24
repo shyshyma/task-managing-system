@@ -26,7 +26,7 @@ import java.util.stream.Collectors;
 @Service
 @RequiredArgsConstructor
 @Transactional(propagation = Propagation.REQUIRED)
-public class AttachedFileDtoService {
+public class AttachedFileService {
 
     private static final String ENTITY_NAME = "attached_file";
     private static final String PARENT_ENTITY_NAME = "task";
@@ -38,7 +38,7 @@ public class AttachedFileDtoService {
     private final AttachedFileDtoMapper attachedFileDtoMapper;
     private final AttachedFileJpaMapper attachedFileJpaMapper;
 
-    private final TaskDtoService taskDtoService;
+    private final TaskService taskService;
 
     private final AttachedFileRepository attachedFileRepository;
 
@@ -54,13 +54,13 @@ public class AttachedFileDtoService {
                 "' entity with id {} and to 'consumer' entity with id {}" +
                 " to the JPA datasource unit", attachedFileDto.getName(), taskId, consumerId);
 
-        if (!taskDtoService.existsByIdAndConsumerId(taskId, consumerId)) {
+        if (!taskService.existsByIdAndConsumerId(taskId, consumerId)) {
             throw new ModelNotFoundException("there is no '" + PARENT_ENTITY_NAME
                     + "' entity with id " + taskId + ", who has parent" +
                     " 'consumer' entity by id " + consumerId);
         }
 
-        TaskDto byIdAndConsumerId = taskDtoService.findByIdAndConsumerId(taskId, consumerId);
+        TaskDto byIdAndConsumerId = taskService.findByIdAndConsumerId(taskId, consumerId);
         Task task = taskJpaMapper.map(byIdAndConsumerId);
 
         AttachedFile attachedFile = attachedFileJpaMapper.map(attachedFileDto);
@@ -85,11 +85,8 @@ public class AttachedFileDtoService {
                 "to the JPA datasource unit", attachedFileDto.getName(), taskId, consumerId);
 
         String fileName = attachedFileDto.getName();
-        AttachedFile attachedFileFromRepo = attachedFileRepository
-                .findByNameAndTaskIdAndTaskConsumerId(fileName, taskId, consumerId)
-                .orElseThrow(() -> new ModelNotFoundException("no entity '" + ENTITY_NAME + "', was found" +
-                        " who has name " + fileName + " and belongs to '" + PARENT_ENTITY_NAME + "', " +
-                        " 'consumer' entities"));
+        AttachedFile attachedFileFromRepo = findByNameAndTaskIdAndTaskConsumerIdOrExceptionThrown(
+                fileName, taskId, consumerId);
 
         AttachedFile mappedAttachedFile = attachedFileJpaMapper.map(attachedFileDto);
         BeanUtils.copyProperties(mappedAttachedFile, attachedFileFromRepo, "id", "task");
@@ -125,11 +122,8 @@ public class AttachedFileDtoService {
                 PARENT_ENTITY_NAME + "' entity by id {} and with 'consumer' entity by id {}" +
                 " from the JPA datasource unit", name, taskId, consumerId);
 
-        AttachedFile attachedFile = attachedFileRepository
-                .findByNameAndTaskIdAndTaskConsumerId(name, taskId, consumerId)
-                .orElseThrow(() -> new ModelNotFoundException("no entity '" + ENTITY_NAME + "'," +
-                        " was found, who has name " + name + " and belongs to '"
-                        + PARENT_ENTITY_NAME + "', 'consumer' entities"));
+        AttachedFile attachedFile = findByNameAndTaskIdAndTaskConsumerIdOrExceptionThrown(name,
+                taskId, consumerId);
 
         return attachedFileDtoMapper.map(attachedFile);
     }
@@ -150,5 +144,15 @@ public class AttachedFileDtoService {
         }
 
         attachedFileRepository.deleteByNameAndTaskIdAndTaskConsumerId(name, taskId, consumerId);
+    }
+
+    private AttachedFile findByNameAndTaskIdAndTaskConsumerIdOrExceptionThrown(String name,
+                                                                               Long taskId,
+                                                                               Long consumerId) {
+
+        return attachedFileRepository.findByNameAndTaskIdAndTaskConsumerId(name, taskId, consumerId)
+                .orElseThrow(() -> new ModelNotFoundException("no entity '" + ENTITY_NAME + "'," +
+                        " was found, who has name " + name + " and belongs to '"
+                        + PARENT_ENTITY_NAME + "', 'consumer' entities"));
     }
 }

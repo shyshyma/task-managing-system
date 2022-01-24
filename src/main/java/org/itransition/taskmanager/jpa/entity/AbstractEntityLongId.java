@@ -1,9 +1,15 @@
 package org.itransition.taskmanager.jpa.entity;
 
+import lombok.EqualsAndHashCode;
 import lombok.Getter;
 import lombok.Setter;
 
-import javax.persistence.*;
+import javax.persistence.MappedSuperclass;
+import javax.persistence.Id;
+import javax.persistence.AttributeOverride;
+import javax.persistence.Column;
+import javax.persistence.GeneratedValue;
+import javax.persistence.GenerationType;
 
 /**
  * Needed in order not to create an entity identifier, instead,
@@ -15,6 +21,7 @@ import javax.persistence.*;
 @Getter
 @Setter
 @MappedSuperclass
+@EqualsAndHashCode
 public abstract class AbstractEntityLongId {
 
     @Id

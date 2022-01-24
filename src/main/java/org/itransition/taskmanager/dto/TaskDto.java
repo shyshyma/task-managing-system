@@ -2,7 +2,12 @@ package org.itransition.taskmanager.dto;
 
 import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 import com.fasterxml.jackson.annotation.JsonProperty;
-import lombok.*;
+
+import lombok.Getter;
+import lombok.Setter;
+import lombok.AllArgsConstructor;
+import lombok.NoArgsConstructor;
+import lombok.EqualsAndHashCode;
 
 import javax.validation.constraints.Max;
 import javax.validation.constraints.Min;
@@ -13,8 +18,7 @@ import java.util.Date;
 @Setter
 @NoArgsConstructor
 @AllArgsConstructor
-@EqualsAndHashCode(of = {"title", "description", "creationDate",
-        "expirationDate", "donePercentage", "priority", "status"}, callSuper = false)
+@EqualsAndHashCode
 @JsonIgnoreProperties(ignoreUnknown = true)
 public class TaskDto implements Dto {
 

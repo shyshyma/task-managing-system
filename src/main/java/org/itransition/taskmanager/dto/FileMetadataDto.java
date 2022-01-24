@@ -8,7 +8,7 @@ import lombok.Setter;
 @Getter
 @Setter
 @Builder
-@EqualsAndHashCode(of = {"fileName", "size", "downloadPath"}, callSuper = false)
+@EqualsAndHashCode
 public class FileMetadataDto {
 
     private String fileName;

@@ -8,7 +8,7 @@ import java.util.Date;
 
 @Getter
 @Setter
-@EqualsAndHashCode(of = {"message", "statusCode"}, callSuper = false)
+@EqualsAndHashCode
 public class ExceptionMetadataDto {
 
     private Date timestamp;

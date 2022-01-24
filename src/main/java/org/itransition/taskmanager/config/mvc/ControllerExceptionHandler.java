@@ -2,7 +2,9 @@ package org.itransition.taskmanager.config.mvc;
 
 import lombok.RequiredArgsConstructor;
 import org.itransition.taskmanager.dto.ExceptionMetadataDto;
-import org.itransition.taskmanager.exception.*;
+import org.itransition.taskmanager.exception.ModelNotFoundException;
+import org.itransition.taskmanager.exception.DuplicateEmailException;
+import org.itransition.taskmanager.exception.DuplicateTitleException;
 import org.itransition.taskmanager.mapper.dto.ExceptionDtoMapper;
 import org.springframework.http.HttpStatus;
 import org.springframework.web.bind.annotation.ExceptionHandler;
@@ -18,7 +20,7 @@ public class ControllerExceptionHandler {
     @ResponseStatus(HttpStatus.NOT_FOUND)
     @ExceptionHandler(value = ModelNotFoundException.class)
     public ExceptionMetadataDto handleModelNotFoundException(ModelNotFoundException exception) {
-       return exceptionDtoMapper.map(exception, HttpStatus.NOT_FOUND);
+        return exceptionDtoMapper.map(exception, HttpStatus.NOT_FOUND);
     }
 
 

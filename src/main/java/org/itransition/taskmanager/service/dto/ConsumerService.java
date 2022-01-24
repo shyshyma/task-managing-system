@@ -22,7 +22,7 @@ import java.util.stream.Collectors;
 @Service
 @RequiredArgsConstructor
 @Transactional(propagation = Propagation.REQUIRED)
-public class ConsumerDtoService {
+public class ConsumerService {
 
     private static final String ENTITY_NAME = "consumer";
 
@@ -35,9 +35,7 @@ public class ConsumerDtoService {
         log.info("Fetching '" + ENTITY_NAME + "' entity with id {}" +
                 " from the JPA datastore unit", id);
 
-        Consumer consumer = consumerRepository.findById(id)
-                .orElseThrow(() -> new ModelNotFoundException("there is no entity '" + ENTITY_NAME +
-                        "' with id: " + id));
+        Consumer consumer = findByIdOrExceptionThrown(id);
 
         return consumerDtoMapper.map(consumer);
     }
@@ -63,11 +61,9 @@ public class ConsumerDtoService {
                         " and unique email '{}' to the JPA datastore unit", consumerDto.getName(),
                 consumerDto.getSurname(), consumerDto.getEmail());
 
-        Consumer consumerById = consumerRepository.findById(consumerId)
-                .orElseThrow(() -> new ModelNotFoundException("there is no entity '" + ENTITY_NAME +
-                        "' with id: " + consumerId));
+        Consumer consumerById = findByIdOrExceptionThrown(consumerId);
 
-        BeanUtils.copyProperties(consumerDto, consumerById,  "id");
+        BeanUtils.copyProperties(consumerDto, consumerById, "id");
         Consumer savedConsumer = consumerRepository.save(consumerById);
 
         return consumerDtoMapper.map(savedConsumer);
@@ -97,5 +93,11 @@ public class ConsumerDtoService {
         }
 
         consumerRepository.deleteById(id);
+    }
+
+    private Consumer findByIdOrExceptionThrown(Long id) {
+       return consumerRepository.findById(id).orElseThrow(
+               () -> new ModelNotFoundException("there is no entity '" + ENTITY_NAME +
+                        "' with id: " + id));
     }
 }

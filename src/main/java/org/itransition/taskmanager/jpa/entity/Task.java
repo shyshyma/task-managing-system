@@ -1,8 +1,26 @@
 package org.itransition.taskmanager.jpa.entity;
 
-import lombok.*;
+import lombok.Getter;
+import lombok.Setter;
+import lombok.NoArgsConstructor;
+import lombok.AllArgsConstructor;
+import lombok.EqualsAndHashCode;
 
-import javax.persistence.*;
+import javax.persistence.Entity;
+import javax.persistence.Table;
+import javax.persistence.UniqueConstraint;
+import javax.persistence.Column;
+import javax.persistence.Temporal;
+import javax.persistence.TemporalType;
+import javax.persistence.Enumerated;
+import javax.persistence.EnumType;
+import javax.persistence.ManyToOne;
+import javax.persistence.FetchType;
+import javax.persistence.CascadeType;
+import javax.persistence.JoinColumn;
+import javax.persistence.ForeignKey;
+import javax.persistence.OneToMany;
+
 import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
@@ -11,8 +29,7 @@ import java.util.List;
 @Setter
 @NoArgsConstructor
 @AllArgsConstructor
-@EqualsAndHashCode(of = {"title", "description", "creationDate", "expirationDate",
-        "donePercentage", "priority", "status"}, callSuper = false)
+@EqualsAndHashCode(exclude = {"consumer", "attachedFilesList"}, callSuper = true)
 @Entity
 @Table(name = "task", uniqueConstraints = {@UniqueConstraint(name = "uk_title", columnNames = {"title"})})
 public class Task extends AbstractEntityLongId {
