@@ -32,8 +32,8 @@ public class ConsumerService {
     private final ConsumerRepository consumerRepository;
 
     public ConsumerDto findById(Long id) {
-        log.info("Fetching '" + ENTITY_NAME + "' entity with id {}" +
-                " from the JPA datastore unit", id);
+        log.info("Fetching '" + ENTITY_NAME + "' entity with id {}"
+                + " from the JPA datastore unit", id);
 
         Consumer consumer = findByIdOrThrow(id);
 
@@ -41,8 +41,8 @@ public class ConsumerService {
     }
 
     public ConsumerDto save(ConsumerDto consumerDto) {
-        log.info("Saving entity '" + ENTITY_NAME + "' with name '{}', surname '{}' and unique email" +
-                        " '{}' to the JPA datastore unit", consumerDto.getName(),
+        log.info("Saving entity '" + ENTITY_NAME + "' with name '{}', surname '{}' and unique email"
+                        + " '{}' to the JPA datastore unit", consumerDto.getName(),
                 consumerDto.getSurname(), consumerDto.getEmail());
 
         Consumer consumer = consumerJpaMapper.map(consumerDto);
@@ -52,13 +52,13 @@ public class ConsumerService {
             return consumerDtoMapper.map(savedConsumer);
         }
 
-        throw new DuplicateEmailException("'" + ENTITY_NAME + "' entry with such email" +
-                " already exists");
+        throw new DuplicateEmailException("'" + ENTITY_NAME + "' entry with such email"
+                + " already exists");
     }
 
     public ConsumerDto updateById(Long consumerId, ConsumerDto consumerDto) {
-        log.info("Updating entity '" + ENTITY_NAME + "' with name '{}', surname '{}'" +
-                        " and unique email '{}' to the JPA datastore unit", consumerDto.getName(),
+        log.info("Updating entity '" + ENTITY_NAME + "' with name '{}', surname '{}'"
+                        + " and unique email '{}' to the JPA datastore unit", consumerDto.getName(),
                 consumerDto.getSurname(), consumerDto.getEmail());
 
         Consumer consumerById = findByIdOrThrow(consumerId);
@@ -78,8 +78,8 @@ public class ConsumerService {
     }
 
     public boolean existsById(Long id) {
-        log.info("Verifying that '" + ENTITY_NAME + "' with id {} exists" +
-                " in the JPA datastore unit ", id);
+        log.info("Verifying that '" + ENTITY_NAME + "' with id {} exists"
+                + " in the JPA datastore unit ", id);
 
         return consumerRepository.existsById(id);
     }
@@ -88,8 +88,8 @@ public class ConsumerService {
         log.info("Deleting '" + ENTITY_NAME + "' entity with id {} from the JPA datastore unit", id);
 
         if (!consumerRepository.existsById(id)) {
-            throw new ModelNotFoundException("there is no entity '" + ENTITY_NAME +
-                    "' with id: " + id);
+            throw new ModelNotFoundException("there is no entity '" + ENTITY_NAME
+                    + "' with id: " + id);
         }
 
         consumerRepository.deleteById(id);
@@ -97,7 +97,7 @@ public class ConsumerService {
 
     private Consumer findByIdOrThrow(Long id) {
        return consumerRepository.findById(id).orElseThrow(
-               () -> new ModelNotFoundException("there is no entity '" + ENTITY_NAME +
-                        "' with id: " + id));
+               () -> new ModelNotFoundException("there is no entity '" + ENTITY_NAME
+                       + "' with id: " + id));
     }
 }
