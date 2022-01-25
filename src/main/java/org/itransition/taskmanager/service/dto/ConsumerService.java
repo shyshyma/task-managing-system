@@ -35,7 +35,7 @@ public class ConsumerService {
         log.info("Fetching '" + ENTITY_NAME + "' entity with id {}" +
                 " from the JPA datastore unit", id);
 
-        Consumer consumer = findByIdOrExceptionThrown(id);
+        Consumer consumer = findByIdOrThrow(id);
 
         return consumerDtoMapper.map(consumer);
     }
@@ -61,7 +61,7 @@ public class ConsumerService {
                         " and unique email '{}' to the JPA datastore unit", consumerDto.getName(),
                 consumerDto.getSurname(), consumerDto.getEmail());
 
-        Consumer consumerById = findByIdOrExceptionThrown(consumerId);
+        Consumer consumerById = findByIdOrThrow(consumerId);
 
         BeanUtils.copyProperties(consumerDto, consumerById, "id");
         Consumer savedConsumer = consumerRepository.save(consumerById);
@@ -95,7 +95,7 @@ public class ConsumerService {
         consumerRepository.deleteById(id);
     }
 
-    private Consumer findByIdOrExceptionThrown(Long id) {
+    private Consumer findByIdOrThrow(Long id) {
        return consumerRepository.findById(id).orElseThrow(
                () -> new ModelNotFoundException("there is no entity '" + ENTITY_NAME +
                         "' with id: " + id));

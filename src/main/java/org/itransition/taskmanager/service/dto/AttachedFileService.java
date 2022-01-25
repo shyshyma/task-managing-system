@@ -85,7 +85,7 @@ public class AttachedFileService {
                 "to the JPA datasource unit", attachedFileDto.getName(), taskId, consumerId);
 
         String fileName = attachedFileDto.getName();
-        AttachedFile attachedFileFromRepo = findByNameAndTaskIdAndTaskConsumerIdOrExceptionThrown(
+        AttachedFile attachedFileFromRepo = findByNameAndTaskIdAndTaskConsumerIdOrThrow(
                 fileName, taskId, consumerId);
 
         AttachedFile mappedAttachedFile = attachedFileJpaMapper.map(attachedFileDto);
@@ -122,7 +122,7 @@ public class AttachedFileService {
                 PARENT_ENTITY_NAME + "' entity by id {} and with 'consumer' entity by id {}" +
                 " from the JPA datasource unit", name, taskId, consumerId);
 
-        AttachedFile attachedFile = findByNameAndTaskIdAndTaskConsumerIdOrExceptionThrown(name,
+        AttachedFile attachedFile = findByNameAndTaskIdAndTaskConsumerIdOrThrow(name,
                 taskId, consumerId);
 
         return attachedFileDtoMapper.map(attachedFile);
@@ -146,9 +146,9 @@ public class AttachedFileService {
         attachedFileRepository.deleteByNameAndTaskIdAndTaskConsumerId(name, taskId, consumerId);
     }
 
-    private AttachedFile findByNameAndTaskIdAndTaskConsumerIdOrExceptionThrown(String name,
-                                                                               Long taskId,
-                                                                               Long consumerId) {
+    private AttachedFile findByNameAndTaskIdAndTaskConsumerIdOrThrow(String name,
+                                                                     Long taskId,
+                                                                     Long consumerId) {
 
         return attachedFileRepository.findByNameAndTaskIdAndTaskConsumerId(name, taskId, consumerId)
                 .orElseThrow(() -> new ModelNotFoundException("no entity '" + ENTITY_NAME + "'," +

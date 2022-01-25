@@ -23,7 +23,6 @@ import java.util.List;
 
 @RestController
 @RequiredArgsConstructor
-@ResponseStatus(HttpStatus.OK)
 @RequestMapping(value = "/api/consumers/{consumerId}/tasks/{taskId}/files",
         produces = MediaType.APPLICATION_JSON_VALUE, consumes = MediaType.APPLICATION_JSON_VALUE)
 public class AttachedFileController {
