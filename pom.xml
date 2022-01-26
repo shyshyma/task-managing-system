@@ -115,14 +115,33 @@
                 <version>3.1.0</version>
                 <executions>
                     <execution>
+                        <id>validate-checkstyle-of-main-sources</id>
                         <configuration>
+                            <sourceDirectories>
+                                <sourceDirectory>src/main/java</sourceDirectory>
+                            </sourceDirectories>
                             <configLocation>checkstyle.xml</configLocation>
-                            <configLocation>checkstyle-test.xml</configLocation>
-                            <includeTestSourceDirectory>true</includeTestSourceDirectory>
-                            <excludes>**/mapper/**</excludes>
+                            <encoding>UTF-8</encoding>
+                            <consoleOutput>true</consoleOutput>
+                            <failsOnError>true</failsOnError>
                         </configuration>
-                        <id>verify-checkstyle-of-sources</id>
-                        <phase>compile</phase>
+                        <phase>validate</phase>
+                        <goals>
+                            <goal>check</goal>
+                        </goals>
+                    </execution>
+                    <execution>
+                        <id>validate-checkstyle-of-test-sources</id>
+                        <configuration>
+                            <sourceDirectories>
+                                <sourceDirectory>src/test/java</sourceDirectory>
+                            </sourceDirectories>
+                            <configLocation>checkstyle-test.xml</configLocation>
+                            <encoding>UTF-8</encoding>
+                            <consoleOutput>true</consoleOutput>
+                            <failsOnError>true</failsOnError>
+                        </configuration>
+                        <phase>validate</phase>
                         <goals>
                             <goal>check</goal>
                         </goals>
