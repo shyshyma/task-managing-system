@@ -46,9 +46,6 @@
  -->
 <module name="Checker">
     <property name="charset" value="UTF8"/>
-    <!--  Checks that a package.html file exists for each package.      -->
-    <!--  See http://checkstyle.sf.net/config_javadoc.html#PackageHtml  -->
-    <!-- module name="PackageHtml"/ -->
     <!--  Checks whether files end with a new line.                         -->
     <!--  See http://checkstyle.sf.net/config_misc.html#NewlineAtEndOfFile  -->
     <module name="NewlineAtEndOfFile">
@@ -63,20 +60,12 @@
     <!--  Checks that there are no tab characters ('\t') in the source code.  -->
     <!--  See http://checkstyle.sourceforge.net/config_whitespace.html#FileTabCharacter  -->
     <module name="FileTabCharacter"/>
-    <!--  Checks for Headers                                 -->
-    <!--  See http://checkstyle.sf.net/config_header.html    -->
-    <!--
-        <module name="Header">
-            <property name="headerFile" value="${checkstyle.header.file}"/>
-            <property name="fileExtensions" value="java"/>
-        </module>
-         -->
+    <module name="LineLength">
+        <property name="max" value="150"/>
+        <property name="severity" value="warning"/>
+    </module>
     <module name="TreeWalker">
-        <module name="LineLength">
-            <property name="max" value="150"/>
-            <property name="severity" value="warning"/>
-        </module>
-        <!--  <module name="FileContentsHolder"/>              -->
+        <!--  <module name="FileContentsHolder"/>               -->
         <!--  Suppresses validation for code with annotation SuppressWarnings  -->
         <module name="SuppressWarningsHolder"/>
         <!--  Checks for Naming Conventions.                   -->
@@ -97,11 +86,10 @@
         <!--  defaults to sun.* packages  -->
         <module name="RedundantImport"/>
         <module name="UnusedImports"/>
-        <module name="MethodLength">
-            <property name="max" value="500"/>
-            <property name="severity" value="warning"/>
+        <module name="MethodLength"/>
+        <module name="ParameterNumber">
+            <property name="max" value="8"/>
         </module>
-        <module name="ParameterNumber"/>
         <!--  Checks for whitespace                                -->
         <!--  See http://checkstyle.sf.net/config_whitespace.html  -->
         <module name="EmptyForIteratorPad"/>
@@ -142,33 +130,39 @@
         <module name="NeedBraces"/>
         <module name="RightCurly"/>
         <!--  Checks for common coding problems                -->
-        <!--  MY FAVOURITE  -->
+        <!--  See http://checkstyle.sf.net/config_coding.html  -->
+        <!--  MY FAVORITE  -->
         <module name="EmptyStatement"/>
         <module name="EqualsAvoidNull"/>
         <module name="EqualsHashCode"/>
         <module name="CovariantEquals"/>
         <module name="IllegalInstantiation"/>
         <module name="InnerAssignment"/>
+        <module name="MagicNumber">
+            <property name="ignoreNumbers" value="-1, 0, 0.5, 1, 2, 10, 100"/>
+            <property name="ignoreHashCodeMethod" value="true"/>
+            <property name="ignoreAnnotation" value="true"/>
+        </module>
         <module name="MissingSwitchDefault"/>
+        <!--  <module name="RedundantThrows"/> -->
         <!-- module name="IllegalThrows"/ -->
         <module name="SimplifyBooleanExpression"/>
         <module name="SimplifyBooleanReturn"/>
         <!-- module name="ParameterAssignment"/ -->
-        <module name="MultipleVariableDeclarations">
-            <property name="severity" value="warning"/>
-        </module>
+        <module name="MultipleVariableDeclarations"/>
+        <module name="NoFinalizer"/>
         <!--  Checks for class design                          -->
         <!--  See http://checkstyle.sf.net/config_design.html  -->
-        <module name="FinalClass">
-            <property name="severity" value="info"/>
-        </module>
+        <module name="FinalClass"/>
         <module name="HideUtilityClassConstructor"/>
         <module name="SuppressionXpathSingleFilter">
             <property name="checks" value="HideUtilityClassConstructor"/>
             <property name="query" value="//*[MODIFIERS//*[@text = 'UtilityClass' or @text='NoArgsConstructor' or @text = 'SpringBootApplication']]/descendant-or-self::node()"/>
         </module>
         <module name="InterfaceIsType"/>
-        <module name="VisibilityModifier"/>
+        <module name="VisibilityModifier">
+            <property name="protectedAllowed" value="true"/>
+        </module>
         <!--  Miscellaneous other checks.                    -->
         <!--  See http://checkstyle.sf.net/config_misc.html  -->
         <module name="ArrayTypeStyle"/>
@@ -177,7 +171,19 @@
         </module>
         <module name="UpperEll"/>
         <!--  Suppresses validation between CHECKSTYLE:ON and CHECKSTYLE:OFF  -->
-        <module name="SuppressionCommentFilter"/>
+        <module name="SuppressionXpathSingleFilter">
+            <property name="checks" value="HideUtilityClassConstructor"/>
+            <property name="query" value="//*[MODIFIERS//*[@text = 'UtilityClass' or @text='NoArgsConstructor' or @text = 'SpringBootApplication']]/descendant-or-self::node()"/>
+        </module>
+        <module name="SuppressionXpathSingleFilter">
+            <property name="checks" value="(MemberName|VisibilityModifier)"/>
+            <property name="query" value="//*[MODIFIERS//*[@text = 'UtilityClass']]/descendant-or-self::node()"/>
+        </module>
+        <module name="SuppressionCommentFilter">
+            <property name="offCommentFormat" value="CHECKSTYLE\:OFF\: ([\w\|]+)"/>
+            <property name="onCommentFormat" value="CHECKSTYLE\:ON\: ([\w\|]+)"/>
+            <property name="checkFormat" value="$1"/>
+        </module>
     </module>
     <!--  Suppresses validation for code with annotation SuppressWarnings  -->
     <module name="SuppressWarningsFilter"/>

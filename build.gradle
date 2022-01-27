@@ -1,0 +1,61 @@
+plugins {
+    id "java"
+    id "org.springframework.boot" version "2.6.2"
+    id "io.spring.dependency-management" version "1.0.11.RELEASE"
+    id "checkstyle"
+    id "war"
+}
+
+group = "org.itransition"
+version = "1.0"
+description = "Provides simple RESTful API for managing tasks"
+
+sourceCompatibility = "17"
+targetCompatibility = "17"
+
+checkstyle {
+    toolVersion "9.1"
+    ignoreFailures = false
+    reportsDir = file "$buildDir/checkstyle-reports"
+}
+
+checkstyleMain {
+    source = "src/main/java"
+    configFile = file "checkstyles/checkstyle.xml"
+}
+
+checkstyleTest {
+    source = "src/test/java"
+    configFile = file "checkstyles/checkstyle-test.xml"
+}
+
+repositories {
+    mavenCentral()
+}
+
+dependencies {
+    implementation "mysql:mysql-connector-java:8.0.27"
+
+    implementation "org.liquibase:liquibase-core:4.6.2"
+
+    implementation "org.apache.commons:commons-lang3:3.12.0"
+
+    implementation "org.springframework.boot:spring-boot-starter-web"
+    implementation "org.springframework.boot:spring-boot-starter-data-jpa"
+    implementation "org.springframework.boot:spring-boot-starter-validation"
+    testImplementation "org.springframework.boot:spring-boot-starter-test"
+
+    compileOnly "org.projectlombok:lombok:1.18.22"
+    annotationProcessor "org.projectlombok:lombok:1.18.22"
+    testCompileOnly "org.projectlombok:lombok:1.18.22"
+    testAnnotationProcessor "org.projectlombok:lombok:1.18.22"
+
+    implementation "org.mapstruct:mapstruct:1.4.2.Final"
+    annotationProcessor "org.mapstruct:mapstruct-processor:1.4.2.Final"
+
+    testImplementation "com.github.javafaker:javafaker:1.0.2"
+}
+
+test {
+    useJUnitPlatform()
+}

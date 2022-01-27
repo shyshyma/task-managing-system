@@ -18,7 +18,7 @@ import java.util.Date;
 
 public final class JpaUtils {
 
-    private JpaUtils(){
+    private JpaUtils() {
     }
 
     private static final Faker FAKER = new Faker();
