@@ -1,0 +1,69 @@
+plugins {
+    id "java"
+    id "org.springframework.boot" version "2.6.2"
+    id "io.spring.dependency-management" version "1.0.11.RELEASE"
+    id "checkstyle"
+    id "war"
+}
+
+group = "org.itransition"
+version = "1.0"
+description = "Provides simple RESTful API for managing tasks"
+
+sourceCompatibility = "17"
+targetCompatibility = "17"
+
+checkstyle {
+    toolVersion "9.1"
+    ignoreFailures = false
+    reportsDir = file "$buildDir/checkstyle-reports"
+}
+
+checkstyleMain {
+    source = "src/main/java"
+    configFile = file "checkstyles/checkstyle.xml"
+}
+
+checkstyleTest {
+    source = "src/test/java"
+    configFile = file "checkstyles/checkstyle-test.xml"
+}
+
+repositories {
+    mavenCentral()
+}
+
+ext {
+    mysqlConnectorVersion = '8.0.25'
+    liquibaseVersion = "4.6.2"
+    commonsLangVersion = "3.12.0"
+    mapStructVersion = "1.4.2.Final"
+    lombokVersion = "1.18.22"
+    javaFakerVersion = "1.0.2"
+}
+
+dependencies {
+    implementation "org.springframework.boot:spring-boot-starter-web"
+    implementation "org.springframework.boot:spring-boot-starter-data-jpa"
+    implementation "org.springframework.boot:spring-boot-starter-validation"
+    implementation "mysql:mysql-connector-java:$mysqlConnectorVersion"
+    implementation "org.liquibase:liquibase-core:$liquibaseVersion"
+    implementation "org.apache.commons:commons-lang3:$commonsLangVersion"
+    implementation "org.mapstruct:mapstruct:$mapStructVersion"
+
+    compileOnly "org.projectlombok:lombok:$lombokVersion"
+
+    annotationProcessor "org.projectlombok:lombok:$lombokVersion"
+    annotationProcessor "org.mapstruct:mapstruct-processor:$mapStructVersion"
+
+    testImplementation "org.springframework.boot:spring-boot-starter-test"
+    testImplementation "com.github.javafaker:javafaker:$javaFakerVersion"
+
+    testCompileOnly "org.projectlombok:lombok:$lombokVersion"
+
+    testAnnotationProcessor "org.projectlombok:lombok:$lombokVersion"
+}
+
+test {
+    useJUnitPlatform()
+}

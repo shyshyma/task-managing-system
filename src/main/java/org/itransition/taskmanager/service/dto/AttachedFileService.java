@@ -50,14 +50,14 @@ public class AttachedFileService {
                                                   Long taskId,
                                                   Long consumerId) {
 
-        log.info("Saving '" + ENTITY_NAME + "' entity with unique name {} to '" + PARENT_ENTITY_NAME +
-                "' entity with id {} and to 'consumer' entity with id {}" +
-                " to the JPA datasource unit", attachedFileDto.getName(), taskId, consumerId);
+        log.info("Saving '" + ENTITY_NAME + "' entity with unique name {} to '" + PARENT_ENTITY_NAME
+                + "' entity with id {} and to 'consumer' entity with id {}"
+                + " to the JPA datasource unit", attachedFileDto.getName(), taskId, consumerId);
 
         if (!taskService.existsByIdAndConsumerId(taskId, consumerId)) {
             throw new ModelNotFoundException("there is no '" + PARENT_ENTITY_NAME
-                    + "' entity with id " + taskId + ", who has parent" +
-                    " 'consumer' entity by id " + consumerId);
+                    + "' entity with id " + taskId + ", who has parent"
+                    + " 'consumer' entity by id " + consumerId);
         }
 
         TaskDto byIdAndConsumerId = taskService.findByIdAndConsumerId(taskId, consumerId);
@@ -80,9 +80,9 @@ public class AttachedFileService {
                                                     Long taskId,
                                                     Long consumerId) {
 
-        log.info("Saving '" + ENTITY_NAME + "' entity with unique name {} to '" + PARENT_ENTITY_NAME +
-                "' entity with id {} and to 'consumer' entity with id {} " +
-                "to the JPA datasource unit", attachedFileDto.getName(), taskId, consumerId);
+        log.info("Saving '" + ENTITY_NAME + "' entity with unique name {} to '" + PARENT_ENTITY_NAME
+                + "' entity with id {} and to 'consumer' entity with id {} "
+                + "to the JPA datasource unit", attachedFileDto.getName(), taskId, consumerId);
 
         String fileName = attachedFileDto.getName();
         AttachedFile attachedFileFromRepo = findByNameAndTaskIdAndTaskConsumerIdOrThrow(
@@ -104,9 +104,9 @@ public class AttachedFileService {
                                                            Long consumerId,
                                                            Pageable pageable) {
 
-        log.info("Fetching '" + ENTITY_NAME + "' entities who have relationship with '" +
-                PARENT_ENTITY_NAME + "' entity with id {} and with 'consumer' with id" +
-                " {} from the JPA datastore unit", taskId, consumerId);
+        log.info("Fetching '" + ENTITY_NAME + "' entities who have relationship with '"
+                + PARENT_ENTITY_NAME + "' entity with id {} and with 'consumer' with id"
+                + " {} from the JPA datastore unit", taskId, consumerId);
 
         return attachedFileRepository.findByTaskIdAndTaskConsumerId(taskId, consumerId, pageable).stream()
                 .map(attachedFileDtoMapper::map)
@@ -118,9 +118,9 @@ public class AttachedFileService {
      * that has relationship with consumer entity(by consumer id)
      */
     public AttachedFileDto findByNameAndTaskIdAndConsumerId(String name, Long taskId, Long consumerId) {
-        log.info("Fetching '" + ENTITY_NAME + "' entity with unique name {}, which attached with '" +
-                PARENT_ENTITY_NAME + "' entity by id {} and with 'consumer' entity by id {}" +
-                " from the JPA datasource unit", name, taskId, consumerId);
+        log.info("Fetching '" + ENTITY_NAME + "' entity with unique name {}, which attached with '"
+                + PARENT_ENTITY_NAME + "' entity by id {} and with 'consumer' entity by id {}"
+                + " from the JPA datasource unit", name, taskId, consumerId);
 
         AttachedFile attachedFile = findByNameAndTaskIdAndTaskConsumerIdOrThrow(name,
                 taskId, consumerId);
@@ -133,13 +133,13 @@ public class AttachedFileService {
      * that has relationship with consumer entity(by consumer id)
      */
     public void deleteByNameAndTaskIdAndConsumerId(String name, Long taskId, Long consumerId) {
-        log.info("Fetching '" + ENTITY_NAME + "' entity with unique name {}, which attached with '" +
-                PARENT_ENTITY_NAME + "' entity by id {} and with 'consumer' entity by id {}" +
-                " from the JPA datasource unit", name, taskId, consumerId);
+        log.info("Fetching '" + ENTITY_NAME + "' entity with unique name {}, which attached with '"
+                + PARENT_ENTITY_NAME + "' entity by id {} and with 'consumer' entity by id {}"
+                + " from the JPA datasource unit", name, taskId, consumerId);
 
         if (!attachedFileRepository.existsByNameAndTaskIdAndTaskConsumerId(name, taskId, consumerId)) {
-            throw new ModelNotFoundException("no entity '" + ENTITY_NAME + "', was found" +
-                    " who has name " + name + " and belongs to '"
+            throw new ModelNotFoundException("no entity '" + ENTITY_NAME + "', was found"
+                    + " who has name " + name + " and belongs to '"
                     + PARENT_ENTITY_NAME + "', 'consumer' entities");
         }
 
@@ -151,8 +151,8 @@ public class AttachedFileService {
                                                                      Long consumerId) {
 
         return attachedFileRepository.findByNameAndTaskIdAndTaskConsumerId(name, taskId, consumerId)
-                .orElseThrow(() -> new ModelNotFoundException("no entity '" + ENTITY_NAME + "'," +
-                        " was found, who has name " + name + " and belongs to '"
+                .orElseThrow(() -> new ModelNotFoundException("no entity '" + ENTITY_NAME + "',"
+                        + " was found, who has name " + name + " and belongs to '"
                         + PARENT_ENTITY_NAME + "', 'consumer' entities"));
     }
 }

@@ -54,8 +54,8 @@ public class TaskService {
      */
     public TaskDto saveToConsumer(TaskDto taskDto, Long consumerId) {
         String title = taskDto.getTitle();
-        log.info("Saving '" + ENTITY_NAME + "' entity with unique title {}" +
-                " to consumer with id {} to the JPA datasource unit", title, consumerId);
+        log.info("Saving '" + ENTITY_NAME + "' entity with unique title {}"
+                + " to consumer with id {} to the JPA datasource unit", title, consumerId);
 
         if (taskRepository.existsByTitle(title)) {
             throw new DuplicateTitleException("there is already exists '" + ENTITY_NAME
@@ -81,8 +81,8 @@ public class TaskService {
      * Updates task entity, if it has consumer parent(by consumer id),
      */
     public TaskDto updateByIdAndConsumerId(Long id, Long consumerId, TaskDto taskDto) {
-        log.info("Updating '" + ENTITY_NAME + "' entity with unique title {} " +
-                "for consumer with id {} to the JPA datasource unit", taskDto.getTitle(), consumerId);
+        log.info("Updating '" + ENTITY_NAME + "' entity with unique title {} "
+                + "for consumer with id {} to the JPA datasource unit", taskDto.getTitle(), consumerId);
 
         Task taskFromRepo = findByIdAndConsumerIdOrThrow(id, consumerId);
 
@@ -96,8 +96,8 @@ public class TaskService {
      * Finds task entity, if it belongs to consumer parent(by consumer id)
      */
     public TaskDto findByIdAndConsumerId(Long id, Long consumerId) {
-        log.info("Fetching '" + ENTITY_NAME + "' entity with id {} who have relationship with '" +
-                PARENT_ENTITY_NAME + "' entity with id {} from the JPA datasource unit", id, consumerId);
+        log.info("Fetching '" + ENTITY_NAME + "' entity with id {} who have relationship with '"
+                + PARENT_ENTITY_NAME + "' entity with id {} from the JPA datasource unit", id, consumerId);
 
         Task taskByIdAndConsumerId = findByIdAndConsumerIdOrThrow(id, consumerId);
 
@@ -108,9 +108,9 @@ public class TaskService {
      * Finds task entities, that belongs to consumer parent(by consumer id)
      */
     public List<TaskDto> findByConsumerId(Long consumerId, Pageable pageable) {
-        log.info("Fetching '" + ENTITY_NAME + "' entities who have relationship to '" +
-                PARENT_ENTITY_NAME + "' parent entity with id {} from" +
-                " the JPA datastore unit", consumerId);
+        log.info("Fetching '" + ENTITY_NAME + "' entities who have relationship to '"
+                + PARENT_ENTITY_NAME + "' parent entity with id {} from"
+                + " the JPA datastore unit", consumerId);
 
         return taskRepository.findByConsumerId(consumerId, pageable).stream()
                 .map(taskDtoMapper::map)
@@ -121,14 +121,14 @@ public class TaskService {
      * Delete task entity, if it has consumer parent(by consumer id)
      */
     public void deleteByIdAndConsumerId(Long id, Long consumerId) {
-        log.info("Deleting '" + ENTITY_NAME + "' entity by id {}, who has" +
-                " relationship to '" + PARENT_ENTITY_NAME + "' parent entity by id {} from" +
-                " the JPA datastore unit", id, consumerId);
+        log.info("Deleting '" + ENTITY_NAME + "' entity by id {}, who has"
+                + " relationship to '" + PARENT_ENTITY_NAME + "' parent entity by id {} from"
+                + " the JPA datastore unit", id, consumerId);
 
         if (!taskRepository.existsByIdAndConsumerId(id, consumerId)) {
             throw new ModelNotFoundException("there is no '" + ENTITY_NAME
-                    + "' entity with id " + id + ", who has parent" +
-                    " '" + PARENT_ENTITY_NAME + "' entity by id " + consumerId);
+                    + "' entity with id " + id + ", who has parent"
+                    + " '" + PARENT_ENTITY_NAME + "' entity by id " + consumerId);
         }
 
         taskRepository.deleteByIdAndConsumerId(id, consumerId);
@@ -137,7 +137,7 @@ public class TaskService {
     private Task findByIdAndConsumerIdOrThrow(Long id, Long consumerId) {
         return taskRepository.findByIdAndConsumerId(id, consumerId)
                 .orElseThrow(() -> new ModelNotFoundException("there is no '" + ENTITY_NAME
-                        + "' entity with id " + id + ", who has parent" +
-                        " '" + PARENT_ENTITY_NAME + "' entity with id " + consumerId));
+                        + "' entity with id " + id + ", who has parent"
+                        + " '" + PARENT_ENTITY_NAME + "' entity with id " + consumerId));
     }
 }
