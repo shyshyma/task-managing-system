@@ -3,15 +3,16 @@ package org.itransition.taskmanager.service.dto;
 import org.itransition.taskmanager.exception.DuplicateEmailException;
 import org.itransition.taskmanager.exception.ModelNotFoundException;
 import org.itransition.taskmanager.mapper.dto.ConsumerDtoMapper;
+import org.itransition.taskmanager.mapper.dto.ConsumerDtoMapperImpl;
 import org.itransition.taskmanager.mapper.jpa.ConsumerJpaMapper;
 import org.itransition.taskmanager.dto.ConsumerDto;
 import org.itransition.taskmanager.jpa.entity.Consumer;
 import org.itransition.taskmanager.jpa.dao.ConsumerRepository;
+import org.itransition.taskmanager.mapper.jpa.ConsumerJpaMapperImpl;
 import org.itransition.taskmanager.utils.DtoUtils;
 import org.itransition.taskmanager.utils.JpaUtils;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
-import org.mapstruct.factory.Mappers;
 import org.mockito.junit.jupiter.MockitoExtension;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageImpl;
@@ -26,8 +27,7 @@ import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertNotNull;
 import static org.mockito.Mockito.when;
 import static org.mockito.Mockito.verify;
-import static org.mockito.Mockito.any;
-import static org.mockito.Mockito.times;
+import static org.mockito.Mockito.verifyNoMoreInteractions;
 
 import java.util.List;
 import java.util.Optional;
@@ -42,10 +42,10 @@ class ConsumerServiceTest {
     private ConsumerRepository consumerRepository;
 
     @Spy
-    private ConsumerJpaMapper consumerJpaMapper = Mappers.getMapper(ConsumerJpaMapper.class);
+    private ConsumerJpaMapper consumerJpaMapper = new ConsumerJpaMapperImpl();
 
     @Spy
-    private ConsumerDtoMapper consumerDtoMapper = Mappers.getMapper(ConsumerDtoMapper.class);
+    private ConsumerDtoMapper consumerDtoMapper = new ConsumerDtoMapperImpl();
 
     @InjectMocks
     private ConsumerService consumerService;
@@ -61,7 +61,7 @@ class ConsumerServiceTest {
         ConsumerDto expectedConsumerDto = DtoUtils.mapToConsumerDto(consumerFromRepo);
         assertEquals(expectedConsumerDto, actualConsumerDto);
 
-        verify(consumerRepository, times(1))
+        verify(consumerRepository)
                 .findById(CONSUMER_ID);
     }
 
@@ -72,7 +72,7 @@ class ConsumerServiceTest {
         assertThrows(ModelNotFoundException.class,
                 () -> consumerService.findById(CONSUMER_ID));
 
-        verify(consumerRepository, times(1))
+        verify(consumerRepository)
                 .findById(CONSUMER_ID);
     }
 
@@ -91,10 +91,10 @@ class ConsumerServiceTest {
         ConsumerDto actualConsumerDto = consumerService.save(consumerDto);
         assertNotNull(actualConsumerDto);
 
-        verify(consumerRepository, times(1))
+        verify(consumerRepository)
                 .existsByEmail(CONSUMER_EMAIL);
 
-        verify(consumerRepository, times(1))
+        verify(consumerRepository)
                 .save(consumer);
     }
 
@@ -109,11 +109,10 @@ class ConsumerServiceTest {
         assertThrows(DuplicateEmailException.class,
                 () -> consumerService.save(consumerDto));
 
-        verify(consumerRepository, times(1))
+        verify(consumerRepository)
                 .existsByEmail(CONSUMER_EMAIL);
 
-        verify(consumerRepository, times(0))
-                .save(any(Consumer.class));
+        verifyNoMoreInteractions(consumerRepository);
     }
 
     @Test
@@ -132,10 +131,10 @@ class ConsumerServiceTest {
 
         assertNotNull(consumerDtoFromService);
 
-        verify(consumerRepository, times(1))
+        verify(consumerRepository)
                 .findById(CONSUMER_ID);
 
-        verify(consumerRepository, times(1))
+        verify(consumerRepository)
                 .save(consumer);
     }
 
@@ -150,11 +149,10 @@ class ConsumerServiceTest {
         assertThrows(ModelNotFoundException.class,
                 () -> consumerService.updateById(CONSUMER_ID, consumerDto));
 
-        verify(consumerRepository, times(1))
+        verify(consumerRepository)
                 .findById(CONSUMER_ID);
 
-        verify(consumerRepository, times(0))
-                .save(consumer);
+        verifyNoMoreInteractions(consumerRepository);
     }
 
     @Test
@@ -168,7 +166,7 @@ class ConsumerServiceTest {
         List<ConsumerDto> consumerDtos = consumerService.find(pageable);
         assertEquals(2, consumerDtos.size());
 
-        verify(consumerRepository, times(1))
+        verify(consumerRepository)
                 .findAll(pageable);
     }
 
@@ -179,10 +177,10 @@ class ConsumerServiceTest {
 
         consumerService.deleteById(CONSUMER_ID);
 
-        verify(consumerRepository, times(1))
+        verify(consumerRepository)
                 .existsById(CONSUMER_ID);
 
-        verify(consumerRepository, times(1))
+        verify(consumerRepository)
                 .deleteById(CONSUMER_ID);
     }
 
@@ -194,10 +192,9 @@ class ConsumerServiceTest {
         assertThrows(ModelNotFoundException.class,
                 () -> consumerService.deleteById(CONSUMER_ID));
 
-        verify(consumerRepository, times(1))
+        verify(consumerRepository)
                 .existsById(CONSUMER_ID);
 
-        verify(consumerRepository, times(0))
-                .deleteById(CONSUMER_ID);
+        verifyNoMoreInteractions(consumerRepository);
     }
 }

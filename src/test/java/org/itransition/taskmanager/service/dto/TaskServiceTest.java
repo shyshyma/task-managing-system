@@ -3,17 +3,19 @@ package org.itransition.taskmanager.service.dto;
 import org.itransition.taskmanager.exception.DuplicateTitleException;
 import org.itransition.taskmanager.exception.ModelNotFoundException;
 import org.itransition.taskmanager.mapper.dto.TaskDtoMapper;
+import org.itransition.taskmanager.mapper.dto.TaskDtoMapperImpl;
 import org.itransition.taskmanager.mapper.jpa.ConsumerJpaMapper;
+import org.itransition.taskmanager.mapper.jpa.ConsumerJpaMapperImpl;
 import org.itransition.taskmanager.mapper.jpa.TaskJpaMapper;
 import org.itransition.taskmanager.dto.ConsumerDto;
 import org.itransition.taskmanager.dto.TaskDto;
 import org.itransition.taskmanager.jpa.entity.Task;
 import org.itransition.taskmanager.jpa.dao.TaskRepository;
+import org.itransition.taskmanager.mapper.jpa.TaskJpaMapperImpl;
 import org.itransition.taskmanager.utils.DtoUtils;
 import org.itransition.taskmanager.utils.JpaUtils;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
-import org.mapstruct.factory.Mappers;
 import org.mockito.junit.jupiter.MockitoExtension;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageImpl;
@@ -28,10 +30,10 @@ import static org.junit.jupiter.api.Assertions.assertThrows;
 import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.mockito.Mockito.when;
 import static org.mockito.Mockito.verify;
+import static org.mockito.Mockito.verifyNoMoreInteractions;
 import static org.mockito.Mockito.anyLong;
 import static org.mockito.Mockito.anyString;
 import static org.mockito.Mockito.any;
-import static org.mockito.Mockito.times;
 
 import java.util.List;
 import java.util.Optional;
@@ -50,13 +52,13 @@ class TaskServiceTest {
     private ConsumerService consumerService;
 
     @Spy
-    private TaskDtoMapper taskDtoMapper = Mappers.getMapper(TaskDtoMapper.class);
+    private TaskDtoMapper taskDtoMapper = new TaskDtoMapperImpl();
 
     @Spy
-    private TaskJpaMapper taskJpaMapper = Mappers.getMapper(TaskJpaMapper.class);
+    private TaskJpaMapper taskJpaMapper = new TaskJpaMapperImpl();
 
     @Spy
-    private ConsumerJpaMapper consumerJpaMapper = Mappers.getMapper(ConsumerJpaMapper.class);
+    private ConsumerJpaMapper consumerJpaMapper = new ConsumerJpaMapperImpl();
 
     @InjectMocks
     private TaskService taskService;
@@ -81,16 +83,16 @@ class TaskServiceTest {
         TaskDto taskDtoFromService = taskService.saveToConsumer(taskDto, CONSUMER_ID);
         assertNotNull(taskDtoFromService);
 
-        verify(taskRepository, times(1))
+        verify(taskRepository)
                 .existsByTitle(anyString());
 
-        verify(consumerService, times(1))
+        verify(consumerService)
                 .existsById(anyLong());
 
-        verify(consumerService, times(1))
+        verify(consumerService)
                 .findById(anyLong());
 
-        verify(taskRepository, times(1))
+        verify(taskRepository)
                 .save(any(Task.class));
     }
 
@@ -104,17 +106,12 @@ class TaskServiceTest {
         assertThrows(DuplicateTitleException.class,
                 () -> taskService.saveToConsumer(taskDto, CONSUMER_ID));
 
-        verify(taskRepository, times(1))
+        verify(taskRepository)
                 .existsByTitle(TASK_TITLE);
 
-        verify(consumerService, times(0))
-                .existsById(CONSUMER_ID);
+        verifyNoMoreInteractions(consumerService);
 
-        verify(consumerService, times(0))
-                .findById(CONSUMER_ID);
-
-        verify(taskRepository, times(0))
-                .save(any(Task.class));
+        verifyNoMoreInteractions(taskRepository);
     }
 
     @Test
@@ -128,17 +125,15 @@ class TaskServiceTest {
         assertThrows(ModelNotFoundException.class,
                 () -> taskService.saveToConsumer(taskDto, CONSUMER_ID));
 
-        verify(taskRepository, times(1))
+        verify(taskRepository)
                 .existsByTitle(TASK_TITLE);
 
-        verify(consumerService, times(1))
+        verify(consumerService)
                 .existsById(CONSUMER_ID);
 
-        verify(consumerService, times(0))
-                .findById(CONSUMER_ID);
+        verifyNoMoreInteractions(consumerService);
 
-        verify(taskRepository, times(0))
-                .save(any(Task.class));
+        verifyNoMoreInteractions(taskRepository);
     }
 
     @Test
@@ -156,10 +151,10 @@ class TaskServiceTest {
 
         assertNotNull(taskDtoFromService);
 
-        verify(taskRepository, times(1))
+        verify(taskRepository)
                 .findByIdAndConsumerId(TASK_ID, CONSUMER_ID);
 
-        verify(taskRepository, times(1)).save(task);
+        verify(taskRepository).save(task);
     }
 
     @Test
@@ -170,11 +165,10 @@ class TaskServiceTest {
         assertThrows(ModelNotFoundException.class,
                 () -> taskService.findByIdAndConsumerId(TASK_ID, CONSUMER_ID));
 
-        verify(taskRepository, times(1))
+        verify(taskRepository)
                 .findByIdAndConsumerId(TASK_ID, CONSUMER_ID);
 
-        verify(taskRepository, times(0))
-                .save(any(Task.class));
+        verifyNoMoreInteractions(taskRepository);
     }
 
     @Test
@@ -190,7 +184,7 @@ class TaskServiceTest {
 
         assertNotNull(taskDtoFromService);
 
-        verify(taskRepository, times(1))
+        verify(taskRepository)
                 .findByIdAndConsumerId(TASK_ID, CONSUMER_ID);
     }
 
@@ -202,7 +196,7 @@ class TaskServiceTest {
         assertThrows(ModelNotFoundException.class,
                 () -> taskService.findByIdAndConsumerId(TASK_ID, CONSUMER_ID));
 
-        verify(taskRepository, times(1))
+        verify(taskRepository)
                 .findByIdAndConsumerId(TASK_ID, CONSUMER_ID);
     }
 
@@ -218,7 +212,7 @@ class TaskServiceTest {
         List<TaskDto> taskDtos = taskService.findByConsumerId(CONSUMER_ID, pageable);
         assertEquals(2, taskDtos.size());
 
-        verify(taskRepository, times(1))
+        verify(taskRepository)
                 .findByConsumerId(CONSUMER_ID, pageable);
     }
 
@@ -229,10 +223,10 @@ class TaskServiceTest {
 
         taskService.deleteByIdAndConsumerId(TASK_ID, CONSUMER_ID);
 
-        verify(taskRepository, times(1))
+        verify(taskRepository)
                 .existsByIdAndConsumerId(TASK_ID, CONSUMER_ID);
 
-        verify(taskRepository, times(1))
+        verify(taskRepository)
                 .deleteByIdAndConsumerId(TASK_ID, CONSUMER_ID);
     }
 
@@ -244,10 +238,9 @@ class TaskServiceTest {
         assertThrows(ModelNotFoundException.class,
                 () -> taskService.deleteByIdAndConsumerId(TASK_ID, CONSUMER_ID));
 
-        verify(taskRepository, times(1))
+        verify(taskRepository)
                 .existsByIdAndConsumerId(TASK_ID, CONSUMER_ID);
 
-        verify(taskRepository, times(0))
-                .deleteByIdAndConsumerId(TASK_ID, CONSUMER_ID);
+        verifyNoMoreInteractions(taskRepository);
     }
 }

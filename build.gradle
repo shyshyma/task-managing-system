@@ -33,27 +33,35 @@ repositories {
     mavenCentral()
 }
 
+ext {
+    mysqlConnectorVersion = '8.0.25'
+    liquibaseVersion = "4.6.2"
+    commonsLangVersion = "3.12.0"
+    mapStructVersion = "1.4.2.Final"
+    lombokVersion = "1.18.22"
+    javaFakerVersion = "1.0.2"
+}
+
 dependencies {
-    implementation "mysql:mysql-connector-java:8.0.27"
-
-    implementation "org.liquibase:liquibase-core:4.6.2"
-
-    implementation "org.apache.commons:commons-lang3:3.12.0"
-
     implementation "org.springframework.boot:spring-boot-starter-web"
     implementation "org.springframework.boot:spring-boot-starter-data-jpa"
     implementation "org.springframework.boot:spring-boot-starter-validation"
+    implementation "mysql:mysql-connector-java:$mysqlConnectorVersion"
+    implementation "org.liquibase:liquibase-core:$liquibaseVersion"
+    implementation "org.apache.commons:commons-lang3:$commonsLangVersion"
+    implementation "org.mapstruct:mapstruct:$mapStructVersion"
+
+    compileOnly "org.projectlombok:lombok:$lombokVersion"
+
+    annotationProcessor "org.projectlombok:lombok:$lombokVersion"
+    annotationProcessor "org.mapstruct:mapstruct-processor:$mapStructVersion"
+
     testImplementation "org.springframework.boot:spring-boot-starter-test"
+    testImplementation "com.github.javafaker:javafaker:$javaFakerVersion"
 
-    compileOnly "org.projectlombok:lombok:1.18.22"
-    annotationProcessor "org.projectlombok:lombok:1.18.22"
-    testCompileOnly "org.projectlombok:lombok:1.18.22"
-    testAnnotationProcessor "org.projectlombok:lombok:1.18.22"
+    testCompileOnly "org.projectlombok:lombok:$lombokVersion"
 
-    implementation "org.mapstruct:mapstruct:1.4.2.Final"
-    annotationProcessor "org.mapstruct:mapstruct-processor:1.4.2.Final"
-
-    testImplementation "com.github.javafaker:javafaker:1.0.2"
+    testAnnotationProcessor "org.projectlombok:lombok:$lombokVersion"
 }
 
 test {

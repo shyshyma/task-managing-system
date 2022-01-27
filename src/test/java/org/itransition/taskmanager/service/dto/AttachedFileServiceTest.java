@@ -3,17 +3,20 @@ package org.itransition.taskmanager.service.dto;
 import org.itransition.taskmanager.dto.FileMetadataDto;
 import org.itransition.taskmanager.exception.ModelNotFoundException;
 import org.itransition.taskmanager.mapper.dto.AttachedFileDtoMapper;
+import org.itransition.taskmanager.mapper.dto.AttachedFileDtoMapperImpl;
 import org.itransition.taskmanager.mapper.dto.FileMetadataDtoMapper;
+import org.itransition.taskmanager.mapper.dto.FileMetadataDtoMapperImpl;
 import org.itransition.taskmanager.mapper.jpa.AttachedFileJpaMapper;
+import org.itransition.taskmanager.mapper.jpa.AttachedFileJpaMapperImpl;
 import org.itransition.taskmanager.mapper.jpa.TaskJpaMapper;
 import org.itransition.taskmanager.dto.AttachedFileDto;
 import org.itransition.taskmanager.jpa.entity.AttachedFile;
 import org.itransition.taskmanager.jpa.dao.AttachedFileRepository;
+import org.itransition.taskmanager.mapper.jpa.TaskJpaMapperImpl;
 import org.itransition.taskmanager.utils.DtoUtils;
 import org.itransition.taskmanager.utils.JpaUtils;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
-import org.mapstruct.factory.Mappers;
 import org.mockito.InjectMocks;
 import org.mockito.Mock;
 import org.mockito.Spy;
@@ -29,7 +32,7 @@ import java.util.Optional;
 import static org.mockito.Mockito.when;
 import static org.mockito.Mockito.verify;
 import static org.mockito.Mockito.any;
-import static org.mockito.Mockito.times;
+import static org.mockito.Mockito.verifyNoMoreInteractions;
 import static org.junit.jupiter.api.Assertions.assertNotNull;
 import static org.junit.jupiter.api.Assertions.assertThrows;
 import static org.junit.jupiter.api.Assertions.assertEquals;
@@ -48,16 +51,16 @@ class AttachedFileServiceTest {
     private AttachedFileRepository attachedFileRepository;
 
     @Spy
-    private AttachedFileDtoMapper attachedFileDtoMapper = Mappers.getMapper(AttachedFileDtoMapper.class);
+    private AttachedFileDtoMapper attachedFileDtoMapper = new AttachedFileDtoMapperImpl();
 
     @Spy
-    private TaskJpaMapper taskJpaMapper = Mappers.getMapper(TaskJpaMapper.class);
+    private TaskJpaMapper taskJpaMapper = new TaskJpaMapperImpl();
 
     @Spy
-    private FileMetadataDtoMapper fileMetadataDtoMapper = Mappers.getMapper(FileMetadataDtoMapper.class);
+    private FileMetadataDtoMapper fileMetadataDtoMapper = new FileMetadataDtoMapperImpl();
 
     @Spy
-    private AttachedFileJpaMapper attachedFileJpaMapper = Mappers.getMapper(AttachedFileJpaMapper.class);
+    private AttachedFileJpaMapper attachedFileJpaMapper = new AttachedFileJpaMapperImpl();
 
     @InjectMocks
     private AttachedFileService attachedFileService;
@@ -73,13 +76,13 @@ class AttachedFileServiceTest {
 
         assertNotNull(fileMetadataDto);
 
-        verify(taskDtoService, times(1))
+        verify(taskDtoService)
                 .existsByIdAndConsumerId(TASK_ID, CONSUMER_ID);
 
-        verify(taskDtoService, times(1))
+        verify(taskDtoService)
                 .findByIdAndConsumerId(TASK_ID, CONSUMER_ID);
 
-        verify(attachedFileRepository, times(1))
+        verify(attachedFileRepository)
                 .save(any(AttachedFile.class));
     }
 
@@ -93,14 +96,11 @@ class AttachedFileServiceTest {
                 () -> attachedFileService
                         .saveToTaskWithConsumer(attachedFileDto, TASK_ID, CONSUMER_ID));
 
-        verify(taskDtoService, times(1))
+        verify(taskDtoService)
                 .existsByIdAndConsumerId(TASK_ID, CONSUMER_ID);
 
-        verify(taskDtoService, times(0))
-                .findByIdAndConsumerId(TASK_ID, CONSUMER_ID);
-
-        verify(attachedFileRepository, times(0))
-                .save(any(AttachedFile.class));
+        verifyNoMoreInteractions(taskDtoService);
+        verifyNoMoreInteractions(attachedFileRepository);
     }
 
     @Test
@@ -118,10 +118,10 @@ class AttachedFileServiceTest {
 
         assertNotNull(fileMetadataDto);
 
-        verify(attachedFileRepository, times(1))
+        verify(attachedFileRepository)
                 .findByNameAndTaskIdAndTaskConsumerId(ATTACHED_FILE_NAME, TASK_ID, CONSUMER_ID);
 
-        verify(attachedFileRepository, times(1))
+        verify(attachedFileRepository)
                 .save(any(AttachedFile.class));
     }
 
@@ -138,11 +138,10 @@ class AttachedFileServiceTest {
                 () -> attachedFileService
                         .updateToTaskWithConsumer(attachedFileDto, TASK_ID, CONSUMER_ID));
 
-        verify(attachedFileRepository, times(1))
+        verify(attachedFileRepository)
                 .findByNameAndTaskIdAndTaskConsumerId(ATTACHED_FILE_NAME, TASK_ID, CONSUMER_ID);
 
-        verify(attachedFileRepository, times(0))
-                .save(any(AttachedFile.class));
+        verifyNoMoreInteractions(attachedFileRepository);
     }
 
     @Test
@@ -162,7 +161,7 @@ class AttachedFileServiceTest {
 
         assertEquals(2, attachedFileDtos.size());
 
-        verify(attachedFileRepository, times(1))
+        verify(attachedFileRepository)
                 .findByTaskIdAndTaskConsumerId(TASK_ID, CONSUMER_ID, pageable);
     }
 
@@ -181,7 +180,7 @@ class AttachedFileServiceTest {
 
         assertEquals(expectedTaskDto, actualTaskDto);
 
-        verify(attachedFileRepository, times(1))
+        verify(attachedFileRepository)
                 .findByNameAndTaskIdAndTaskConsumerId(ATTACHED_FILE_NAME, TASK_ID, CONSUMER_ID);
     }
 
@@ -195,7 +194,7 @@ class AttachedFileServiceTest {
                 () -> attachedFileService.findByNameAndTaskIdAndConsumerId(
                         ATTACHED_FILE_NAME, TASK_ID, CONSUMER_ID));
 
-        verify(attachedFileRepository, times(1))
+        verify(attachedFileRepository)
                 .findByNameAndTaskIdAndTaskConsumerId(ATTACHED_FILE_NAME, TASK_ID, CONSUMER_ID);
     }
 
@@ -207,10 +206,10 @@ class AttachedFileServiceTest {
 
         attachedFileService.deleteByNameAndTaskIdAndConsumerId(ATTACHED_FILE_NAME, TASK_ID, CONSUMER_ID);
 
-        verify(attachedFileRepository, times(1))
+        verify(attachedFileRepository)
                 .existsByNameAndTaskIdAndTaskConsumerId(ATTACHED_FILE_NAME, TASK_ID, CONSUMER_ID);
 
-        verify(attachedFileRepository, times(1))
+        verify(attachedFileRepository)
                 .deleteByNameAndTaskIdAndTaskConsumerId(ATTACHED_FILE_NAME, TASK_ID, CONSUMER_ID);
     }
 
@@ -224,10 +223,9 @@ class AttachedFileServiceTest {
                 () -> attachedFileService
                         .deleteByNameAndTaskIdAndConsumerId(ATTACHED_FILE_NAME, TASK_ID, CONSUMER_ID));
 
-        verify(attachedFileRepository, times(1))
+        verify(attachedFileRepository)
                 .existsByNameAndTaskIdAndTaskConsumerId(ATTACHED_FILE_NAME, TASK_ID, CONSUMER_ID);
 
-        verify(attachedFileRepository, times(0))
-                .deleteByNameAndTaskIdAndTaskConsumerId(ATTACHED_FILE_NAME, TASK_ID, CONSUMER_ID);
+        verifyNoMoreInteractions(attachedFileRepository);
     }
 }
