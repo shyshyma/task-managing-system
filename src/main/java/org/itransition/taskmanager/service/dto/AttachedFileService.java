@@ -3,6 +3,7 @@ package org.itransition.taskmanager.service.dto;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.itransition.taskmanager.dto.FileMetadataDto;
+import org.itransition.taskmanager.exception.DuplicateFileNameException;
 import org.itransition.taskmanager.mapper.dto.FileMetadataDtoMapper;
 import org.itransition.taskmanager.mapper.jpa.TaskJpaMapper;
 import org.itransition.taskmanager.dto.AttachedFileDto;
@@ -58,6 +59,12 @@ public class AttachedFileService {
             throw new ModelNotFoundException("there is no '" + PARENT_ENTITY_NAME
                     + "' entity with id " + taskId + ", who has parent"
                     + " 'consumer' entity by id " + consumerId);
+        }
+
+        String fileName = attachedFileDto.getName();
+        if (attachedFileRepository.existsByName(fileName)) {
+            throw new DuplicateFileNameException("Impossible to persist entity '"
+                    + ENTITY_NAME + "' with name " + fileName + ", because this name is already in use");
         }
 
         TaskDto byIdAndConsumerId = taskService.findByIdAndConsumerId(taskId, consumerId);

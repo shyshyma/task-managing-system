@@ -12,6 +12,7 @@ import org.itransition.taskmanager.jpa.entity.Consumer;
 import org.itransition.taskmanager.jpa.entity.Task;
 import org.mapstruct.factory.Mappers;
 
+import java.time.Instant;
 import java.util.Date;
 
 public final class DtoUtils {
@@ -66,13 +67,9 @@ public final class DtoUtils {
 
         task.setDescription("task from JPA utils");
 
-        int creationDateIntervalStart = FAKER.number().numberBetween(1000, 5000);
-        int creationDateIntervalEnd = FAKER.number().numberBetween(6000, 9000);
-        task.setCreationDate(FAKER.date().between(new Date(creationDateIntervalStart),
-                new Date(creationDateIntervalEnd)));
+        task.setCreationDate(Date.from(Instant.now()));
 
-        int expirationDate = FAKER.number().numberBetween(10000, 15000);
-        task.setExpirationDate(new Date(expirationDate));
+        task.setExpirationDate(Date.from(Instant.now()));
 
         task.setId(FAKER.number().randomNumber());
 

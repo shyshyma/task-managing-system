@@ -10,6 +10,8 @@ import java.util.Optional;
 @Repository
 public interface AttachedFileRepository extends BaseRepository<AttachedFile> {
 
+    boolean existsByName(String name);
+
     boolean existsByNameAndTaskIdAndTaskConsumerId(String name, Long taskId, Long consumerId);
 
     Optional<AttachedFile> findByNameAndTaskIdAndTaskConsumerId(String name, Long taskId, Long consumerId);

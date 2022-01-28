@@ -2,6 +2,7 @@ package org.itransition.taskmanager.config.mvc;
 
 import lombok.RequiredArgsConstructor;
 import org.itransition.taskmanager.dto.ExceptionMetadataDto;
+import org.itransition.taskmanager.exception.DuplicateFileNameException;
 import org.itransition.taskmanager.exception.ModelNotFoundException;
 import org.itransition.taskmanager.exception.DuplicateEmailException;
 import org.itransition.taskmanager.exception.DuplicateTitleException;
@@ -32,6 +33,12 @@ public class ControllerExceptionHandler {
     @ResponseStatus(HttpStatus.BAD_REQUEST)
     @ExceptionHandler(value = DuplicateTitleException.class)
     public ExceptionMetadataDto handleDuplicateTitleException(DuplicateTitleException exception) {
+        return exceptionDtoMapper.map(exception, HttpStatus.BAD_REQUEST);
+    }
+
+    @ResponseStatus(HttpStatus.BAD_REQUEST)
+    @ExceptionHandler(value = DuplicateFileNameException.class)
+    public ExceptionMetadataDto handleDuplicateFileNameException(DuplicateFileNameException exception) {
         return exceptionDtoMapper.map(exception, HttpStatus.BAD_REQUEST);
     }
 }
