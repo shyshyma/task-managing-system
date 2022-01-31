@@ -1,0 +1,16 @@
+insert into task values(1, '2021-05-17 12:20:31', '2024-05-17 12:20:31', ' need to repair car by myself', 0, 'HIGH', 'NEW', 'repair car', 1);
+insert into task values(2, '2021-01-12 14:44:44', '2024-01-12 14:44:44', 'need to learn 4000 eng words', 67, 'LOW', 'IN_PROGRESS', 'learn eng words', 1);
+insert into task values(3, '2022-11-21 17:33:51', '2025-11-21 17:33:51', ' i have to drop junky food fully', 23, 'MEDIUM', 'IN_PROGRESS', 'junky food', 2);
+insert into task values(4, '2021-08-07 22:22:12', '2024-08-07 22:22:12', ' should become master in java', 35, 'HIGH', 'IN_PROGRESS', 'programming', 2);
+insert into task values(5, '2022-04-04 21:11:07', '2026-04-04 21:11:07', ' have to become master in sql', 0, 'LOW', 'NEW', 'database', 3);
+insert into task values(6, '2021-10-02 23:22:00', '2023-10-02 23:22:00', ' need to learn, python and django', 0, 'URGENT', 'NEW', 'new technologies', 3);
+insert into task values(7, '2022-06-06 20:51:15', '2023-06-06 20:51:15', ' I have to learn spanish and japan lang.', 28, 'LOW', 'IN_PROGRESS', 'new languages', 2);
+insert into task values(8, '2021-04-12 23:22:41', '2022-04-12 23:22:41', ' should learn how to dance', 0, 'HIGH', 'NEW', 'sport', 4);
+insert into task values(9, '2022-05-14 21:41:57', '2023-05-14 21:41:57', ' investigate Linci pictures', 33, 'MEDIUM', 'ABANDONED', 'art', 4);
+insert into task values(10, '2021-12-15 19:22:03', '2026-12-15 19:22:03', ' finish to use drugs', 47, 'MEDIUM', 'IN_PROGRESS', 'drugs', 5);
+insert into task values(11, '2022-01-26 23:17:07', '2025-01-26 23:17:07', ' get diploma', 51, 'HIGH', 'ABANDONED', 'studying', 5);
+insert into task values(12, '2021-02-23 22:22:04', '2024-02-23 22:22:04', ' study main terminal commands for linux', 0, 'LOW', 'NEW', 'OS', 5);
+insert into task values(13, '2022-08-17 15:13:08', '2023-08-17 15:13:08', ' learn TCP/IP stack', 100, 'MEDIUM', 'IN_PROGRESS', 'networks', 5);
+insert into task values(14, '2021-02-13 23:22:03', '2022-03-13 23:22:03', ' stop drink alcohol!', 24, 'URGENT', 'ABANDONED', 'bad habits', 4);
+insert into task values(15, '2020-03-22 11:37:13', '2021-03-23 11:37:13', 'play football minimum 1 time per week during year', 19, 'LOW', 'IN_PROGRESS', 'football', 2);
+insert into task values(16, '2021-01-13 09:21:12', '2021-02-13 09:21:12', 'install mysql server', 100, 'HIGH', 'FINISHED', 'mysql', 1);

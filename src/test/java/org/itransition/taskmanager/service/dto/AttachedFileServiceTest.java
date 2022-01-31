@@ -1,6 +1,7 @@
 package org.itransition.taskmanager.service.dto;
 
 import org.itransition.taskmanager.dto.FileMetadataDto;
+import org.itransition.taskmanager.exception.DuplicateFileNameException;
 import org.itransition.taskmanager.exception.ModelNotFoundException;
 import org.itransition.taskmanager.mapper.dto.AttachedFileDtoMapper;
 import org.itransition.taskmanager.mapper.dto.AttachedFileDtoMapperImpl;
@@ -98,6 +99,27 @@ class AttachedFileServiceTest {
 
         verify(taskDtoService)
                 .existsByIdAndConsumerId(TASK_ID, CONSUMER_ID);
+
+        verifyNoMoreInteractions(taskDtoService);
+        verifyNoMoreInteractions(attachedFileRepository);
+    }
+
+    @Test
+    void testSaveToTaskWithConsumerThrowsDuplicateFileNameException() {
+        when(taskDtoService.existsByIdAndConsumerId(TASK_ID, CONSUMER_ID)).thenReturn(true);
+        when(attachedFileRepository.existsByName(ATTACHED_FILE_NAME)).thenReturn(true);
+
+        AttachedFileDto attachedFileDto = DtoUtils.generateAttachedFileDto();
+        attachedFileDto.setName(ATTACHED_FILE_NAME);
+
+        assertThrows(DuplicateFileNameException.class,
+                () -> attachedFileService
+                        .saveToTaskWithConsumer(attachedFileDto, TASK_ID, CONSUMER_ID));
+
+        verify(taskDtoService)
+                .existsByIdAndConsumerId(TASK_ID, CONSUMER_ID);
+
+        verify(attachedFileRepository).existsByName(ATTACHED_FILE_NAME);
 
         verifyNoMoreInteractions(taskDtoService);
         verifyNoMoreInteractions(attachedFileRepository);
