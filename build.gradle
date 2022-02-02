@@ -86,6 +86,8 @@ ext {
     mapStructVersion = "1.4.2.Final"
     lombokVersion = "1.18.22"
     javaFakerVersion = "1.0.2"
+    cloudVersion = '3.1.0'
+    embeddedMySqlVersion = '2.0.20'
 }
 
 dependencies {
@@ -104,6 +106,8 @@ dependencies {
 
     testImplementation "org.springframework.boot:spring-boot-starter-test"
     testImplementation "com.github.javafaker:javafaker:$javaFakerVersion"
+    testImplementation "org.springframework.cloud:spring-cloud-starter-bootstrap:$cloudVersion"
+    testImplementation "com.playtika.testcontainers:embedded-mysql:$embeddedMySqlVersion"
 
     testCompileOnly "org.projectlombok:lombok:$lombokVersion"
 
