@@ -1,0 +1,35 @@
+version: "3.7"
+
+services:
+
+  mysql:
+    image: "mysql:8.0"
+    container_name: taskmanager-mysql
+    environment:
+      MYSQL_RANDOM_ROOT_PASSWORD: "yes"
+      MYSQL_USER: ${MYSQL_USERNAME}
+      MYSQL_PASSWORD: ${MYSQL_PASSWORD}
+      MYSQL_DATABASE: ${MYSQL_DATABASE}
+    volumes:
+      - taskmanager-mysql-data:/var/lib/mysql
+    ports:
+      - "3309:3306"
+
+  taskmanager:
+    container_name: taskmanager-rest-api
+    restart: on-failure
+    build: .
+    environment:
+      DATASOURCE_URL: ${MYSQL_DATASOURCE_URL}
+      DATASOURCE_USERNAME: ${MYSQL_USERNAME}
+      DATASOURCE_PASSWORD: ${MYSQL_PASSWORD}
+    volumes:
+      - taskmanager-logs:/logs
+    ports:
+      - "8085:8080"
+    depends_on:
+      - mysql
+
+volumes:
+  taskmanager-mysql-data:
+  taskmanager-logs:
