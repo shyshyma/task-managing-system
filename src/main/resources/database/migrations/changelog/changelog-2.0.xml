@@ -1,0 +1,36 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<databaseChangeLog
+        xmlns="http://www.liquibase.org/xml/ns/dbchangelog"
+        xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+        xsi:schemaLocation="http://www.liquibase.org/xml/ns/dbchangelog
+         http://www.liquibase.org/xml/ns/dbchangelog/dbchangelog-3.8.xsd">
+
+    <changeSet id="changeset-taskmanager-7" author="ashyshyma">
+        <createIndex tableName="consumer" indexName="ix_consumer_email">
+            <column name="email"/>
+        </createIndex>
+        <createIndex tableName="task" indexName="ix_task_title">
+            <column name="title"/>
+        </createIndex>
+        <createIndex tableName="attached_file" indexName="ix_attached_file_name">
+            <column name="name"/>
+        </createIndex>
+    </changeSet>
+    <changeSet id="changeset-taskmanager-8" author="ashyshyma">
+        <createTable tableName="consumer_config">
+            <column name="id" type="bigint">
+                <constraints primaryKey="true" foreignKeyName="fk_consumer_config_consumer"
+                             references="consumer(id)" deleteCascade="true"/>
+            </column>
+            <column name="notifications_enabled" type="tinyint(1)" defaultValue="false">
+                <constraints nullable="false"/>
+            </column>
+            <column name="email_for_notifications" type="varchar(40)" defaultValue="MISSED">
+                <constraints nullable="false"/>
+            </column>
+            <column name="notification_frequency" type="varchar(30)" defaultValue="PER_MONTH">
+                <constraints nullable="false"/>
+            </column>
+        </createTable>
+    </changeSet>
+</databaseChangeLog>

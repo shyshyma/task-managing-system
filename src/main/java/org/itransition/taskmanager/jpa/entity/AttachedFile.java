@@ -16,6 +16,7 @@ import javax.persistence.FetchType;
 import javax.persistence.CascadeType;
 import javax.persistence.JoinColumn;
 import javax.persistence.ForeignKey;
+import javax.persistence.Index;
 
 @Getter
 @Setter
@@ -23,7 +24,9 @@ import javax.persistence.ForeignKey;
 @AllArgsConstructor
 @Entity
 @EqualsAndHashCode(of = "name", callSuper = true)
-@Table(name = "attached_file", uniqueConstraints = @UniqueConstraint(name = "uk_attached_file", columnNames = "name"))
+@Table(name = "attached_file",
+        indexes = @Index(name = "ix_attached_file_name", columnList = "name"),
+        uniqueConstraints = @UniqueConstraint(name = "uk_attached_file", columnNames = "name"))
 public class AttachedFile extends AbstractEntityLongId {
 
     @Lob
