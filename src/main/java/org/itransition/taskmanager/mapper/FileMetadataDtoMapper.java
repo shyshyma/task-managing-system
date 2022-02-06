@@ -1,4 +1,4 @@
-package org.itransition.taskmanager.mapper.dto;
+package org.itransition.taskmanager.mapper;
 
 import org.itransition.taskmanager.dto.FileMetadataDto;
 import org.itransition.taskmanager.jpa.entity.AttachedFile;

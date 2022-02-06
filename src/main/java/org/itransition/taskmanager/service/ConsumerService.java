@@ -1,4 +1,4 @@
-package org.itransition.taskmanager.service.dto;
+package org.itransition.taskmanager.service;
 
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
@@ -9,8 +9,8 @@ import org.itransition.taskmanager.exception.DuplicateEmailException;
 import org.itransition.taskmanager.exception.ModelNotFoundException;
 import org.itransition.taskmanager.jpa.entity.ConsumerConfig;
 import org.itransition.taskmanager.jpa.entity.NotificationFrequency;
-import org.itransition.taskmanager.mapper.dto.ConsumerDtoMapper;
-import org.itransition.taskmanager.mapper.jpa.ConsumerJpaMapper;
+import org.itransition.taskmanager.mapper.ConsumerDtoMapper;
+import org.itransition.taskmanager.mapper.ConsumerJpaMapper;
 import org.itransition.taskmanager.jpa.entity.Consumer;
 import org.itransition.taskmanager.jpa.dao.ConsumerRepository;
 import org.itransition.taskmanager.service.email.TemplateEmailDetails;

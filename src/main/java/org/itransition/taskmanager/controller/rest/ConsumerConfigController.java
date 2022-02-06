@@ -2,7 +2,7 @@ package org.itransition.taskmanager.controller.rest;
 
 import lombok.RequiredArgsConstructor;
 import org.itransition.taskmanager.dto.ConsumerConfigDto;
-import org.itransition.taskmanager.service.dto.ConsumerConfigService;
+import org.itransition.taskmanager.service.ConsumerConfigService;
 import org.springframework.http.MediaType;
 import org.springframework.web.bind.annotation.RestController;
 import org.springframework.web.bind.annotation.RequestMapping;

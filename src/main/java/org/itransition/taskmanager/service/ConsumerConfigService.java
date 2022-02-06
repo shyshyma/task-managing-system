@@ -1,4 +1,4 @@
-package org.itransition.taskmanager.service.dto;
+package org.itransition.taskmanager.service;
 
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
@@ -6,7 +6,7 @@ import org.itransition.taskmanager.dto.ConsumerConfigDto;
 import org.itransition.taskmanager.exception.ModelNotFoundException;
 import org.itransition.taskmanager.jpa.dao.ConsumerConfigRepository;
 import org.itransition.taskmanager.jpa.entity.ConsumerConfig;
-import org.itransition.taskmanager.mapper.dto.ConsumerConfigDtoMapper;
+import org.itransition.taskmanager.mapper.ConsumerConfigDtoMapper;
 import org.springframework.beans.BeanUtils;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Propagation;

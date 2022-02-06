@@ -1,4 +1,4 @@
-package org.itransition.taskmanager.mapper.jpa;
+package org.itransition.taskmanager.mapper;
 
 import org.itransition.taskmanager.dto.ConsumerDto;
 import org.itransition.taskmanager.jpa.entity.Consumer;

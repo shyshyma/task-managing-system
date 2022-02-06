@@ -7,7 +7,7 @@ import org.itransition.taskmanager.constant.FreeMarkerTemplatesLocation;
 import org.itransition.taskmanager.dto.ConsumerDto;
 import org.itransition.taskmanager.jpa.entity.NotificationFrequency;
 import org.itransition.taskmanager.jpa.entity.ConsumerConfig;
-import org.itransition.taskmanager.service.dto.ConsumerService;
+import org.itransition.taskmanager.service.ConsumerService;
 import org.springframework.scheduling.annotation.Scheduled;
 import org.springframework.stereotype.Service;
 

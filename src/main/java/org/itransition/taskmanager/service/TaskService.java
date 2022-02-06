@@ -1,14 +1,14 @@
-package org.itransition.taskmanager.service.dto;
+package org.itransition.taskmanager.service;
 
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
-import org.itransition.taskmanager.mapper.jpa.ConsumerJpaMapper;
+import org.itransition.taskmanager.mapper.ConsumerJpaMapper;
 import org.itransition.taskmanager.dto.ConsumerDto;
 import org.itransition.taskmanager.dto.TaskDto;
 import org.itransition.taskmanager.exception.DuplicateTitleException;
 import org.itransition.taskmanager.exception.ModelNotFoundException;
-import org.itransition.taskmanager.mapper.dto.TaskDtoMapper;
-import org.itransition.taskmanager.mapper.jpa.TaskJpaMapper;
+import org.itransition.taskmanager.mapper.TaskDtoMapper;
+import org.itransition.taskmanager.mapper.TaskJpaMapper;
 import org.itransition.taskmanager.jpa.entity.Consumer;
 import org.itransition.taskmanager.jpa.entity.Task;
 import org.itransition.taskmanager.jpa.dao.TaskRepository;
