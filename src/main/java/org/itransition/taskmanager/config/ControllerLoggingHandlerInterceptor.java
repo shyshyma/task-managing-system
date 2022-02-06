@@ -1,4 +1,4 @@
-package org.itransition.taskmanager.config.mvc;
+package org.itransition.taskmanager.config;
 
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.web.method.HandlerMethod;

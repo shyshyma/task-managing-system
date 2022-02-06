@@ -1,4 +1,4 @@
-package org.itransition.taskmanager.config.mvc;
+package org.itransition.taskmanager.config;
 
 import lombok.RequiredArgsConstructor;
 import org.itransition.taskmanager.dto.ExceptionMetadataDto;
