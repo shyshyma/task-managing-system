@@ -6,7 +6,7 @@
                 <table>
                     <tr>
                         <td align="center" class="masthead">
-                            <h1>${header} &#9825;</h1>
+                            <h1>Thanks for registration &#9825;</h1>
                         </td>
                     </tr>
                     <tr>

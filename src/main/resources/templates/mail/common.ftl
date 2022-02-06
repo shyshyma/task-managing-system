@@ -5,6 +5,7 @@
         <meta charset="UTF-8">
         <style>
             <#switch style>
+
             <#case "success">
             <@sucessStyle/>
             <#break>
@@ -12,6 +13,7 @@
             <#case "warn">
             <@warnStyle/>
             <#break>
+
             </#switch>
         </style>
     </head>
