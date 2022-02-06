@@ -29,19 +29,15 @@ import java.util.stream.Collectors;
 @Transactional(propagation = Propagation.REQUIRED)
 public class AttachedFileService {
 
-    private static final String ENTITY_NAME = "attached_file";
-    private static final String PARENT_ENTITY_NAME = "task";
-
     private final TaskJpaMapper taskJpaMapper;
-
     private final FileMetadataDtoMapper fileMetadataDtoMapper;
-
     private final AttachedFileDtoMapper attachedFileDtoMapper;
     private final AttachedFileJpaMapper attachedFileJpaMapper;
-
     private final TaskService taskService;
-
     private final AttachedFileRepository attachedFileRepository;
+
+    private static final String ENTITY_NAME = "attached_file";
+    private static final String PARENT_ENTITY_NAME = "task";
 
     /**
      * Saves attached file entity and sets task parent( by task id)
