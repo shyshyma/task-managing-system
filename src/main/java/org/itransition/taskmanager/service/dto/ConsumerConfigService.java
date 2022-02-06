@@ -6,6 +6,7 @@ import org.itransition.taskmanager.dto.ConsumerConfigDto;
 import org.itransition.taskmanager.exception.ModelNotFoundException;
 import org.itransition.taskmanager.jpa.dao.ConsumerConfigRepository;
 import org.itransition.taskmanager.jpa.entity.ConsumerConfig;
+import org.itransition.taskmanager.mapper.dto.ConsumerConfigDtoMapper;
 import org.springframework.beans.BeanUtils;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Propagation;
@@ -17,6 +18,7 @@ import org.springframework.transaction.annotation.Transactional;
 @Transactional(propagation = Propagation.REQUIRED)
 public class ConsumerConfigService {
 
+    private final ConsumerConfigDtoMapper consumerConfigDtoMapper;
     private final ConsumerConfigRepository consumerConfigRepository;
 
     private static final String ENTITY_NAME = "consumer config";
@@ -33,6 +35,12 @@ public class ConsumerConfigService {
         return consumerConfigRepository.existsByEmail(email);
     }
 
+    public ConsumerConfigDto findById(Long id) {
+        log.info("Fetching '" + ENTITY_NAME + "' entity with id {} from the JPA datastore unit", id);
+        ConsumerConfig consumerConfigById = findByIdOrThrow(id);
+        return consumerConfigDtoMapper.map(consumerConfigById);
+    }
+
     public String findEmailById(Long id) {
         log.info("Fetching 'notification_email' from '" + ENTITY_NAME + "' by id '{}'", id);
         if (!consumerConfigRepository.existsById(id)) {
@@ -47,12 +55,10 @@ public class ConsumerConfigService {
         consumerConfigRepository.updateEmailById(email, id);
     }
 
-    public ConsumerConfigDto update(Long consumerConfigId, ConsumerConfigDto consumerConfigDto) {
+    public ConsumerConfigDto updateById(Long consumerConfigId, ConsumerConfigDto consumerConfigDto) {
         log.info("Updating entity '" + ENTITY_NAME + "' by id {} to the JPA datastore unit", consumerConfigId);
 
-        ConsumerConfig configById = consumerConfigRepository.findById(consumerConfigId).orElseThrow(
-                () -> new ModelNotFoundException("there is no entity '" + ENTITY_NAME
-                        + "' with id: " + consumerConfigId));
+        ConsumerConfig configById = findByIdOrThrow(consumerConfigId);
         BeanUtils.copyProperties(consumerConfigDto, configById, "id");
         consumerConfigRepository.save(configById);
 
@@ -63,5 +69,11 @@ public class ConsumerConfigService {
     public void deleteById(Long id) {
         log.info("Deleting '" + ENTITY_NAME + "' by id {}", id);
         consumerConfigRepository.deleteById(id);
+    }
+
+    private ConsumerConfig findByIdOrThrow(Long id) {
+        return consumerConfigRepository.findById(id).orElseThrow(
+                () -> new ModelNotFoundException("there is no entity '" + ENTITY_NAME
+                        + "' with id: " + id));
     }
 }
