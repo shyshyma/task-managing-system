@@ -45,4 +45,8 @@
         <dropUniqueConstraint tableName="consumer" constraintName="uk_consumer"/>
         <dropColumn tableName="consumer" columnName="email"/>
     </changeSet>
+    <changeSet id="changeset-taskmanager-11" author="ashyshyma">
+        <addUniqueConstraint tableName="consumer_config" columnNames="email_for_notifications"
+                             constraintName="uk_consumer_config_email_for_notifications"/>
+    </changeSet>
 </databaseChangeLog>

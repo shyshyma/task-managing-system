@@ -17,6 +17,7 @@ import javax.persistence.ForeignKey;
 import javax.persistence.FetchType;
 import javax.persistence.JoinColumn;
 import javax.persistence.Index;
+import javax.persistence.UniqueConstraint;
 
 @Getter
 @Setter
@@ -26,7 +27,9 @@ import javax.persistence.Index;
 @Entity
 @Table(name = "consumer_config",
         indexes = @Index(name = "ix_consumer_config_notifications_enabled_notification_frequency",
-                columnList = "notifications_enabled, notification_frequency"))
+                columnList = "notifications_enabled, notification_frequency"),
+        uniqueConstraints = @UniqueConstraint(name = "uk_consumer_config_email_for_notifications",
+                columnNames = "email_for_notifications"))
 public class ConsumerConfig extends AbstractEntityLongId {
 
     @Column(name = "notifications_enabled", nullable = false, columnDefinition = "tinyint(1) default false")
