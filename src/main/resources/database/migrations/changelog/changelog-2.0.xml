@@ -33,4 +33,16 @@
             </column>
         </createTable>
     </changeSet>
+    <changeSet id="changeset-taskmanager-9" author="ashyshyma">
+        <createIndex tableName="consumer_config"
+                     indexName="ix_consumer_config_notifications_enabled_notification_frequency">
+            <column name="notifications_enabled"/>
+            <column name="notification_frequency"/>
+        </createIndex>
+    </changeSet>
+    <changeSet id="changeset-taskmanager-10" author="ashyshyma">
+        <sqlFile path="sql/move-emails.sql" relativeToChangelogFile="true"/>
+        <dropUniqueConstraint tableName="consumer" constraintName="uk_consumer"/>
+        <dropColumn tableName="consumer" columnName="email"/>
+    </changeSet>
 </databaseChangeLog>

@@ -16,6 +16,7 @@ import javax.persistence.MapsId;
 import javax.persistence.ForeignKey;
 import javax.persistence.FetchType;
 import javax.persistence.JoinColumn;
+import javax.persistence.Index;
 
 @Getter
 @Setter
@@ -23,7 +24,9 @@ import javax.persistence.JoinColumn;
 @AllArgsConstructor
 @EqualsAndHashCode(exclude = "consumer", callSuper = false)
 @Entity
-@Table(name = "consumer_config")
+@Table(name = "consumer_config",
+        indexes = @Index(name = "ix_consumer_config_notifications_enabled_notification_frequency",
+                columnList = "notifications_enabled, notification_frequency"))
 public class ConsumerConfig extends AbstractEntityLongId {
 
     @Column(name = "notifications_enabled", nullable = false, columnDefinition = "tinyint(1) default false")
