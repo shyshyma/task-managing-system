@@ -23,7 +23,7 @@ import javax.persistence.UniqueConstraint;
 @Setter
 @NoArgsConstructor
 @AllArgsConstructor
-@EqualsAndHashCode(exclude = "consumer", callSuper = false)
+@EqualsAndHashCode(exclude = "consumer", callSuper = true)
 @Entity
 @Table(name = "consumer_config",
         indexes = @Index(name = "ix_consumer_config_notifications_enabled_notification_frequency",
