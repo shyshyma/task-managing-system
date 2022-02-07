@@ -3,9 +3,9 @@ package org.itransition.taskmanager.utils;
 import com.github.javafaker.Faker;
 import org.itransition.taskmanager.jpa.entity.Priority;
 import org.itransition.taskmanager.jpa.entity.Status;
-import org.itransition.taskmanager.mapper.jpa.AttachedFileJpaMapper;
-import org.itransition.taskmanager.mapper.jpa.ConsumerJpaMapper;
-import org.itransition.taskmanager.mapper.jpa.TaskJpaMapper;
+import org.itransition.taskmanager.mapper.AttachedFileJpaMapper;
+import org.itransition.taskmanager.mapper.ConsumerJpaMapper;
+import org.itransition.taskmanager.mapper.TaskJpaMapper;
 import org.itransition.taskmanager.dto.AttachedFileDto;
 import org.itransition.taskmanager.dto.ConsumerDto;
 import org.itransition.taskmanager.dto.TaskDto;
@@ -49,10 +49,8 @@ public final class JpaUtils {
 
         consumer.setId(FAKER.number().randomNumber());
 
-        consumer.setFirstName(FAKER.name().firstName());
-        consumer.setSecondName(FAKER.name().lastName());
-
-        consumer.setEmail(FAKER.internet().emailAddress());
+        consumer.setName(FAKER.name().firstName());
+        consumer.setSurname(FAKER.name().lastName());
 
         consumer.setDateOfBirth(FAKER.date().birthday());
         return consumer;

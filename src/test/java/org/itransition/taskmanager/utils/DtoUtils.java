@@ -1,9 +1,9 @@
 package org.itransition.taskmanager.utils;
 
 import com.github.javafaker.Faker;
-import org.itransition.taskmanager.mapper.dto.AttachedFileDtoMapper;
-import org.itransition.taskmanager.mapper.dto.ConsumerDtoMapper;
-import org.itransition.taskmanager.mapper.dto.TaskDtoMapper;
+import org.itransition.taskmanager.mapper.AttachedFileDtoMapper;
+import org.itransition.taskmanager.mapper.ConsumerDtoMapper;
+import org.itransition.taskmanager.mapper.TaskDtoMapper;
 import org.itransition.taskmanager.dto.AttachedFileDto;
 import org.itransition.taskmanager.dto.ConsumerDto;
 import org.itransition.taskmanager.dto.TaskDto;
@@ -31,8 +31,8 @@ public final class DtoUtils {
     private static final AttachedFileDtoMapper ATTACHED_FILE_DTO_MAPPER =
             Mappers.getMapper(AttachedFileDtoMapper.class);
 
-    public static ConsumerDto mapToConsumerDto(Consumer consumer) {
-        return CONSUMER_DTO_MAPPER.map(consumer);
+    public static ConsumerDto mapToConsumerDto(Consumer consumer, String email) {
+        return CONSUMER_DTO_MAPPER.map(consumer, email);
     }
 
     public static TaskDto mapToTaskDto(Task task) {
