@@ -52,6 +52,9 @@ public class ConsumerConfigService {
     public void updateEmailById(String email, Long id) {
         log.info("Updating 'notification_email' by value {} for '" + ENTITY_NAME + "' entity by id"
                 + " '{}'", email, id);
+        if (!consumerConfigRepository.existsById(id)) {
+            throw new ModelNotFoundException("No '" + ENTITY_NAME + "' entity exists by PK " + id);
+        }
         consumerConfigRepository.updateEmailById(email, id);
     }
 
@@ -68,6 +71,9 @@ public class ConsumerConfigService {
 
     public void deleteById(Long id) {
         log.info("Deleting '" + ENTITY_NAME + "' by id {}", id);
+        if(!consumerConfigRepository.existsById(id)) {
+            throw new ModelNotFoundException("No '" + ENTITY_NAME + "' entity exists by PK " + id);
+        }
         consumerConfigRepository.deleteById(id);
     }
 

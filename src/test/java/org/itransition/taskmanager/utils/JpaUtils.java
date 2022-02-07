@@ -3,15 +3,18 @@ package org.itransition.taskmanager.utils;
 import com.github.javafaker.Faker;
 import org.itransition.taskmanager.jpa.entity.Priority;
 import org.itransition.taskmanager.jpa.entity.Status;
+import org.itransition.taskmanager.jpa.entity.Consumer;
+import org.itransition.taskmanager.jpa.entity.Task;
+import org.itransition.taskmanager.jpa.entity.ConsumerConfig;
+import org.itransition.taskmanager.jpa.entity.AttachedFile;
 import org.itransition.taskmanager.mapper.AttachedFileJpaMapper;
+import org.itransition.taskmanager.mapper.ConsumerConfigJpaMapper;
 import org.itransition.taskmanager.mapper.ConsumerJpaMapper;
 import org.itransition.taskmanager.mapper.TaskJpaMapper;
 import org.itransition.taskmanager.dto.AttachedFileDto;
 import org.itransition.taskmanager.dto.ConsumerDto;
+import org.itransition.taskmanager.dto.ConsumerConfigDto;
 import org.itransition.taskmanager.dto.TaskDto;
-import org.itransition.taskmanager.jpa.entity.AttachedFile;
-import org.itransition.taskmanager.jpa.entity.Consumer;
-import org.itransition.taskmanager.jpa.entity.Task;
 import org.mapstruct.factory.Mappers;
 
 import java.util.Date;
@@ -26,6 +29,9 @@ public final class JpaUtils {
     private static final ConsumerJpaMapper CONSUMER_JPA_MAPPER =
             Mappers.getMapper(ConsumerJpaMapper.class);
 
+    private static final ConsumerConfigJpaMapper CONSUMER_CONFIG_JPA_MAPPER =
+            Mappers.getMapper(ConsumerConfigJpaMapper.class);
+
     private static final TaskJpaMapper TASK_JPA_MAPPER =
             Mappers.getMapper(TaskJpaMapper.class);
 
@@ -34,6 +40,10 @@ public final class JpaUtils {
 
     public static Consumer mapToConsumer(ConsumerDto consumerDto) {
         return CONSUMER_JPA_MAPPER.map(consumerDto);
+    }
+
+    public static ConsumerConfig mapToConsumerConfig(ConsumerConfigDto consumerConfigDto) {
+        return CONSUMER_CONFIG_JPA_MAPPER.map(consumerConfigDto);
     }
 
     public static Task mapToTask(TaskDto consumerDto) {
@@ -54,6 +64,17 @@ public final class JpaUtils {
 
         consumer.setDateOfBirth(FAKER.date().birthday());
         return consumer;
+    }
+
+    public static ConsumerConfig generateConsumerConfig() {
+        ConsumerConfig consumerConfig = new ConsumerConfig();
+
+        consumerConfig.setId(FAKER.number().randomNumber());
+        consumerConfig.setEmail(FAKER.internet().emailAddress());
+
+        consumerConfig.setNotifications(FAKER.bool().bool());
+
+        return consumerConfig;
     }
 
     public static Task generateTask() {
