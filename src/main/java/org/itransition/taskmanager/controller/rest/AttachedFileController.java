@@ -3,7 +3,7 @@ package org.itransition.taskmanager.controller.rest;
 import lombok.RequiredArgsConstructor;
 import org.itransition.taskmanager.dto.AttachedFileDto;
 import org.itransition.taskmanager.dto.FileMetadataDto;
-import org.itransition.taskmanager.service.dto.AttachedFileService;
+import org.itransition.taskmanager.service.AttachedFileService;
 import org.springframework.data.domain.Pageable;
 import org.springframework.data.web.PageableDefault;
 import org.springframework.http.HttpStatus;

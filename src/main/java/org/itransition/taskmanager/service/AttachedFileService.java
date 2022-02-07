@@ -1,15 +1,15 @@
-package org.itransition.taskmanager.service.dto;
+package org.itransition.taskmanager.service;
 
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.itransition.taskmanager.dto.FileMetadataDto;
 import org.itransition.taskmanager.exception.DuplicateFileNameException;
-import org.itransition.taskmanager.mapper.dto.FileMetadataDtoMapper;
-import org.itransition.taskmanager.mapper.jpa.TaskJpaMapper;
+import org.itransition.taskmanager.mapper.FileMetadataDtoMapper;
+import org.itransition.taskmanager.mapper.TaskJpaMapper;
 import org.itransition.taskmanager.dto.AttachedFileDto;
 import org.itransition.taskmanager.exception.ModelNotFoundException;
-import org.itransition.taskmanager.mapper.dto.AttachedFileDtoMapper;
-import org.itransition.taskmanager.mapper.jpa.AttachedFileJpaMapper;
+import org.itransition.taskmanager.mapper.AttachedFileDtoMapper;
+import org.itransition.taskmanager.mapper.AttachedFileJpaMapper;
 import org.itransition.taskmanager.dto.TaskDto;
 import org.itransition.taskmanager.jpa.entity.AttachedFile;
 import org.itransition.taskmanager.jpa.entity.Task;
@@ -29,19 +29,15 @@ import java.util.stream.Collectors;
 @Transactional(propagation = Propagation.REQUIRED)
 public class AttachedFileService {
 
-    private static final String ENTITY_NAME = "attached_file";
-    private static final String PARENT_ENTITY_NAME = "task";
-
     private final TaskJpaMapper taskJpaMapper;
-
     private final FileMetadataDtoMapper fileMetadataDtoMapper;
-
     private final AttachedFileDtoMapper attachedFileDtoMapper;
     private final AttachedFileJpaMapper attachedFileJpaMapper;
-
     private final TaskService taskService;
-
     private final AttachedFileRepository attachedFileRepository;
+
+    private static final String ENTITY_NAME = "attached_file";
+    private static final String PARENT_ENTITY_NAME = "task";
 
     /**
      * Saves attached file entity and sets task parent( by task id)
