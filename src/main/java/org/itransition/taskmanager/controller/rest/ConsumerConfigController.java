@@ -22,14 +22,14 @@ public class ConsumerConfigController {
 
     private final ConsumerConfigService consumerConfigService;
 
-    @GetMapping("{id}")
+    @GetMapping
     public ConsumerConfigDto getConsumerConfig(@PathVariable("id") final Long id) {
         return consumerConfigService.findById(id);
     }
 
-    @PutMapping("{id}")
+    @PutMapping
     public ConsumerConfigDto updateConsumerConfig(final @PathVariable("id") Long consumerId,
-                                      @Valid @RequestBody final ConsumerConfigDto consumerConfigDto) {
+                                                  @Valid @RequestBody final ConsumerConfigDto consumerConfigDto) {
 
         return consumerConfigService.updateById(consumerId, consumerConfigDto);
     }
