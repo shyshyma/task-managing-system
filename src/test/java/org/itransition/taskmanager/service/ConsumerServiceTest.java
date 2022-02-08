@@ -202,9 +202,6 @@ class ConsumerServiceTest {
 
         verify(consumerRepository)
                 .deleteById(CONSUMER_ID);
-
-        verify(consumerConfigService)
-                .deleteById(CONSUMER_ID);
     }
 
     @Test

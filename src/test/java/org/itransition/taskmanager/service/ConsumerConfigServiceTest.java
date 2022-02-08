@@ -157,27 +157,4 @@ class ConsumerConfigServiceTest {
         verify(consumerConfigRepository).findById(CONSUMER_CONFIG_ID);
         verifyNoMoreInteractions(consumerConfigRepository);
     }
-
-    @Test
-    void deleteById() {
-        when(consumerConfigRepository.existsById(CONSUMER_CONFIG_ID))
-                .thenReturn(true);
-
-        consumerConfigService.deleteById(CONSUMER_CONFIG_ID);
-
-        verify(consumerConfigRepository).existsById(CONSUMER_CONFIG_ID);
-        verify(consumerConfigRepository).deleteById(CONSUMER_CONFIG_ID);
-    }
-
-    @Test
-    void deleteByIdThrowsModelNotFoundException() {
-        when(consumerConfigRepository.existsById(CONSUMER_CONFIG_ID))
-                .thenReturn(false);
-
-        assertThrows(ModelNotFoundException.class,
-                () -> consumerConfigService.deleteById(CONSUMER_CONFIG_ID));
-
-        verify(consumerConfigRepository).existsById(CONSUMER_CONFIG_ID);
-        verifyNoMoreInteractions(consumerConfigRepository);
-    }
 }
