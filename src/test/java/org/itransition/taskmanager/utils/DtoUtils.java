@@ -13,6 +13,7 @@ import org.itransition.taskmanager.jpa.entity.AttachedFile;
 import org.itransition.taskmanager.jpa.entity.Consumer;
 import org.itransition.taskmanager.jpa.entity.ConsumerConfig;
 import org.itransition.taskmanager.jpa.entity.Task;
+import org.itransition.taskmanager.jpa.entity.NotificationFrequency;
 import org.mapstruct.factory.Mappers;
 
 import java.time.Instant;
@@ -74,7 +75,7 @@ public final class DtoUtils {
         consumerConfigDto.setEmail(FAKER.internet().emailAddress());
 
         consumerConfigDto.setNotifications(FAKER.bool().bool());
-
+        consumerConfigDto.setNotificationFrequency(NotificationFrequency.EVERY_DAY.toString());
         return consumerConfigDto;
     }
 
