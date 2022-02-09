@@ -13,8 +13,7 @@ import org.itransition.taskmanager.mapper.ConsumerDtoMapper;
 import org.itransition.taskmanager.mapper.ConsumerJpaMapper;
 import org.itransition.taskmanager.jpa.entity.Consumer;
 import org.itransition.taskmanager.jpa.dao.ConsumerRepository;
-import org.itransition.taskmanager.service.email.TemplateEmailDetails;
-import org.springframework.beans.BeanUtils;
+import org.itransition.taskmanager.service.email.EmailDetails;
 import org.springframework.context.ApplicationEventPublisher;
 import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
@@ -38,7 +37,6 @@ public class ConsumerService {
 
     private static final String ENTITY_NAME = "consumer";
     private static final String CONSUMER_CONFIG_ENTITY_NAME = "consumer config";
-    private static final String SUBJECT_CONTENT = "Task manager: thanks for registration on our resource";
 
     /**
      * Finds Consumer entity and joins email column from ConsumerConfig
@@ -72,7 +70,7 @@ public class ConsumerService {
         //set missing properties by default
         consumerConfig.setNotifications(false);
         consumerConfig.setNotificationFrequency(NotificationFrequency.EVERY_MONTH);
-        consumerConfig.setEmail("MISSED");
+        consumerConfig.setEmail(consumerDto.getEmail());
 
         //needed for saving cascaded entity
         consumer.setConsumerConfig(consumerConfig);
@@ -81,8 +79,8 @@ public class ConsumerService {
 
         Consumer savedConsumer = consumerRepository.save(consumer);
 
-        TemplateEmailDetails emailDetails = new TemplateEmailDetails()
-                .withSubject(SUBJECT_CONTENT)
+        EmailDetails emailDetails = new EmailDetails()
+                .withSubject("Task manager: thanks for registration on our resource")
                 .withDestinationEmail(consumerDto.getEmail())
                 .withTemplateLocation(FreeMarkerTemplatesLocation.SUCCESS_REGISTRATION)
                 .withTemplateProperty("name", consumerDto.getName())
@@ -104,7 +102,7 @@ public class ConsumerService {
                 consumerDto.getSurname(), consumerDto.getEmail());
 
         Consumer consumerById = findByIdOrThrow(consumerId);
-        BeanUtils.copyProperties(consumerDto, consumerById, "id");
+        consumerJpaMapper.mapWithoutId(consumerDto, consumerById);
 
         consumerRepository.save(consumerById);
         consumerConfigService.updateEmailById(consumerDto.getEmail(), consumerId);
@@ -121,7 +119,7 @@ public class ConsumerService {
                 + CONSUMER_CONFIG_ENTITY_NAME + "' entity from  the JPA datastore unit");
 
         return consumerRepository.findAll(pageable).stream()
-                .map((entry) -> consumerDtoMapper.map(entry,
+                .map(entry -> consumerDtoMapper.map(entry,
                         consumerConfigService.findEmailById(entry.getId())))
                 .collect(Collectors.toList());
     }
@@ -144,7 +142,6 @@ public class ConsumerService {
                     + "' with id: " + id);
         }
         consumerRepository.deleteById(id);
-        consumerConfigService.deleteById(id);
     }
 
     private Consumer findByIdOrThrow(Long id) {
@@ -162,7 +159,7 @@ public class ConsumerService {
                 + " from the JPA datastore unit", notificationFrequency);
 
         return consumerRepository.findByEnabledNotificationsAndByFrequency(notificationFrequency).stream()
-                .map((entry) -> consumerDtoMapper.map(entry,
+                .map(entry -> consumerDtoMapper.map(entry,
                         consumerConfigService.findEmailById(entry.getId())))
                 .collect(Collectors.toList());
     }
