@@ -3,14 +3,16 @@ package org.itransition.taskmanager.service.email;
 import freemarker.template.Configuration;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
+import org.itransition.taskmanager.jpa.entity.NotificationFrequency;
 import org.springframework.beans.factory.annotation.Value;
-import org.springframework.mail.SimpleMailMessage;
 import org.springframework.mail.javamail.JavaMailSenderImpl;
 import org.springframework.mail.javamail.MimeMessageHelper;
+import org.springframework.scheduling.annotation.Async;
 import org.springframework.stereotype.Service;
 import org.springframework.ui.freemarker.FreeMarkerTemplateUtils;
 
 import javax.mail.internet.MimeMessage;
+import java.util.List;
 
 @Slf4j
 @Service
@@ -19,20 +21,27 @@ public class EmailService {
 
     private final Configuration configuration;
     private final JavaMailSenderImpl mailSender;
-
-    private static final String EMAIL_SUCCESSFUL_DELIVERY_MESSAGE = "Email has been successfully"
-            + " delivered to consumer {}";
-    private static final String EMAIL_UNSUCCESSFUL_DELIVERY_MESSAGE = "Email hasn't been delivered to" +
-            " consumer {} due some problems";
+    private final EmailDetailsService emailDetailsService;
 
     @Value("${spring.mail.username}")
     private String replyToEmailAddress;
 
     /**
+     * Sends emails to all consumers by frequency param, who have enabled notifications
+     */
+    public void sendNotificationToConsumersByFrequency(NotificationFrequency frequency) {
+        log.info("Starting to send notification emails for consumers, who have enabled this option");
+        List<EmailDetails> emailDetailsList = emailDetailsService
+                .findAllEmailDetailsByNotificationFrequency(frequency);
+        emailDetailsList.forEach(this::sendTemplateMessage);
+    }
+
+    /**
      * Generates HTML email body with the help of freemarker template engine
      * and sends it as MIME type
      */
-    public void sendTemplateMessage(TemplateEmailDetails emailDetails) {
+    @Async
+    public void sendTemplateMessage(EmailDetails emailDetails) {
         try {
             MimeMessage mimeMessage = mailSender.createMimeMessage();
             MimeMessageHelper helper = new MimeMessageHelper(mimeMessage);
@@ -47,25 +56,12 @@ public class EmailService {
             helper.setReplyTo(replyToEmailAddress);
 
             mailSender.send(mimeMessage);
-            log.info(EMAIL_SUCCESSFUL_DELIVERY_MESSAGE, emailDetails.getDestinationEmail());
+            log.info("Email has been successfully delivered to consumer {}",
+                    emailDetails.getDestinationEmail());
 
         } catch (Exception e) {
-            log.error(EMAIL_UNSUCCESSFUL_DELIVERY_MESSAGE, emailDetails.getDestinationEmail());
+            log.error("Email hasn't been delivered to consumer {} due some problems",
+                    emailDetails.getDestinationEmail());
         }
-    }
-
-    /**
-     * Sends email letter with simple text body
-     */
-    public void sendSimpleMessage(SimpleEmailDetails emailDetails) {
-        SimpleMailMessage simpleMailMessage = new SimpleMailMessage();
-
-        simpleMailMessage.setTo(emailDetails.getDestinationEmail());
-        simpleMailMessage.setSubject(emailDetails.getSubject());
-        simpleMailMessage.setText(emailDetails.getText());
-        simpleMailMessage.setReplyTo(replyToEmailAddress);
-
-        mailSender.send(simpleMailMessage);
-        log.info(EMAIL_SUCCESSFUL_DELIVERY_MESSAGE, emailDetails.getDestinationEmail());
     }
 }
