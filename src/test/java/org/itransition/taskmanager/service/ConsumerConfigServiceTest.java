@@ -42,7 +42,7 @@ class ConsumerConfigServiceTest {
     private ConsumerConfigService consumerConfigService;
 
     @Test
-    void existsById() {
+    void testExistsById() {
         when(consumerConfigRepository.existsById(CONSUMER_CONFIG_ID)).thenReturn(true);
 
         assertTrue(consumerConfigService.existsById(CONSUMER_CONFIG_ID));
@@ -50,7 +50,7 @@ class ConsumerConfigServiceTest {
     }
 
     @Test
-    void existsByEmail() {
+    void testExistsByEmail() {
         when(consumerConfigRepository.existsByEmail(CONSUMER_CONFIG_EMAIL)).thenReturn(true);
 
         assertTrue(consumerConfigService.existsByEmail(CONSUMER_CONFIG_EMAIL));
@@ -58,7 +58,7 @@ class ConsumerConfigServiceTest {
     }
 
     @Test
-    void findById() {
+    void testFindById() {
         ConsumerConfig consumerConfig = JpaUtils.generateConsumerConfig();
         when(consumerConfigRepository.findById(CONSUMER_CONFIG_ID))
                 .thenReturn(Optional.of(consumerConfig));
@@ -70,7 +70,7 @@ class ConsumerConfigServiceTest {
     }
 
     @Test
-    void findByIdThrowsModelNotFoundException() {
+    void testFindByIdThrowsModelNotFoundException() {
         when(consumerConfigRepository.findById(CONSUMER_CONFIG_ID))
                 .thenReturn(Optional.empty());
 
@@ -81,7 +81,7 @@ class ConsumerConfigServiceTest {
     }
 
     @Test
-    void findEmailById() {
+    void testFindEmailById() {
         when(consumerConfigRepository.existsById(CONSUMER_CONFIG_ID))
                 .thenReturn(true);
 
@@ -95,7 +95,7 @@ class ConsumerConfigServiceTest {
     }
 
     @Test
-    void findEmailByIdThrowsModelNotFoundException() {
+    void testFindEmailByIdThrowsModelNotFoundException() {
         when(consumerConfigRepository.existsById(CONSUMER_CONFIG_ID))
                 .thenReturn(false);
 
@@ -107,7 +107,7 @@ class ConsumerConfigServiceTest {
     }
 
     @Test
-    void updateEmailById() {
+    void testUpdateEmailById() {
         when(consumerConfigRepository.existsById(CONSUMER_CONFIG_ID))
                 .thenReturn(true);
 
@@ -118,7 +118,7 @@ class ConsumerConfigServiceTest {
     }
 
     @Test
-    void updateEmailByIdThrowsModelNotFoundException() {
+    void testUpdateEmailByIdThrowsModelNotFoundException() {
         when(consumerConfigRepository.existsById(CONSUMER_CONFIG_ID))
                 .thenReturn(false);
 
@@ -130,7 +130,7 @@ class ConsumerConfigServiceTest {
     }
 
     @Test
-    void updateById() {
+    void testUpdateById() {
         when(consumerConfigRepository.findById(CONSUMER_CONFIG_ID))
                 .thenReturn(Optional.of(JpaUtils.generateConsumerConfig()));
 
@@ -146,7 +146,7 @@ class ConsumerConfigServiceTest {
     }
 
     @Test
-    void updateByIdThrowsModelNotFoundException() {
+    void testUpdateByIdThrowsModelNotFoundException() {
         when(consumerConfigRepository.findById(CONSUMER_CONFIG_ID))
                 .thenReturn(Optional.empty());
 
