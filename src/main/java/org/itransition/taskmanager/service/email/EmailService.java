@@ -29,6 +29,7 @@ public class EmailService {
     /**
      * Sends emails to all consumers by frequency param, who have enabled notifications
      */
+    @Async
     public void sendNotificationToConsumersByFrequency(NotificationFrequency frequency) {
         log.info("Starting to send notification emails for consumers, who have enabled this option");
         List<EmailDetails> emailDetailsList = emailDetailsService

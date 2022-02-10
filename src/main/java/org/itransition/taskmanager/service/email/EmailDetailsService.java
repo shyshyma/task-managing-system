@@ -7,8 +7,8 @@ import org.itransition.taskmanager.jpa.entity.NotificationFrequency;
 import org.itransition.taskmanager.service.ConsumerService;
 import org.springframework.stereotype.Service;
 
-import java.util.ArrayList;
 import java.util.List;
+import java.util.stream.Collectors;
 
 @Service
 @RequiredArgsConstructor
@@ -21,18 +21,14 @@ public class EmailDetailsService {
      * and by enabled notifications
      */
     public List<EmailDetails> findAllEmailDetailsByNotificationFrequency(NotificationFrequency frequency) {
-        List<ConsumerDto> consumers = consumerService.findAllConsumersByEnabledNotificationsAndByFrequency(
-                frequency.toString());
-        List<EmailDetails> templateEmailDetails = new ArrayList<>();
-        for (ConsumerDto consumerDto : consumers) {
-            EmailDetails emailDetails = new EmailDetails()
-                    .withSubject("Task manager: you have a new notification")
-                    .withTemplateLocation(FreeMarkerTemplatesLocation.NOTIFICATION)
-                    .withDestinationEmail(consumerDto.getEmail())
-                    .withTemplateProperty("name", consumerDto.getName())
-                    .withTemplateProperty("surname", consumerDto.getSurname());
-            templateEmailDetails.add(emailDetails);
-        }
-        return templateEmailDetails;
+        List<ConsumerDto> consumers = consumerService.findAllConsumersByEnabledNotificationsAndByFrequency(frequency.toString());
+        return consumers.stream()
+                .map((consumerDto -> new EmailDetails()
+                        .withSubject("Task manager: you have a new notification")
+                        .withTemplateLocation(FreeMarkerTemplatesLocation.NOTIFICATION)
+                        .withDestinationEmail(consumerDto.getEmail())
+                        .withTemplateProperty("name", consumerDto.getName())
+                        .withTemplateProperty("surname", consumerDto.getSurname())))
+                .collect(Collectors.toList());
     }
 }
