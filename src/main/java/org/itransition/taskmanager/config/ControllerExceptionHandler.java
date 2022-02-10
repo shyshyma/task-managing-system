@@ -1,4 +1,4 @@
-package org.itransition.taskmanager.config.mvc;
+package org.itransition.taskmanager.config;
 
 import lombok.RequiredArgsConstructor;
 import org.itransition.taskmanager.dto.ExceptionMetadataDto;
@@ -6,7 +6,7 @@ import org.itransition.taskmanager.exception.DuplicateFileNameException;
 import org.itransition.taskmanager.exception.ModelNotFoundException;
 import org.itransition.taskmanager.exception.DuplicateEmailException;
 import org.itransition.taskmanager.exception.DuplicateTitleException;
-import org.itransition.taskmanager.mapper.dto.ExceptionDtoMapper;
+import org.itransition.taskmanager.mapper.ExceptionDtoMapper;
 import org.springframework.http.HttpStatus;
 import org.springframework.web.bind.annotation.ExceptionHandler;
 import org.springframework.web.bind.annotation.ResponseStatus;

@@ -1,4 +1,4 @@
-package org.itransition.taskmanager.mapper.dto;
+package org.itransition.taskmanager.mapper;
 
 import org.itransition.taskmanager.dto.ExceptionMetadataDto;
 import org.mapstruct.Mapper;
