@@ -1,7 +1,6 @@
 package org.itransition.taskmanager.utils;
 
 import com.github.javafaker.Faker;
-import org.itransition.taskmanager.constant.FreeMarkerTemplatesLocation;
 import org.itransition.taskmanager.mapper.AttachedFileDtoMapper;
 import org.itransition.taskmanager.mapper.ConsumerDtoMapper;
 import org.itransition.taskmanager.mapper.ConsumerConfigDtoMapper;
@@ -15,7 +14,6 @@ import org.itransition.taskmanager.jpa.entity.Consumer;
 import org.itransition.taskmanager.jpa.entity.ConsumerConfig;
 import org.itransition.taskmanager.jpa.entity.Task;
 import org.itransition.taskmanager.jpa.entity.NotificationFrequency;
-import org.itransition.taskmanager.service.email.EmailDetails;
 import org.mapstruct.factory.Mappers;
 
 import java.time.Instant;
@@ -109,14 +107,5 @@ public final class DtoUtils {
         attachedFileDto.setContent("TWluaW1hbGx5IGNvbmZpZ3VyZWQgdGhlIHByb2p");
 
         return attachedFileDto;
-    }
-
-    public static EmailDetails generateEmailDetails() {
-        return new EmailDetails()
-                .withDestinationEmail(FAKER.internet().emailAddress())
-                .withSubject("Task manager test subject")
-                .withTemplateLocation(FreeMarkerTemplatesLocation.NOTIFICATION)
-                .withTemplateProperty("name", FAKER.name().firstName())
-                .withTemplateProperty("surname", FAKER.name().lastName());
     }
 }
