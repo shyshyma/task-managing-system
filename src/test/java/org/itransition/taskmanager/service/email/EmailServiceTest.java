@@ -51,10 +51,17 @@ class EmailServiceTest {
 
     @Test
     void testSendNotificationToConsumersByFrequency() {
-        EmailDetails firstEmailDetails = EmailUtils.generateEmailDetailsByTemplateLocation(FreeMarkerTemplatesLocation.NOTIFICATION);
-        EmailDetails secondEmailDetails = EmailUtils.generateEmailDetailsByTemplateLocation(FreeMarkerTemplatesLocation.NOTIFICATION);
-        EmailDetails thirdEmailDetails = EmailUtils.generateEmailDetailsByTemplateLocation(FreeMarkerTemplatesLocation.NOTIFICATION);
-        EmailDetails fourthEmailDetails = EmailUtils.generateEmailDetailsByTemplateLocation(FreeMarkerTemplatesLocation.NOTIFICATION);
+        EmailDetails firstEmailDetails = EmailUtils
+                .generateEmailDetailsByTemplateLocation(FreeMarkerTemplatesLocation.NOTIFICATION);
+
+        EmailDetails secondEmailDetails = EmailUtils
+                .generateEmailDetailsByTemplateLocation(FreeMarkerTemplatesLocation.NOTIFICATION);
+
+        EmailDetails thirdEmailDetails = EmailUtils
+                .generateEmailDetailsByTemplateLocation(FreeMarkerTemplatesLocation.NOTIFICATION);
+
+        EmailDetails fourthEmailDetails = EmailUtils
+                .generateEmailDetailsByTemplateLocation(FreeMarkerTemplatesLocation.NOTIFICATION);
 
         when(emailDetailsService
                 .findAllEmailDetailsByNotificationFrequency(NotificationFrequency.EVERY_DAY))
