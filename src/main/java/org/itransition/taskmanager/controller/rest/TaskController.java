@@ -2,7 +2,7 @@ package org.itransition.taskmanager.controller.rest;
 
 import lombok.RequiredArgsConstructor;
 import org.itransition.taskmanager.dto.TaskDto;
-import org.itransition.taskmanager.service.dto.TaskService;
+import org.itransition.taskmanager.service.TaskService;
 import org.springframework.data.domain.Pageable;
 import org.springframework.data.web.PageableDefault;
 import org.springframework.http.HttpStatus;

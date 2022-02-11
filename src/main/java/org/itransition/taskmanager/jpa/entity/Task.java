@@ -20,6 +20,7 @@ import javax.persistence.CascadeType;
 import javax.persistence.JoinColumn;
 import javax.persistence.ForeignKey;
 import javax.persistence.OneToMany;
+import javax.persistence.Index;
 
 import java.util.ArrayList;
 import java.util.Date;
@@ -31,7 +32,9 @@ import java.util.List;
 @AllArgsConstructor
 @EqualsAndHashCode(exclude = {"consumer", "attachedFilesList"}, callSuper = true)
 @Entity
-@Table(name = "task", uniqueConstraints = {@UniqueConstraint(name = "uk_title", columnNames = {"title"})})
+@Table(name = "task",
+        indexes = @Index(name = "ix_task_title", columnList = "title"),
+        uniqueConstraints = {@UniqueConstraint(name = "uk_title", columnNames = {"title"})})
 public class Task extends AbstractEntityLongId {
 
     @Column(name = "title", nullable = false, columnDefinition = "varchar(40)")
