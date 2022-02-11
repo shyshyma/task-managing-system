@@ -21,6 +21,7 @@ import static org.junit.jupiter.api.Assertions.assertEquals;
 
 @Sql(executionPhase = Sql.ExecutionPhase.BEFORE_TEST_METHOD,
         scripts = {"/sql/populate-consumers.sql",
+                "/sql/populate-consumers-config.sql",
                 "/sql/populate-tasks.sql"})
 @Sql(executionPhase = Sql.ExecutionPhase.AFTER_TEST_METHOD,
         scripts = {"/sql/drop-consumers.sql",
@@ -29,7 +30,6 @@ class TaskControllerTest extends BaseControllerTest {
 
     private static final Integer CONSUMER_ID_THAT_IN_DATABASE = 1;
     private static final Integer TASK_ID_THAT_IN_DATABASE = 1;
-
     private static final Integer CONSUMER_ID_THAT_NOT_IN_DATABASE = 567;
     private static final Integer TASK_ID_THAT_NOT_IN_DATABASE = 345;
     private static final String TASK_TITLE_THAT_IN_DATABASE = "programming";

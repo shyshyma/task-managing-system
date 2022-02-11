@@ -1,15 +1,19 @@
 package org.itransition.taskmanager.utils;
 
 import com.github.javafaker.Faker;
-import org.itransition.taskmanager.mapper.dto.AttachedFileDtoMapper;
-import org.itransition.taskmanager.mapper.dto.ConsumerDtoMapper;
-import org.itransition.taskmanager.mapper.dto.TaskDtoMapper;
+import org.itransition.taskmanager.mapper.AttachedFileDtoMapper;
+import org.itransition.taskmanager.mapper.ConsumerDtoMapper;
+import org.itransition.taskmanager.mapper.ConsumerConfigDtoMapper;
+import org.itransition.taskmanager.mapper.TaskDtoMapper;
 import org.itransition.taskmanager.dto.AttachedFileDto;
 import org.itransition.taskmanager.dto.ConsumerDto;
+import org.itransition.taskmanager.dto.ConsumerConfigDto;
 import org.itransition.taskmanager.dto.TaskDto;
 import org.itransition.taskmanager.jpa.entity.AttachedFile;
 import org.itransition.taskmanager.jpa.entity.Consumer;
+import org.itransition.taskmanager.jpa.entity.ConsumerConfig;
 import org.itransition.taskmanager.jpa.entity.Task;
+import org.itransition.taskmanager.jpa.entity.NotificationFrequency;
 import org.mapstruct.factory.Mappers;
 
 import java.time.Instant;
@@ -25,14 +29,21 @@ public final class DtoUtils {
     private static final ConsumerDtoMapper CONSUMER_DTO_MAPPER =
             Mappers.getMapper(ConsumerDtoMapper.class);
 
+    private static final ConsumerConfigDtoMapper CONSUMER_CONFIG_DTO_MAPPER =
+            Mappers.getMapper(ConsumerConfigDtoMapper.class);
+
     private static final TaskDtoMapper TASK_DTO_MAPPER =
             Mappers.getMapper(TaskDtoMapper.class);
 
     private static final AttachedFileDtoMapper ATTACHED_FILE_DTO_MAPPER =
             Mappers.getMapper(AttachedFileDtoMapper.class);
 
-    public static ConsumerDto mapToConsumerDto(Consumer consumer) {
-        return CONSUMER_DTO_MAPPER.map(consumer);
+    public static ConsumerDto mapToConsumerDto(Consumer consumer, String email) {
+        return CONSUMER_DTO_MAPPER.map(consumer, email);
+    }
+
+    public static ConsumerConfigDto mapToConsumerConfigDto(ConsumerConfig consumerConfig) {
+        return CONSUMER_CONFIG_DTO_MAPPER.map(consumerConfig);
     }
 
     public static TaskDto mapToTaskDto(Task task) {
@@ -45,7 +56,7 @@ public final class DtoUtils {
 
     public static ConsumerDto generateConsumerDto() {
         ConsumerDto consumer = new ConsumerDto();
-        
+
         consumer.setId(FAKER.number().randomNumber());
 
         consumer.setName(FAKER.name().firstName());
@@ -55,6 +66,17 @@ public final class DtoUtils {
 
         consumer.setDateOfBirth(FAKER.date().birthday());
         return consumer;
+    }
+
+    public static ConsumerConfigDto generateConsumerConfigDto() {
+        ConsumerConfigDto consumerConfigDto = new ConsumerConfigDto();
+
+        consumerConfigDto.setId(FAKER.number().randomNumber());
+        consumerConfigDto.setEmail(FAKER.internet().emailAddress());
+
+        consumerConfigDto.setNotifications(FAKER.bool().bool());
+        consumerConfigDto.setNotificationFrequency(NotificationFrequency.EVERY_DAY.toString());
+        return consumerConfigDto;
     }
 
     public static TaskDto generateTaskDto() {

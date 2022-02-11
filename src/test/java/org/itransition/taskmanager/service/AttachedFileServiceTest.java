@@ -1,19 +1,19 @@
-package org.itransition.taskmanager.service.dto;
+package org.itransition.taskmanager.service;
 
 import org.itransition.taskmanager.dto.FileMetadataDto;
 import org.itransition.taskmanager.exception.DuplicateFileNameException;
 import org.itransition.taskmanager.exception.ModelNotFoundException;
-import org.itransition.taskmanager.mapper.dto.AttachedFileDtoMapper;
-import org.itransition.taskmanager.mapper.dto.AttachedFileDtoMapperImpl;
-import org.itransition.taskmanager.mapper.dto.FileMetadataDtoMapper;
-import org.itransition.taskmanager.mapper.dto.FileMetadataDtoMapperImpl;
-import org.itransition.taskmanager.mapper.jpa.AttachedFileJpaMapper;
-import org.itransition.taskmanager.mapper.jpa.AttachedFileJpaMapperImpl;
-import org.itransition.taskmanager.mapper.jpa.TaskJpaMapper;
+import org.itransition.taskmanager.mapper.AttachedFileDtoMapper;
+import org.itransition.taskmanager.mapper.AttachedFileDtoMapperImpl;
+import org.itransition.taskmanager.mapper.FileMetadataDtoMapper;
+import org.itransition.taskmanager.mapper.FileMetadataDtoMapperImpl;
+import org.itransition.taskmanager.mapper.AttachedFileJpaMapper;
+import org.itransition.taskmanager.mapper.AttachedFileJpaMapperImpl;
+import org.itransition.taskmanager.mapper.TaskJpaMapper;
 import org.itransition.taskmanager.dto.AttachedFileDto;
 import org.itransition.taskmanager.jpa.entity.AttachedFile;
 import org.itransition.taskmanager.jpa.dao.AttachedFileRepository;
-import org.itransition.taskmanager.mapper.jpa.TaskJpaMapperImpl;
+import org.itransition.taskmanager.mapper.TaskJpaMapperImpl;
 import org.itransition.taskmanager.utils.DtoUtils;
 import org.itransition.taskmanager.utils.JpaUtils;
 import org.junit.jupiter.api.Test;
@@ -77,11 +77,9 @@ class AttachedFileServiceTest {
 
         assertNotNull(fileMetadataDto);
 
-        verify(taskDtoService)
-                .existsByIdAndConsumerId(TASK_ID, CONSUMER_ID);
+        verify(taskDtoService).existsByIdAndConsumerId(TASK_ID, CONSUMER_ID);
 
-        verify(taskDtoService)
-                .findByIdAndConsumerId(TASK_ID, CONSUMER_ID);
+        verify(taskDtoService).findByIdAndConsumerId(TASK_ID, CONSUMER_ID);
 
         verify(attachedFileRepository)
                 .save(any(AttachedFile.class));
@@ -97,8 +95,7 @@ class AttachedFileServiceTest {
                 () -> attachedFileService
                         .saveToTaskWithConsumer(attachedFileDto, TASK_ID, CONSUMER_ID));
 
-        verify(taskDtoService)
-                .existsByIdAndConsumerId(TASK_ID, CONSUMER_ID);
+        verify(taskDtoService).existsByIdAndConsumerId(TASK_ID, CONSUMER_ID);
 
         verifyNoMoreInteractions(taskDtoService);
         verifyNoMoreInteractions(attachedFileRepository);
@@ -143,8 +140,7 @@ class AttachedFileServiceTest {
         verify(attachedFileRepository)
                 .findByNameAndTaskIdAndTaskConsumerId(ATTACHED_FILE_NAME, TASK_ID, CONSUMER_ID);
 
-        verify(attachedFileRepository)
-                .save(any(AttachedFile.class));
+        verify(attachedFileRepository).save(any(AttachedFile.class));
     }
 
     @Test

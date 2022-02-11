@@ -19,15 +19,15 @@ import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.
 
 @Sql(executionPhase = Sql.ExecutionPhase.BEFORE_TEST_METHOD,
         scripts = "/sql/populate-consumers.sql")
+@Sql(executionPhase = Sql.ExecutionPhase.BEFORE_TEST_METHOD,
+        scripts = "/sql/populate-consumers-config.sql")
 @Sql(executionPhase = Sql.ExecutionPhase.AFTER_TEST_METHOD,
         scripts = "/sql/drop-consumers.sql")
 class ConsumerControllerTest extends BaseControllerTest {
 
     private static final Integer CONSUMER_ID_THAT_IN_DATABASE = 1;
     private static final String CONSUMER_EMAIL_THAT_IN_DATABASE = "ashyshyma@gmail.com";
-
     private static final Integer CONSUMER_ID_THAT_NOT_IN_DATABASE = 101;
-
     private static final Integer CONSUMERS_COUNT = 6;
 
     @Test

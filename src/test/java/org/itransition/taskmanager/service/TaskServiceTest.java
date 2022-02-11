@@ -1,17 +1,17 @@
-package org.itransition.taskmanager.service.dto;
+package org.itransition.taskmanager.service;
 
 import org.itransition.taskmanager.exception.DuplicateTitleException;
 import org.itransition.taskmanager.exception.ModelNotFoundException;
-import org.itransition.taskmanager.mapper.dto.TaskDtoMapper;
-import org.itransition.taskmanager.mapper.dto.TaskDtoMapperImpl;
-import org.itransition.taskmanager.mapper.jpa.ConsumerJpaMapper;
-import org.itransition.taskmanager.mapper.jpa.ConsumerJpaMapperImpl;
-import org.itransition.taskmanager.mapper.jpa.TaskJpaMapper;
+import org.itransition.taskmanager.mapper.TaskDtoMapper;
+import org.itransition.taskmanager.mapper.TaskDtoMapperImpl;
+import org.itransition.taskmanager.mapper.ConsumerJpaMapper;
+import org.itransition.taskmanager.mapper.ConsumerJpaMapperImpl;
+import org.itransition.taskmanager.mapper.TaskJpaMapper;
 import org.itransition.taskmanager.dto.ConsumerDto;
 import org.itransition.taskmanager.dto.TaskDto;
 import org.itransition.taskmanager.jpa.entity.Task;
 import org.itransition.taskmanager.jpa.dao.TaskRepository;
-import org.itransition.taskmanager.mapper.jpa.TaskJpaMapperImpl;
+import org.itransition.taskmanager.mapper.TaskJpaMapperImpl;
 import org.itransition.taskmanager.utils.DtoUtils;
 import org.itransition.taskmanager.utils.JpaUtils;
 import org.junit.jupiter.api.Test;
@@ -83,17 +83,13 @@ class TaskServiceTest {
         TaskDto taskDtoFromService = taskService.saveToConsumer(taskDto, CONSUMER_ID);
         assertNotNull(taskDtoFromService);
 
-        verify(taskRepository)
-                .existsByTitle(anyString());
+        verify(taskRepository).existsByTitle(anyString());
 
-        verify(consumerService)
-                .existsById(anyLong());
+        verify(consumerService).existsById(anyLong());
 
-        verify(consumerService)
-                .findById(anyLong());
+        verify(consumerService).findById(anyLong());
 
-        verify(taskRepository)
-                .save(any(Task.class));
+        verify(taskRepository).save(any(Task.class));
     }
 
     @Test
@@ -106,8 +102,7 @@ class TaskServiceTest {
         assertThrows(DuplicateTitleException.class,
                 () -> taskService.saveToConsumer(taskDto, CONSUMER_ID));
 
-        verify(taskRepository)
-                .existsByTitle(TASK_TITLE);
+        verify(taskRepository).existsByTitle(TASK_TITLE);
 
         verifyNoMoreInteractions(consumerService);
 
@@ -125,11 +120,9 @@ class TaskServiceTest {
         assertThrows(ModelNotFoundException.class,
                 () -> taskService.saveToConsumer(taskDto, CONSUMER_ID));
 
-        verify(taskRepository)
-                .existsByTitle(TASK_TITLE);
+        verify(taskRepository).existsByTitle(TASK_TITLE);
 
-        verify(consumerService)
-                .existsById(CONSUMER_ID);
+        verify(consumerService).existsById(CONSUMER_ID);
 
         verifyNoMoreInteractions(consumerService);
 
@@ -151,8 +144,7 @@ class TaskServiceTest {
 
         assertNotNull(taskDtoFromService);
 
-        verify(taskRepository)
-                .findByIdAndConsumerId(TASK_ID, CONSUMER_ID);
+        verify(taskRepository).findByIdAndConsumerId(TASK_ID, CONSUMER_ID);
 
         verify(taskRepository).save(task);
     }

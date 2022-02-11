@@ -19,6 +19,7 @@ import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.
 
 @Sql(executionPhase = Sql.ExecutionPhase.BEFORE_TEST_METHOD,
         scripts = {"/sql/populate-consumers.sql",
+                "/sql/populate-consumers-config.sql",
                 "/sql/populate-tasks.sql",
                 "/sql/populate-attached-files.sql"})
 @Sql(executionPhase = Sql.ExecutionPhase.AFTER_TEST_METHOD,
