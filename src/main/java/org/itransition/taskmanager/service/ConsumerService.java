@@ -153,7 +153,7 @@ public class ConsumerService {
     /**
      * Finds all consumers by some frequency, who have enabled notifications
      */
-    public List<ConsumerDto> findAllConsumersByEnabledNotificationsAndByFrequency(String notificationFrequency) {
+    public List<ConsumerDto> findAllConsumersByEnabledNotificationsAndByFrequency(NotificationFrequency notificationFrequency) {
         log.info("Fetching '" + ENTITY_NAME + "' entities who have enabled notifications in"
                 + " joined '" + CONSUMER_CONFIG_ENTITY_NAME + "' by notification frequency {}"
                 + " from the JPA datastore unit", notificationFrequency);

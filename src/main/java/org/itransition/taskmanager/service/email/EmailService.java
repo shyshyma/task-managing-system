@@ -4,7 +4,6 @@ import freemarker.template.Configuration;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.itransition.taskmanager.jpa.entity.NotificationFrequency;
-import org.springframework.beans.factory.annotation.Value;
 import org.springframework.mail.javamail.JavaMailSenderImpl;
 import org.springframework.mail.javamail.MimeMessageHelper;
 import org.springframework.scheduling.annotation.Async;
@@ -22,9 +21,6 @@ public class EmailService {
     private final Configuration configuration;
     private final JavaMailSenderImpl mailSender;
     private final EmailDetailsService emailDetailsService;
-
-    @Value("${spring.mail.username}")
-    private String replyToEmailAddress;
 
     /**
      * Sends emails to all consumers by frequency param, who have enabled notifications
@@ -54,7 +50,6 @@ public class EmailService {
             helper.setText(emailContent, true);
             helper.setSubject(emailDetails.getSubject());
             helper.setTo(emailDetails.getDestinationEmail());
-            helper.setReplyTo(replyToEmailAddress);
 
             mailSender.send(mimeMessage);
             log.info("Email has been successfully delivered to consumer {}",

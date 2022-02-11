@@ -2,7 +2,6 @@ package org.itransition.taskmanager.service.email;
 
 import lombok.RequiredArgsConstructor;
 import org.itransition.taskmanager.constant.FreeMarkerTemplatesLocation;
-import org.itransition.taskmanager.dto.ConsumerDto;
 import org.itransition.taskmanager.jpa.entity.NotificationFrequency;
 import org.itransition.taskmanager.mapper.EmailDetailsMapper;
 import org.itransition.taskmanager.service.ConsumerService;
@@ -25,8 +24,8 @@ public class EmailDetailsService {
      * and by enabled notifications
      */
     public List<EmailDetails> findAllEmailDetailsByNotificationFrequency(NotificationFrequency frequency) {
-        List<ConsumerDto> consumers = consumerService.findAllConsumersByEnabledNotificationsAndByFrequency(frequency.toString());
-        return consumers.stream()
+        return consumerService.findAllConsumersByEnabledNotificationsAndByFrequency(frequency)
+                .stream()
                 .map(consumerDto -> emailDetailsMapper.map(consumerDto, NOTIFICATION_SUBJECT, FreeMarkerTemplatesLocation.NOTIFICATION))
                 .collect(Collectors.toList());
     }
