@@ -11,6 +11,8 @@ import lombok.EqualsAndHashCode;
 
 import javax.validation.constraints.Email;
 import javax.validation.constraints.NotNull;
+import java.io.Serial;
+import java.io.Serializable;
 
 @Getter
 @Setter
@@ -18,7 +20,10 @@ import javax.validation.constraints.NotNull;
 @AllArgsConstructor
 @EqualsAndHashCode
 @JsonIgnoreProperties(ignoreUnknown = true)
-public class ConsumerConfigDto {
+public class ConsumerConfigDto implements Dto, Serializable {
+
+    @Serial
+    private static final long serialVersionUID = 144L;
 
     @JsonProperty(access = JsonProperty.Access.READ_ONLY)
     private Long id;
