@@ -72,6 +72,7 @@ class ConsumerControllerTest extends BaseControllerTest {
     @Test
     void saveConsumerReturns201AndConsumerJson() throws Exception {
         ConsumerDto consumerDto = DtoUtils.generateConsumerDto();
+        consumerDto.setId(null);
         ResultActions resultActions = getMockMvc().perform(post("/api/consumers")
                         .contentType(getJsonContentType())
                         .content(getObjectMapper().writeValueAsString(consumerDto)))
