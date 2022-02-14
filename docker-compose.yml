@@ -15,6 +15,12 @@ services:
     ports:
       - "3309:3306"
 
+  redis:
+    image: "redis:6.2.6"
+    container_name: taskmanager-redis
+    ports:
+      - "${REDIS_PORT}:6379"
+
   taskmanager:
     container_name: taskmanager-rest-api
     restart: on-failure
@@ -23,12 +29,23 @@ services:
       DATASOURCE_URL: ${MYSQL_DATASOURCE_URL}
       DATASOURCE_USERNAME: ${MYSQL_USERNAME}
       DATASOURCE_PASSWORD: ${MYSQL_PASSWORD}
+      SMTP_MAIL_HOST: ${SMTP_MAIL_HOST}
+      SMTP_MAIL_PORT: ${SMTP_MAIL_PORT}
+      SMTP_MAIL_USERNAME: ${SMTP_MAIL_USERNAME}
+      SMTP_MAIL_PASSWORD: ${SMTP_MAIL_PASSWORD}
+      THREAD_POOL_CORE_SIZE: ${THREAD_POOL_CORE_SIZE}
+      THREAD_POOL_ASYNC_MAX_SIZE: ${THREAD_POOL_ASYNC_MAX_SIZE}
+      THREAD_POOL_QUEUE_CAPACITY: ${THREAD_POOL_QUEUE_CAPACITY}
+      REDIS_HOST: ${REDIS_HOST}
+      REDIS_PORT: ${REDIS_PORT}
+      REDIS_CACHE_TTL: ${REDIS_CACHE_TTL}
     volumes:
       - taskmanager-logs:/logs
     ports:
       - "8085:8080"
     depends_on:
       - mysql
+      - redis
 
 volumes:
   taskmanager-mysql-data:
