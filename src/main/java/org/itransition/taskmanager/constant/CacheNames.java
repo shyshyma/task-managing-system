@@ -7,11 +7,26 @@ import lombok.RequiredArgsConstructor;
 @RequiredArgsConstructor
 public enum CacheNames {
 
-    CONSUMER("consumer"),
-    CONSUMER_EXISTS_BY_ID("consumer-exists-by-id"),
-    CONSUMER_CONFIG("consumer-config"),
-    CONSUMER_CONFIG_EMAIL("consumer-config-email"),
-    CONSUMER_CONFIG_EXISTS_BY_EMAIL("consumer-config-exists-by-email");
+    CONSUMER(Constants.CONSUMER_VALUE),
+    CONSUMER_EXISTS_BY_ID(Constants.CONSUMER_EXISTS_BY_ID_VALUE),
+    CONSUMER_CONFIG(Constants.CONSUMER_CONFIG_VALUE),
+    CONSUMER_CONFIG_EMAIL(Constants.CONSUMER_CONFIG_EMAIL_VALUE),
+    CONSUMER_CONFIG_EXISTS_BY_ID(Constants.CONSUMER_CONFIG_EXISTS_BY_ID_VALUE),
+    CONSUMER_CONFIG_EXISTS_BY_EMAIL(Constants.CONSUMER_CONFIG_EXISTS_BY_EMAIL_VALUE);
 
     private final String name;
+
+    public final class Constants {
+
+        private Constants() {
+            throw new RuntimeException("This class cannot be initialized");
+        }
+
+        public static final String CONSUMER_VALUE = "consumer";
+        public static final String CONSUMER_EXISTS_BY_ID_VALUE = "consumer-exists-by-id";
+        public static final String CONSUMER_CONFIG_VALUE = "consumer-config";
+        public static final String CONSUMER_CONFIG_EMAIL_VALUE = "consumer-config-email";
+        public static final String CONSUMER_CONFIG_EXISTS_BY_ID_VALUE = "consumer-config-exists-by-id";
+        public static final String CONSUMER_CONFIG_EXISTS_BY_EMAIL_VALUE = "consumer-config-exists-by-email";
+    }
 }

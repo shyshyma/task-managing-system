@@ -2,7 +2,6 @@ package org.itransition.taskmanager.dto;
 
 import com.fasterxml.jackson.annotation.JsonFormat;
 import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
-import com.fasterxml.jackson.annotation.JsonProperty;
 
 import lombok.Getter;
 import lombok.Setter;
@@ -12,8 +11,6 @@ import lombok.EqualsAndHashCode;
 
 import javax.validation.constraints.Email;
 import javax.validation.constraints.NotNull;
-import java.io.Serial;
-import java.io.Serializable;
 import java.util.Date;
 
 @Getter
@@ -22,12 +19,8 @@ import java.util.Date;
 @AllArgsConstructor
 @EqualsAndHashCode
 @JsonIgnoreProperties(ignoreUnknown = true)
-public class ConsumerDto implements Dto, Serializable {
+public class ConsumerDto implements Dto {
 
-    @Serial
-    private static final long serialVersionUID = 42L;
-
-    @JsonProperty(access = JsonProperty.Access.READ_ONLY)
     private Long id;
 
     @NotNull(message = "'name' property must be not null")

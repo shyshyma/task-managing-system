@@ -2,6 +2,7 @@ package org.itransition.taskmanager.service;
 
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
+import org.itransition.taskmanager.constant.CacheNames;
 import org.itransition.taskmanager.dto.ConsumerConfigDto;
 import org.itransition.taskmanager.exception.ModelNotFoundException;
 import org.itransition.taskmanager.jpa.dao.ConsumerConfigRepository;
@@ -20,7 +21,7 @@ import org.springframework.transaction.annotation.Transactional;
 @Service
 @RequiredArgsConstructor
 @Transactional(propagation = Propagation.REQUIRED)
-@CacheConfig(cacheNames = "consumer-config")
+@CacheConfig(cacheNames = CacheNames.Constants.CONSUMER_CONFIG_VALUE)
 public class ConsumerConfigService {
 
     private final ConsumerConfigDtoMapper consumerConfigDtoMapper;
@@ -28,14 +29,14 @@ public class ConsumerConfigService {
 
     private static final String ENTITY_NAME = "consumer config";
 
-    @Cacheable(cacheNames = "consumer-config-exists-by-id")
+    @Cacheable(cacheNames = CacheNames.Constants.CONSUMER_CONFIG_EXISTS_BY_ID_VALUE)
     public boolean existsById(Long id) {
         log.info("Verifying that '" + ENTITY_NAME + "' with id {} exists"
                 + " in the JPA datastore unit ", id);
         return consumerConfigRepository.existsById(id);
     }
 
-    @Cacheable(cacheNames = "consumer-config-exists-by-email")
+    @Cacheable(cacheNames = CacheNames.Constants.CONSUMER_CONFIG_EXISTS_BY_EMAIL_VALUE)
     public boolean existsByEmail(String email) {
         log.info("Verifying that '" + ENTITY_NAME + "' with unique email '{}' exists"
                 + " in the JPA datastore unit ", email);
@@ -49,7 +50,7 @@ public class ConsumerConfigService {
         return consumerConfigDtoMapper.map(consumerConfigById);
     }
 
-    @Cacheable(cacheNames = "consumer-config-email")
+    @Cacheable(cacheNames = CacheNames.Constants.CONSUMER_CONFIG_EMAIL_VALUE)
     public String findEmailById(Long id) {
         log.info("Fetching 'notification_email' from '" + ENTITY_NAME + "' by id '{}'", id);
         if (!consumerConfigRepository.existsById(id)) {
@@ -58,7 +59,7 @@ public class ConsumerConfigService {
         return consumerConfigRepository.findEmailById(id);
     }
 
-    @CachePut(key = "#id", cacheNames = "consumer-config-email")
+    @CachePut(key = "#id", cacheNames = CacheNames.Constants.CONSUMER_CONFIG_EMAIL_VALUE)
     public String updateEmailById(String email, Long id) {
         log.info("Updating 'notification_email' by value {} for '" + ENTITY_NAME + "' entity by id"
                 + " '{}'", email, id);
@@ -82,10 +83,10 @@ public class ConsumerConfigService {
     }
 
     @CacheEvict(cacheNames = {
-            "consumer-config",
-            "consumer-config-exists-by-id",
-            "consumer-config-exists-by-email",
-            "consumer-config-email"})
+            CacheNames.Constants.CONSUMER_CONFIG_VALUE,
+            CacheNames.Constants.CONSUMER_CONFIG_EXISTS_BY_ID_VALUE,
+            CacheNames.Constants.CONSUMER_CONFIG_EXISTS_BY_EMAIL_VALUE,
+            CacheNames.Constants.CONSUMER_CONFIG_EMAIL_VALUE})
     public void deleteById(Long id) {
         log.info("Deleting '" + ENTITY_NAME + "' by id {}", id);
         if (!consumerConfigRepository.existsById(id)) {

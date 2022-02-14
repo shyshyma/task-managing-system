@@ -1,7 +1,6 @@
 package org.itransition.taskmanager.dto;
 
 import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
-import com.fasterxml.jackson.annotation.JsonProperty;
 
 import lombok.Getter;
 import lombok.Setter;
@@ -11,8 +10,6 @@ import lombok.EqualsAndHashCode;
 
 import javax.validation.constraints.Email;
 import javax.validation.constraints.NotNull;
-import java.io.Serial;
-import java.io.Serializable;
 
 @Getter
 @Setter
@@ -20,12 +17,8 @@ import java.io.Serializable;
 @AllArgsConstructor
 @EqualsAndHashCode
 @JsonIgnoreProperties(ignoreUnknown = true)
-public class ConsumerConfigDto implements Dto, Serializable {
+public class ConsumerConfigDto implements Dto {
 
-    @Serial
-    private static final long serialVersionUID = 144L;
-
-    @JsonProperty(access = JsonProperty.Access.READ_ONLY)
     private Long id;
 
     @NotNull(message = "'notifications' property must be not null")

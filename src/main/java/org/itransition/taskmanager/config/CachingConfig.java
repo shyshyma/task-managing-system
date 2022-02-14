@@ -23,7 +23,7 @@ import java.util.stream.Collectors;
 public class CachingConfig {
 
     @Value("${spring.cache.redis.time-to-live}")
-    private Duration ttlInMilliseconds;
+    private Duration ttl;
 
     @Value("${spring.cache.redis.key-prefix}")
     private String cacheNamePrefix;
@@ -34,8 +34,8 @@ public class CachingConfig {
         return RedisCacheConfiguration.defaultCacheConfig()
                 .prefixCacheNameWith(cacheNamePrefix)
                 .serializeValuesWith(RedisSerializationContext
-                        .SerializationPair.fromSerializer(RedisSerializer.java()))
-                .entryTtl(ttlInMilliseconds)
+                        .SerializationPair.fromSerializer(RedisSerializer.json()))
+                .entryTtl(ttl)
                 .disableCachingNullValues();
     }
 

@@ -2,6 +2,7 @@ package org.itransition.taskmanager.service;
 
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
+import org.itransition.taskmanager.constant.CacheNames;
 import org.itransition.taskmanager.constant.FreeMarkerTemplatesLocation;
 import org.itransition.taskmanager.dto.ConsumerDto;
 import org.itransition.taskmanager.event.SuccessRegistrationEvent;
@@ -31,7 +32,7 @@ import java.util.stream.Collectors;
 @Service
 @RequiredArgsConstructor
 @Transactional(propagation = Propagation.REQUIRED)
-@CacheConfig(cacheNames = "consumer")
+@CacheConfig(cacheNames = CacheNames.Constants.CONSUMER_VALUE)
 public class ConsumerService {
 
     private final ApplicationEventPublisher applicationEventPublisher;
@@ -131,7 +132,7 @@ public class ConsumerService {
                 .collect(Collectors.toList());
     }
 
-    @Cacheable(cacheNames = "consumer-exists-by-id")
+    @Cacheable(cacheNames = CacheNames.Constants.CONSUMER_EXISTS_BY_ID_VALUE)
     public boolean existsById(Long id) {
         log.info("Verifying that '" + ENTITY_NAME + "' with id {} exists"
                 + " in the JPA datastore unit ", id);
@@ -142,12 +143,12 @@ public class ConsumerService {
      * Deletes Consumer, and it's config entities by id(have shared PK)
      */
     @CacheEvict(cacheNames = {
-            "consumer",
-            "consumer-exists-by-id",
-            "consumer-config",
-            "consumer-config-exists-by-id",
-            "consumer-config-exists-by-email",
-            "consumer-config-email"})
+            CacheNames.Constants.CONSUMER_VALUE,
+            CacheNames.Constants.CONSUMER_EXISTS_BY_ID_VALUE,
+            CacheNames.Constants.CONSUMER_CONFIG_VALUE,
+            CacheNames.Constants.CONSUMER_CONFIG_EXISTS_BY_ID_VALUE,
+            CacheNames.Constants.CONSUMER_CONFIG_EXISTS_BY_EMAIL_VALUE,
+            CacheNames.Constants.CONSUMER_CONFIG_EMAIL_VALUE})
     public void deleteById(Long id) {
         log.info("Deleting '" + ENTITY_NAME
                 + ", '" + CONSUMER_CONFIG_ENTITY_NAME
