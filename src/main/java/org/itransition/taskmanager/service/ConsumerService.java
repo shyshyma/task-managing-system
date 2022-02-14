@@ -2,6 +2,7 @@ package org.itransition.taskmanager.service;
 
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
+import org.itransition.taskmanager.constant.CacheNames;
 import org.itransition.taskmanager.constant.FreeMarkerTemplatesLocation;
 import org.itransition.taskmanager.dto.ConsumerDto;
 import org.itransition.taskmanager.event.SuccessRegistrationEvent;
@@ -14,6 +15,10 @@ import org.itransition.taskmanager.mapper.ConsumerJpaMapper;
 import org.itransition.taskmanager.jpa.entity.Consumer;
 import org.itransition.taskmanager.jpa.dao.ConsumerRepository;
 import org.itransition.taskmanager.service.email.EmailDetails;
+import org.springframework.cache.annotation.CacheConfig;
+import org.springframework.cache.annotation.Cacheable;
+import org.springframework.cache.annotation.CachePut;
+import org.springframework.cache.annotation.CacheEvict;
 import org.springframework.context.ApplicationEventPublisher;
 import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
@@ -27,6 +32,7 @@ import java.util.stream.Collectors;
 @Service
 @RequiredArgsConstructor
 @Transactional(propagation = Propagation.REQUIRED)
+@CacheConfig(cacheNames = CacheNames.Constants.CONSUMER_VALUE)
 public class ConsumerService {
 
     private final ApplicationEventPublisher applicationEventPublisher;
@@ -41,6 +47,7 @@ public class ConsumerService {
     /**
      * Finds Consumer entity and joins email column from ConsumerConfig
      */
+    @Cacheable
     public ConsumerDto findById(Long id) {
         log.info("Fetching '" + ENTITY_NAME + "' entity with id {}"
                 + " from the JPA datastore unit", id);
@@ -55,8 +62,8 @@ public class ConsumerService {
      */
     public ConsumerDto save(ConsumerDto consumerDto) {
         log.info("Saving entities '" + ENTITY_NAME + "' "
-                + CONSUMER_CONFIG_ENTITY_NAME + "' with name '{}', surname '{}' and email '{}'"
-                + " to the JPA datastore unit", consumerDto.getName(), consumerDto.getSurname(),
+                        + CONSUMER_CONFIG_ENTITY_NAME + "' with name '{}', surname '{}' and email '{}'"
+                        + " to the JPA datastore unit", consumerDto.getName(), consumerDto.getSurname(),
                 consumerDto.getEmail());
 
         if (consumerConfigService.existsByEmail(consumerDto.getEmail())) {
@@ -96,6 +103,7 @@ public class ConsumerService {
     /**
      * Updates 'Consumer' entity and his email inside of ConsumerConfig entity
      */
+    @CachePut(key = "#consumerId")
     public ConsumerDto updateById(Long consumerId, ConsumerDto consumerDto) {
         log.info("Updating entity '" + ENTITY_NAME + "' with name '{}', surname '{}'"
                         + " and unique email '{}' to the JPA datastore unit", consumerDto.getName(),
@@ -124,6 +132,7 @@ public class ConsumerService {
                 .collect(Collectors.toList());
     }
 
+    @Cacheable(cacheNames = CacheNames.Constants.CONSUMER_EXISTS_BY_ID_VALUE)
     public boolean existsById(Long id) {
         log.info("Verifying that '" + ENTITY_NAME + "' with id {} exists"
                 + " in the JPA datastore unit ", id);
@@ -133,6 +142,13 @@ public class ConsumerService {
     /**
      * Deletes Consumer, and it's config entities by id(have shared PK)
      */
+    @CacheEvict(cacheNames = {
+            CacheNames.Constants.CONSUMER_VALUE,
+            CacheNames.Constants.CONSUMER_EXISTS_BY_ID_VALUE,
+            CacheNames.Constants.CONSUMER_CONFIG_VALUE,
+            CacheNames.Constants.CONSUMER_CONFIG_EXISTS_BY_ID_VALUE,
+            CacheNames.Constants.CONSUMER_CONFIG_EXISTS_BY_EMAIL_VALUE,
+            CacheNames.Constants.CONSUMER_CONFIG_EMAIL_VALUE})
     public void deleteById(Long id) {
         log.info("Deleting '" + ENTITY_NAME
                 + ", '" + CONSUMER_CONFIG_ENTITY_NAME

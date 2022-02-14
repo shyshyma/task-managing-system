@@ -2,7 +2,6 @@ package org.itransition.taskmanager.dto;
 
 import com.fasterxml.jackson.annotation.JsonFormat;
 import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
-import com.fasterxml.jackson.annotation.JsonProperty;
 
 import lombok.Getter;
 import lombok.Setter;
@@ -22,7 +21,6 @@ import java.util.Date;
 @JsonIgnoreProperties(ignoreUnknown = true)
 public class ConsumerDto implements Dto {
 
-    @JsonProperty(access = JsonProperty.Access.READ_ONLY)
     private Long id;
 
     @NotNull(message = "'name' property must be not null")
