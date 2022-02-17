@@ -1,1 +1,3 @@
-rootProject.name = 'taskmanager'
+rootProject.name = 'task-managing-system'
+include 'audit'
+include 'task-manager'
