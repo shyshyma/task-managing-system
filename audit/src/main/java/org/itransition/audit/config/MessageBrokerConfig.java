@@ -10,7 +10,6 @@ import org.springframework.amqp.rabbit.connection.ConnectionFactory;
 import org.springframework.amqp.rabbit.core.RabbitTemplate;
 import org.springframework.amqp.support.converter.Jackson2JsonMessageConverter;
 import org.springframework.amqp.support.converter.MessageConverter;
-import org.springframework.beans.factory.annotation.Qualifier;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.context.annotation.Primary;
@@ -29,11 +28,9 @@ public class MessageBrokerConfig {
     }
 
     @Bean
-    public Binding binding(@Qualifier("taskLogQueue") Queue queue,
-                           @Qualifier("taskLogDirectExchange") DirectExchange exchange) {
-
-        return BindingBuilder.bind(queue)
-                .to(exchange)
+    public Binding binding() {
+        return BindingBuilder.bind(queue())
+                .to(directExchange())
                 .with(MessageBroker.RoutingKey.TASK_LOG_ROUTING_KEY_NAME);
     }
 
@@ -44,9 +41,9 @@ public class MessageBrokerConfig {
     }
 
     @Bean
-    public AmqpTemplate amqpTemplate(ConnectionFactory factory, MessageConverter converter) {
+    public AmqpTemplate amqpTemplate(ConnectionFactory factory) {
         RabbitTemplate template = new RabbitTemplate(factory);
-        template.setMessageConverter(converter);
+        template.setMessageConverter(messageConverter());
         return template;
     }
 }
