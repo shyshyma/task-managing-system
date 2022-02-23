@@ -2,6 +2,7 @@ package org.itransition.taskmanager.constant;
 
 import lombok.Getter;
 import lombok.RequiredArgsConstructor;
+import lombok.experimental.UtilityClass;
 
 @Getter
 @RequiredArgsConstructor
@@ -16,11 +17,8 @@ public enum CacheNames {
 
     private final String name;
 
+    @UtilityClass
     public final class Constants {
-
-        private Constants() {
-            throw new RuntimeException("This class cannot be initialized");
-        }
 
         public static final String CONSUMER_VALUE = "consumer";
         public static final String CONSUMER_EXISTS_BY_ID_VALUE = "consumer-exists-by-id";

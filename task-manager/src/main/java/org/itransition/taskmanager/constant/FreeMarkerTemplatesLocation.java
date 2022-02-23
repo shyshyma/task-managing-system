@@ -1,10 +1,9 @@
 package org.itransition.taskmanager.constant;
 
-public final class FreeMarkerTemplatesLocation {
+import lombok.experimental.UtilityClass;
 
-    private FreeMarkerTemplatesLocation() {
-        throw new RuntimeException("This class cannot be initialized");
-    }
+@UtilityClass
+public final class FreeMarkerTemplatesLocation {
 
     public static final String SUCCESS_REGISTRATION = "mail/success-registration.ftl";
     public static final String NOTIFICATION = "mail/notification.ftl";
