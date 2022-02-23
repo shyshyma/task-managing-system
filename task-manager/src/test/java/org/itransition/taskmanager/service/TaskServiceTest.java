@@ -7,11 +7,14 @@ import org.itransition.taskmanager.mapper.TaskDtoMapperImpl;
 import org.itransition.taskmanager.mapper.ConsumerJpaMapper;
 import org.itransition.taskmanager.mapper.ConsumerJpaMapperImpl;
 import org.itransition.taskmanager.mapper.TaskJpaMapper;
+import org.itransition.taskmanager.mapper.TaskLogMessageMapper;
+import org.itransition.taskmanager.mapper.TaskLogMessageMapperImpl;
 import org.itransition.taskmanager.dto.ConsumerDto;
 import org.itransition.taskmanager.dto.TaskDto;
 import org.itransition.taskmanager.jpa.entity.Task;
 import org.itransition.taskmanager.jpa.dao.TaskRepository;
 import org.itransition.taskmanager.mapper.TaskJpaMapperImpl;
+import org.itransition.taskmanager.mb.Producer;
 import org.itransition.taskmanager.utils.DtoUtils;
 import org.itransition.taskmanager.utils.JpaUtils;
 import org.junit.jupiter.api.Test;
@@ -51,6 +54,9 @@ class TaskServiceTest {
     @Mock
     private ConsumerService consumerService;
 
+    @Mock
+    private Producer producer;
+
     @Spy
     private TaskDtoMapper taskDtoMapper = new TaskDtoMapperImpl();
 
@@ -59,6 +65,9 @@ class TaskServiceTest {
 
     @Spy
     private ConsumerJpaMapper consumerJpaMapper = new ConsumerJpaMapperImpl();
+
+    @Spy
+    private TaskLogMessageMapper taskLogMessageMapper = new TaskLogMessageMapperImpl();
 
     @InjectMocks
     private TaskService taskService;

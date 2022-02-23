@@ -2,6 +2,7 @@ package org.itransition.taskmanager.service;
 
 import org.itransition.taskmanager.exception.DuplicateEmailException;
 import org.itransition.taskmanager.exception.ModelNotFoundException;
+import org.itransition.taskmanager.jpa.entity.NotificationFrequency;
 import org.itransition.taskmanager.mapper.ConsumerDtoMapper;
 import org.itransition.taskmanager.mapper.ConsumerDtoMapperImpl;
 import org.itransition.taskmanager.mapper.ConsumerJpaMapper;
@@ -218,5 +219,21 @@ class ConsumerServiceTest {
         verifyNoMoreInteractions(consumerRepository);
 
         verifyNoMoreInteractions(consumerConfigService);
+    }
+
+    @Test
+    void testFindAllConsumersByEnabledNotificationsAndByFrequency() {
+        List<Consumer> consumers = List.of(JpaUtils.generateConsumer(), JpaUtils.generateConsumer(),
+                JpaUtils.generateConsumer());
+
+        when(consumerRepository.findByEnabledNotificationsAndByFrequency(NotificationFrequency.EVERY_DAY))
+                .thenReturn(consumers);
+
+        List<ConsumerDto> consumersFromService = consumerService
+                .findAllConsumersByEnabledNotificationsAndByFrequency(NotificationFrequency.EVERY_DAY);
+
+        assertEquals(consumers.size(), consumersFromService.size());
+
+        verify(consumerRepository).findByEnabledNotificationsAndByFrequency(NotificationFrequency.EVERY_DAY);
     }
 }
