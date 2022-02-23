@@ -15,7 +15,7 @@ public class Consumer {
     private final TaskLogService taskLogService;
 
     @RabbitListener(queues = MessageBroker.Queue.TASK_LOG_QUEUE_NAME)
-    public void some(TaskLogMessage taskLogMessage) {
+    public void receive(TaskLogMessage taskLogMessage) {
         log.info("Received message from the queue '{}'", MessageBroker.Queue.TASK_LOG_QUEUE_NAME);
         taskLogService.save(taskLogMessage);
     }
