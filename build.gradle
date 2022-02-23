@@ -15,6 +15,7 @@ ext {
     commonsLangVersion = "3.12.0"
     mapStructVersion = "1.4.2.Final"
     lombokVersion = "1.18.22"
+    javaFakerVersion = "1.0.2"
 }
 
 subprojects {
@@ -52,10 +53,14 @@ subprojects {
 
     def excludingList = [
             '**/taskmanager/*.class',
+            '**/audit/*.class',
             '**/config/**',
+            '**/constant/**',
+            "**/mq/**",
             '**/dto/**',
             '**/exception/**',
             '**/jpa/**',
+            '**/mongo/**',
             '**/mapper/**'
     ]
 
@@ -107,6 +112,7 @@ subprojects {
         annotationProcessor "org.mapstruct:mapstruct-processor:$mapStructVersion"
 
         testImplementation "org.springframework.boot:spring-boot-starter-test"
+        testImplementation "com.github.javafaker:javafaker:$javaFakerVersion"
 
         testCompileOnly "org.projectlombok:lombok:$lombokVersion"
 

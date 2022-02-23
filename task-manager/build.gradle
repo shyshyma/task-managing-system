@@ -3,10 +3,10 @@ description = "Provides simple RESTful API for managing tasks"
 ext {
     mysqlConnectorVersion = '8.0.25'
     liquibaseVersion = '4.7.1'
-    javaFakerVersion = '1.0.2'
     cloudVersion = '3.1.0'
     embeddedMySqlVersion = '2.0.20'
     embeddedRedisVersion = '2.0.20'
+    embeddedRabbitVersion = '2.0.20'
 }
 
 dependencies {
@@ -19,8 +19,8 @@ dependencies {
     implementation "org.springframework.boot:spring-boot-starter-freemarker"
     implementation "org.liquibase:liquibase-core:$liquibaseVersion"
 
-    testImplementation "com.github.javafaker:javafaker:$javaFakerVersion"
     testImplementation "org.springframework.cloud:spring-cloud-starter-bootstrap:$cloudVersion"
     testImplementation "com.playtika.testcontainers:embedded-mysql:$embeddedMySqlVersion"
     testImplementation "com.playtika.testcontainers:embedded-redis:$embeddedRedisVersion"
+    testImplementation "com.playtika.testcontainers:embedded-rabbitmq:$embeddedRabbitVersion"
 }
