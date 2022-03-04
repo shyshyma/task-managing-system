@@ -15,21 +15,82 @@ services:
     ports:
       - "3309:3306"
 
+  mongo:
+    image: "mongo:5.0"
+    container_name: audit-mongo
+    environment:
+      MONGO_INITDB_ROOT_USERNAME: ${MONGO_USERNAME}
+      MONGO_INITDB_ROOT_PASSWORD: ${MONGO_PASSWORD}
+      MONGO_INITDB_DATABASE: ${MONGO_DATABASE}
+    volumes:
+      - audit-mongo-data:/data/db
+    ports:
+      - "${MONGO_PORT}:27017"
+
+  redis:
+    image: "redis:6.2.6"
+    container_name: taskmanager-redis
+    ports:
+      - "${REDIS_PORT}:6379"
+
+  rabbitmq:
+    image: "rabbitmq:3.9"
+    container_name: rabbit-mq
+    ports:
+      - "${RABBITMQ_PORT}:5672"
+      - "15672:15672"
+
+  audit:
+    container_name: audit
+    restart: on-failure
+    build: audit
+    environment:
+      MONGO_PORT: ${MONGO_PORT}
+      MONGO_HOST: ${MONGO_HOST}
+      MONGO_DATABASE: ${MONGO_DATABASE}
+      MONGO_USERNAME: ${MONGO_USERNAME}
+      MONGO_PASSWORD: ${MONGO_PASSWORD}
+      RABBITMQ_HOST: ${RABBITMQ_HOST}
+      RABBITMQ_PORT: ${RABBITMQ_PORT}
+    volumes:
+      - audit-logs:/audit/logs
+    ports:
+      - "8081:8081"
+    depends_on:
+      - mongo
+      - rabbitmq
+
   taskmanager:
     container_name: taskmanager-rest-api
     restart: on-failure
-    build: .
+    build: task-manager
     environment:
       DATASOURCE_URL: ${MYSQL_DATASOURCE_URL}
       DATASOURCE_USERNAME: ${MYSQL_USERNAME}
       DATASOURCE_PASSWORD: ${MYSQL_PASSWORD}
+      SMTP_MAIL_HOST: ${SMTP_MAIL_HOST}
+      SMTP_MAIL_PORT: ${SMTP_MAIL_PORT}
+      SMTP_MAIL_USERNAME: ${SMTP_MAIL_USERNAME}
+      SMTP_MAIL_PASSWORD: ${SMTP_MAIL_PASSWORD}
+      THREAD_POOL_CORE_SIZE: ${THREAD_POOL_CORE_SIZE}
+      THREAD_POOL_ASYNC_MAX_SIZE: ${THREAD_POOL_ASYNC_MAX_SIZE}
+      THREAD_POOL_QUEUE_CAPACITY: ${THREAD_POOL_QUEUE_CAPACITY}
+      REDIS_HOST: ${REDIS_HOST}
+      REDIS_PORT: ${REDIS_PORT}
+      REDIS_CACHE_TTL: ${REDIS_CACHE_TTL}
+      RABBITMQ_HOST: ${RABBITMQ_HOST}
+      RABBITMQ_PORT: ${RABBITMQ_PORT}
     volumes:
-      - taskmanager-logs:/logs
+      - taskmanager-logs:/task-manager/logs
     ports:
       - "8085:8080"
     depends_on:
       - mysql
+      - redis
+      - rabbitmq
 
 volumes:
   taskmanager-mysql-data:
   taskmanager-logs:
+  audit-logs:
+  audit-mongo-data:
