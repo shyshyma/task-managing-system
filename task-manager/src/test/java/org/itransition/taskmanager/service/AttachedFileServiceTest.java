@@ -1,5 +1,6 @@
 package org.itransition.taskmanager.service;
 
+import org.itransition.common.mb.MessagePublisher;
 import org.itransition.taskmanager.dto.FileMetadataDto;
 import org.itransition.taskmanager.exception.DuplicateFileNameException;
 import org.itransition.taskmanager.exception.ModelNotFoundException;
@@ -14,6 +15,8 @@ import org.itransition.taskmanager.dto.AttachedFileDto;
 import org.itransition.taskmanager.jpa.entity.AttachedFile;
 import org.itransition.taskmanager.jpa.dao.AttachedFileRepository;
 import org.itransition.taskmanager.mapper.TaskJpaMapperImpl;
+import org.itransition.taskmanager.mapper.AttachedFileLogMessageMapper;
+import org.itransition.taskmanager.mapper.AttachedFileLogMessageMapperImpl;
 import org.itransition.taskmanager.utils.DtoUtils;
 import org.itransition.taskmanager.utils.JpaUtils;
 import org.junit.jupiter.api.Test;
@@ -51,6 +54,9 @@ class AttachedFileServiceTest {
     @Mock
     private AttachedFileRepository attachedFileRepository;
 
+    @Mock
+    private MessagePublisher messagePublisher;
+
     @Spy
     private AttachedFileDtoMapper attachedFileDtoMapper = new AttachedFileDtoMapperImpl();
 
@@ -62,6 +68,9 @@ class AttachedFileServiceTest {
 
     @Spy
     private AttachedFileJpaMapper attachedFileJpaMapper = new AttachedFileJpaMapperImpl();
+
+    @Spy
+    private AttachedFileLogMessageMapper attachedFileLogMessageMapper = new AttachedFileLogMessageMapperImpl();
 
     @InjectMocks
     private AttachedFileService attachedFileService;

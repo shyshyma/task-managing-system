@@ -2,6 +2,9 @@ package org.itransition.taskmanager.service;
 
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
+import org.itransition.common.mb.MessageBrokerConstant;
+import org.itransition.common.mb.MessageDestinationDetails;
+import org.itransition.common.mb.MessagePublisher;
 import org.itransition.taskmanager.constant.CacheNames;
 import org.itransition.taskmanager.constant.FreeMarkerTemplatesLocation;
 import org.itransition.taskmanager.dto.ConsumerDto;
@@ -14,7 +17,10 @@ import org.itransition.taskmanager.mapper.ConsumerDtoMapper;
 import org.itransition.taskmanager.mapper.ConsumerJpaMapper;
 import org.itransition.taskmanager.jpa.entity.Consumer;
 import org.itransition.taskmanager.jpa.dao.ConsumerRepository;
+import org.itransition.taskmanager.mapper.ConsumerLogMessageMapper;
+import org.itransition.taskmanager.mb.ConsumerLogMessage;
 import org.itransition.taskmanager.service.email.EmailDetails;
+import org.springframework.cache.CacheManager;
 import org.springframework.cache.annotation.CacheConfig;
 import org.springframework.cache.annotation.Cacheable;
 import org.springframework.cache.annotation.CachePut;
@@ -26,6 +32,7 @@ import org.springframework.transaction.annotation.Propagation;
 import org.springframework.transaction.annotation.Transactional;
 
 import java.util.List;
+import java.util.Objects;
 import java.util.stream.Collectors;
 
 @Slf4j
@@ -38,8 +45,11 @@ public class ConsumerService {
     private final ApplicationEventPublisher applicationEventPublisher;
     private final ConsumerJpaMapper consumerJpaMapper;
     private final ConsumerDtoMapper consumerDtoMapper;
+    private final ConsumerLogMessageMapper consumerLogMessageMapper;
     private final ConsumerConfigService consumerConfigService;
     private final ConsumerRepository consumerRepository;
+    private final MessagePublisher messagePublisher;
+    private final CacheManager cacheManager;
 
     private static final String ENTITY_NAME = "consumer";
     private static final String CONSUMER_CONFIG_ENTITY_NAME = "consumer config";
@@ -47,13 +57,31 @@ public class ConsumerService {
     /**
      * Finds Consumer entity and joins email column from ConsumerConfig
      */
-    @Cacheable
     public ConsumerDto findById(Long id) {
+        ConsumerDto dtoFromCache = cacheManager.getCache(CacheNames.Constants.CONSUMER_VALUE).get(id, ConsumerDto.class);
+        if (!Objects.isNull(dtoFromCache)) {
+            MessageDestinationDetails details = new MessageDestinationDetails(MessageBrokerConstant.Exchange.LOG_EXCHANGE_NAME,
+                    MessageBrokerConstant.RoutingKey.CONSUMER_LOG_ROUTING_KEY_NAME);
+            ConsumerLogMessage message = consumerLogMessageMapper.map(dtoFromCache.getName(), dtoFromCache.getSurname(),
+                    "Consumer was found in cache");
+            messagePublisher.publish(message, details);
+
+            return dtoFromCache;
+        }
+
         log.info("Fetching '" + ENTITY_NAME + "' entity with id {}"
                 + " from the JPA datastore unit", id);
         Consumer consumer = findByIdOrThrow(id);
         String emailById = consumerConfigService.findEmailById(id);
-        return consumerDtoMapper.map(consumer, emailById);
+        ConsumerDto consumerDto = consumerDtoMapper.map(consumer, emailById);
+
+        MessageDestinationDetails details = new MessageDestinationDetails(MessageBrokerConstant.Exchange.LOG_EXCHANGE_NAME,
+                MessageBrokerConstant.RoutingKey.CONSUMER_LOG_ROUTING_KEY_NAME);
+        ConsumerLogMessage message = consumerLogMessageMapper.map(consumerDto.getName(), consumerDto.getSurname(),
+                "Consumer was found from relational database");
+        messagePublisher.publish(message, details);
+
+        return consumerDto;
     }
 
     /**
@@ -85,6 +113,7 @@ public class ConsumerService {
         consumerConfig.setConsumer(consumer);
 
         Consumer savedConsumer = consumerRepository.save(consumer);
+        consumerDto.setId(savedConsumer.getId());
 
         EmailDetails emailDetails = new EmailDetails()
                 .withSubject("Task manager: thanks for registration on our resource")
@@ -96,7 +125,12 @@ public class ConsumerService {
         SuccessRegistrationEvent event = new SuccessRegistrationEvent(this, emailDetails);
         applicationEventPublisher.publishEvent(event);
 
-        consumerDto.setId(savedConsumer.getId());
+        MessageDestinationDetails details = new MessageDestinationDetails(MessageBrokerConstant.Exchange.LOG_EXCHANGE_NAME,
+                MessageBrokerConstant.RoutingKey.CONSUMER_LOG_ROUTING_KEY_NAME);
+        ConsumerLogMessage message = consumerLogMessageMapper.map(consumerDto.getName(), consumerDto.getSurname(),
+                "Consumer was created inside relational database");
+        messagePublisher.publish(message, details);
+
         return consumerDto;
     }
 
@@ -114,8 +148,14 @@ public class ConsumerService {
 
         consumerRepository.save(consumerById);
         consumerConfigService.updateEmailById(consumerDto.getEmail(), consumerId);
-
         consumerDto.setId(consumerId);
+
+        MessageDestinationDetails details = new MessageDestinationDetails(MessageBrokerConstant.Exchange.LOG_EXCHANGE_NAME,
+                MessageBrokerConstant.RoutingKey.CONSUMER_LOG_ROUTING_KEY_NAME);
+        ConsumerLogMessage message = consumerLogMessageMapper.map(consumerDto.getName(), consumerDto.getSurname(),
+                "Consumer was updated inside of relational database");
+        messagePublisher.publish(message, details);
+
         return consumerDto;
     }
 
@@ -157,7 +197,18 @@ public class ConsumerService {
             throw new ModelNotFoundException("there is no entity '" + ENTITY_NAME
                     + "' with id: " + id);
         }
+
+        Consumer consumer = findByIdOrThrow(id);
+        String emailById = consumerConfigService.findEmailById(id);
+        ConsumerDto consumerDto = consumerDtoMapper.map(consumer, emailById);
+
         consumerRepository.deleteById(id);
+
+        MessageDestinationDetails details = new MessageDestinationDetails(MessageBrokerConstant.Exchange.LOG_EXCHANGE_NAME,
+                MessageBrokerConstant.RoutingKey.CONSUMER_LOG_ROUTING_KEY_NAME);
+        ConsumerLogMessage message = consumerLogMessageMapper.map(consumerDto.getName(), consumerDto.getSurname(),
+                "Consumer was deleted from relational database");
+        messagePublisher.publish(message, details);
     }
 
     private Consumer findByIdOrThrow(Long id) {

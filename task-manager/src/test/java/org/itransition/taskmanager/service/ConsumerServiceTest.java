@@ -1,5 +1,6 @@
 package org.itransition.taskmanager.service;
 
+import org.itransition.common.mb.MessagePublisher;
 import org.itransition.taskmanager.exception.DuplicateEmailException;
 import org.itransition.taskmanager.exception.ModelNotFoundException;
 import org.itransition.taskmanager.jpa.entity.NotificationFrequency;
@@ -10,11 +11,15 @@ import org.itransition.taskmanager.dto.ConsumerDto;
 import org.itransition.taskmanager.jpa.entity.Consumer;
 import org.itransition.taskmanager.jpa.dao.ConsumerRepository;
 import org.itransition.taskmanager.mapper.ConsumerJpaMapperImpl;
+import org.itransition.taskmanager.mapper.ConsumerLogMessageMapper;
+import org.itransition.taskmanager.mapper.ConsumerLogMessageMapperImpl;
 import org.itransition.taskmanager.utils.DtoUtils;
 import org.itransition.taskmanager.utils.JpaUtils;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
 import org.mockito.junit.jupiter.MockitoExtension;
+import org.springframework.cache.CacheManager;
+import org.springframework.cache.concurrent.ConcurrentMapCacheManager;
 import org.springframework.context.ApplicationEventPublisher;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageImpl;
@@ -53,11 +58,20 @@ class ConsumerServiceTest {
     @Mock
     private ConsumerConfigService consumerConfigService;
 
+    @Mock
+    private MessagePublisher messagePublisher;
+
+    @Spy
+    private CacheManager cacheManager = new ConcurrentMapCacheManager();
+
     @Spy
     private ConsumerJpaMapper consumerJpaMapper = new ConsumerJpaMapperImpl();
 
     @Spy
     private ConsumerDtoMapper consumerDtoMapper = new ConsumerDtoMapperImpl();
+
+    @Spy
+    private ConsumerLogMessageMapper consumerLogMessageMapper = new ConsumerLogMessageMapperImpl();
 
     @InjectMocks
     private ConsumerService consumerService;
@@ -196,10 +210,22 @@ class ConsumerServiceTest {
         when(consumerRepository.existsById(CONSUMER_ID))
                 .thenReturn(true);
 
+        Consumer generateConsumer = JpaUtils.generateConsumer();
+        generateConsumer.setId(CONSUMER_ID);
+
+        when(consumerRepository.findById(CONSUMER_ID))
+                .thenReturn(Optional.of(generateConsumer));
+
+        when(consumerConfigService.findEmailById(CONSUMER_ID))
+                .thenReturn(CONSUMER_EMAIL);
+
         consumerService.deleteById(CONSUMER_ID);
 
-        verify(consumerRepository)
-                .existsById(CONSUMER_ID);
+        verify(consumerRepository).existsById(CONSUMER_ID);
+
+        verify(consumerRepository).findById(CONSUMER_ID);
+
+        verify(consumerConfigService).findEmailById(CONSUMER_ID);
 
         verify(consumerRepository)
                 .deleteById(CONSUMER_ID);

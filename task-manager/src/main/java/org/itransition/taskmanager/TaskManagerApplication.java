@@ -7,8 +7,9 @@ import org.springframework.scheduling.annotation.EnableScheduling;
 
 @EnableAsync
 @EnableScheduling
-@SpringBootApplication
+@SpringBootApplication(scanBasePackages = {"org.itransition.common", "org.itransition.taskmanager"})
 public class TaskManagerApplication {
+
     public static void main(String[] args) {
         SpringApplication.run(TaskManagerApplication.class, args);
     }

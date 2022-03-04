@@ -1,5 +1,6 @@
 package org.itransition.taskmanager.service;
 
+import org.itransition.common.mb.MessagePublisher;
 import org.itransition.taskmanager.exception.DuplicateTitleException;
 import org.itransition.taskmanager.exception.ModelNotFoundException;
 import org.itransition.taskmanager.mapper.TaskDtoMapper;
@@ -14,7 +15,6 @@ import org.itransition.taskmanager.dto.TaskDto;
 import org.itransition.taskmanager.jpa.entity.Task;
 import org.itransition.taskmanager.jpa.dao.TaskRepository;
 import org.itransition.taskmanager.mapper.TaskJpaMapperImpl;
-import org.itransition.taskmanager.mb.Producer;
 import org.itransition.taskmanager.utils.DtoUtils;
 import org.itransition.taskmanager.utils.JpaUtils;
 import org.junit.jupiter.api.Test;
@@ -55,7 +55,7 @@ class TaskServiceTest {
     private ConsumerService consumerService;
 
     @Mock
-    private Producer producer;
+    private MessagePublisher messagePublisher;
 
     @Spy
     private TaskDtoMapper taskDtoMapper = new TaskDtoMapperImpl();

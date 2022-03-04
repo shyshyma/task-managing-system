@@ -2,7 +2,8 @@ package org.itransition.taskmanager.service;
 
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
-import org.itransition.taskmanager.constant.MessageBroker;
+import org.itransition.common.mb.MessageBrokerConstant;
+import org.itransition.common.mb.MessagePublisher;
 import org.itransition.taskmanager.mapper.ConsumerJpaMapper;
 import org.itransition.taskmanager.dto.ConsumerDto;
 import org.itransition.taskmanager.dto.TaskDto;
@@ -14,9 +15,8 @@ import org.itransition.taskmanager.jpa.entity.Consumer;
 import org.itransition.taskmanager.jpa.entity.Task;
 import org.itransition.taskmanager.jpa.dao.TaskRepository;
 import org.itransition.taskmanager.mapper.TaskLogMessageMapper;
-import org.itransition.taskmanager.mb.Producer;
 import org.itransition.taskmanager.mb.TaskLogMessage;
-import org.itransition.taskmanager.mb.MessageDestinationDetails;
+import org.itransition.common.mb.MessageDestinationDetails;
 import org.springframework.beans.BeanUtils;
 import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
@@ -38,7 +38,7 @@ public class TaskService {
     private final TaskLogMessageMapper taskLogMessageMapper;
     private final ConsumerService consumerService;
     private final TaskRepository taskRepository;
-    private final Producer producer;
+    private final MessagePublisher messagePublisher;
 
     private static final String ENTITY_NAME = "task";
     private static final String PARENT_ENTITY_NAME = "consumer";
@@ -79,10 +79,10 @@ public class TaskService {
         mappedTask.setConsumer(consumer);
         Task savedTask = taskRepository.save(mappedTask);
 
-        MessageDestinationDetails details = new MessageDestinationDetails(MessageBroker.Exchange.TASK_LOG_EXCHANGE_NAME,
-                MessageBroker.RoutingKey.TASK_LOG_ROUTING_KEY_NAME);
-        TaskLogMessage message = taskLogMessageMapper.map(taskDto.getTitle(), "Task was created");
-        producer.send(message, details);
+        MessageDestinationDetails details = new MessageDestinationDetails(MessageBrokerConstant.Exchange.LOG_EXCHANGE_NAME,
+                MessageBrokerConstant.RoutingKey.TASK_LOG_ROUTING_KEY_NAME);
+        TaskLogMessage message = taskLogMessageMapper.map(taskDto.getTitle(), "Task was created inside relational database");
+        messagePublisher.publish(message, details);
 
         return taskDtoMapper.map(savedTask);
     }
@@ -99,10 +99,10 @@ public class TaskService {
         BeanUtils.copyProperties(taskDto, taskFromRepo, "id", "creationDate", "consumer");
         Task savedTask = taskRepository.save(taskFromRepo);
 
-        MessageDestinationDetails details = new MessageDestinationDetails(MessageBroker.Exchange.TASK_LOG_EXCHANGE_NAME,
-                MessageBroker.RoutingKey.TASK_LOG_ROUTING_KEY_NAME);
-        TaskLogMessage message = taskLogMessageMapper.map(taskDto.getTitle(), "Task was updated");
-        producer.send(message, details);
+        MessageDestinationDetails details = new MessageDestinationDetails(MessageBrokerConstant.Exchange.LOG_EXCHANGE_NAME,
+                MessageBrokerConstant.RoutingKey.TASK_LOG_ROUTING_KEY_NAME);
+        TaskLogMessage message = taskLogMessageMapper.map(taskDto.getTitle(), "Task was updated inside relational database");
+        messagePublisher.publish(message, details);
 
         return taskDtoMapper.map(savedTask);
     }
@@ -117,10 +117,10 @@ public class TaskService {
         Task taskByIdAndConsumerId = findByIdAndConsumerIdOrThrow(id, consumerId);
         TaskDto taskDto = taskDtoMapper.map(taskByIdAndConsumerId);
 
-        MessageDestinationDetails details = new MessageDestinationDetails(MessageBroker.Exchange.TASK_LOG_EXCHANGE_NAME,
-                MessageBroker.RoutingKey.TASK_LOG_ROUTING_KEY_NAME);
-        TaskLogMessage message = taskLogMessageMapper.map(taskDto.getTitle(), "Task was found");
-        producer.send(message, details);
+        MessageDestinationDetails details = new MessageDestinationDetails(MessageBrokerConstant.Exchange.LOG_EXCHANGE_NAME,
+                MessageBrokerConstant.RoutingKey.TASK_LOG_ROUTING_KEY_NAME);
+        TaskLogMessage message = taskLogMessageMapper.map(taskDto.getTitle(), "Task was found inside relational database");
+        messagePublisher.publish(message, details);
 
         return taskDto;
     }
@@ -156,10 +156,10 @@ public class TaskService {
 
         taskRepository.deleteByIdAndConsumerId(id, consumerId);
 
-        MessageDestinationDetails details = new MessageDestinationDetails(MessageBroker.Exchange.TASK_LOG_EXCHANGE_NAME,
-                MessageBroker.RoutingKey.TASK_LOG_ROUTING_KEY_NAME);
-        TaskLogMessage message = taskLogMessageMapper.map(titleById, "Task was deleted");
-        producer.send(message, details);
+        MessageDestinationDetails details = new MessageDestinationDetails(MessageBrokerConstant.Exchange.LOG_EXCHANGE_NAME,
+                MessageBrokerConstant.RoutingKey.TASK_LOG_ROUTING_KEY_NAME);
+        TaskLogMessage message = taskLogMessageMapper.map(titleById, "Task was deleted inside relational database");
+        messagePublisher.publish(message, details);
     }
 
     private Task findByIdAndConsumerIdOrThrow(Long id, Long consumerId) {

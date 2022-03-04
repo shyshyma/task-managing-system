@@ -2,6 +2,9 @@ package org.itransition.taskmanager.service;
 
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
+import org.itransition.common.mb.MessageBrokerConstant;
+import org.itransition.common.mb.MessageDestinationDetails;
+import org.itransition.common.mb.MessagePublisher;
 import org.itransition.taskmanager.dto.FileMetadataDto;
 import org.itransition.taskmanager.exception.DuplicateFileNameException;
 import org.itransition.taskmanager.mapper.FileMetadataDtoMapper;
@@ -10,10 +13,12 @@ import org.itransition.taskmanager.dto.AttachedFileDto;
 import org.itransition.taskmanager.exception.ModelNotFoundException;
 import org.itransition.taskmanager.mapper.AttachedFileDtoMapper;
 import org.itransition.taskmanager.mapper.AttachedFileJpaMapper;
+import org.itransition.taskmanager.mapper.AttachedFileLogMessageMapper;
 import org.itransition.taskmanager.dto.TaskDto;
 import org.itransition.taskmanager.jpa.entity.AttachedFile;
 import org.itransition.taskmanager.jpa.entity.Task;
 import org.itransition.taskmanager.jpa.dao.AttachedFileRepository;
+import org.itransition.taskmanager.mb.AttachedFileLogMessage;
 import org.springframework.beans.BeanUtils;
 import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
@@ -33,8 +38,10 @@ public class AttachedFileService {
     private final FileMetadataDtoMapper fileMetadataDtoMapper;
     private final AttachedFileDtoMapper attachedFileDtoMapper;
     private final AttachedFileJpaMapper attachedFileJpaMapper;
+    private final AttachedFileLogMessageMapper attachedFileLogMessageMapper;
     private final TaskService taskService;
     private final AttachedFileRepository attachedFileRepository;
+    private final MessagePublisher messagePublisher;
 
     private static final String ENTITY_NAME = "attached_file";
     private static final String PARENT_ENTITY_NAME = "task";
@@ -70,6 +77,12 @@ public class AttachedFileService {
         attachedFile.setTask(task);
         attachedFileRepository.save(attachedFile);
 
+        MessageDestinationDetails details = new MessageDestinationDetails(MessageBrokerConstant.Exchange.LOG_EXCHANGE_NAME,
+                MessageBrokerConstant.RoutingKey.ATTACHED_FILE_LOG_ROUTING_KEY_NAME);
+        AttachedFileLogMessage message = attachedFileLogMessageMapper.map(attachedFileDto.getName(),
+                "File was created inside relational database");
+        messagePublisher.publish(message, details);
+
         return fileMetadataDtoMapper.map(attachedFile,
                 "api/consumers/" + consumerId + "/tasks/" + taskId + "/files/"
                         + attachedFileDto.getName());
@@ -94,6 +107,12 @@ public class AttachedFileService {
         AttachedFile mappedAttachedFile = attachedFileJpaMapper.map(attachedFileDto);
         BeanUtils.copyProperties(mappedAttachedFile, attachedFileFromRepo, "id", "task");
         attachedFileRepository.save(attachedFileFromRepo);
+
+        MessageDestinationDetails details = new MessageDestinationDetails(MessageBrokerConstant.Exchange.LOG_EXCHANGE_NAME,
+                MessageBrokerConstant.RoutingKey.ATTACHED_FILE_LOG_ROUTING_KEY_NAME);
+        AttachedFileLogMessage message = attachedFileLogMessageMapper.map(attachedFileDto.getName(),
+                "File was updated inside relational database");
+        messagePublisher.publish(message, details);
 
         return fileMetadataDtoMapper.map(attachedFileFromRepo,
                 "api/consumers/" + consumerId + "/tasks/" + taskId + "/files/" + fileName);
@@ -128,6 +147,11 @@ public class AttachedFileService {
         AttachedFile attachedFile = findByNameAndTaskIdAndTaskConsumerIdOrThrow(name,
                 taskId, consumerId);
 
+        MessageDestinationDetails details = new MessageDestinationDetails(MessageBrokerConstant.Exchange.LOG_EXCHANGE_NAME,
+                MessageBrokerConstant.RoutingKey.ATTACHED_FILE_LOG_ROUTING_KEY_NAME);
+        AttachedFileLogMessage message = attachedFileLogMessageMapper.map(name, "File was found inside relational database");
+        messagePublisher.publish(message, details);
+
         return attachedFileDtoMapper.map(attachedFile);
     }
 
@@ -147,6 +171,11 @@ public class AttachedFileService {
         }
 
         attachedFileRepository.deleteByNameAndTaskIdAndTaskConsumerId(name, taskId, consumerId);
+
+        MessageDestinationDetails details = new MessageDestinationDetails(MessageBrokerConstant.Exchange.LOG_EXCHANGE_NAME,
+                MessageBrokerConstant.RoutingKey.ATTACHED_FILE_LOG_ROUTING_KEY_NAME);
+        AttachedFileLogMessage message = attachedFileLogMessageMapper.map(name, "File was deleted inside relational database");
+        messagePublisher.publish(message, details);
     }
 
     private AttachedFile findByNameAndTaskIdAndTaskConsumerIdOrThrow(String name,
