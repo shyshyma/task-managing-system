@@ -1,0 +1,6 @@
+description = "Contains commons for all the modules"
+
+//jar without springBoot plugin,
+// because it requires mainClass, in common module no main class
+jar.enabled = true
+bootJar.enabled = false

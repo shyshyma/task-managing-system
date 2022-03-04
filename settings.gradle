@@ -1,3 +1,4 @@
 rootProject.name = 'task-managing-system'
 include 'audit'
 include 'task-manager'
+include 'common'

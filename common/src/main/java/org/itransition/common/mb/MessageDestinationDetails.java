@@ -1,7 +1,7 @@
-package org.itransition.taskmanager.mb;
+package org.itransition.common.mb;
 
-import lombok.AllArgsConstructor;
 import lombok.Getter;
+import lombok.AllArgsConstructor;
 
 /**
  * Provides core info for sending AMQP message to proper queue
