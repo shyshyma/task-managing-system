@@ -9,7 +9,7 @@ import lombok.Setter;
 @Setter
 @Builder
 @EqualsAndHashCode
-public class FileMetadataDto {
+public class FileMetadataDto implements Dto {
 
     private String fileName;
     private int size;

@@ -9,7 +9,7 @@ import java.util.Date;
 @Getter
 @Setter
 @EqualsAndHashCode
-public class ExceptionMetadataDto {
+public class ExceptionMetadataDto implements Dto {
 
     private Date timestamp;
     private String message;
