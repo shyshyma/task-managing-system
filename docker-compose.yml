@@ -58,7 +58,6 @@ services:
       - "8081:8081"
     depends_on:
       - mongo
-      - redis
       - rabbitmq
 
   taskmanager:
@@ -88,7 +87,6 @@ services:
     depends_on:
       - mysql
       - redis
-      - audit
       - rabbitmq
 
 volumes:
