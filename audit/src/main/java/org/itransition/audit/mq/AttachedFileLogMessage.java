@@ -9,7 +9,7 @@ import lombok.Setter;
 @Setter
 @NoArgsConstructor
 @AllArgsConstructor
-public class TaskLogMessage extends AbstractLogMessage {
+public class AttachedFileLogMessage extends AbstractLogMessage {
 
-    private String taskTitle;
+    private String fileName;
 }

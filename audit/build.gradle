@@ -1,5 +1,6 @@
 description = "Listens messages from 'task-manager' service and performs auditing"
 
 dependencies {
+    implementation project(':common')
     implementation "org.springframework.boot:spring-boot-starter-data-mongodb"
 }

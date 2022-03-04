@@ -16,9 +16,11 @@ public class TaskLogService {
     private final TaskLogMapper taskLogMapper;
     private final TaskLogRepository taskLogRepository;
 
+    private static final String ENTITY_NAME = "task log";
+
     public void save(TaskLogMessage taskLogMessage) {
+        log.info("Saving '" + ENTITY_NAME + "' entity to mongo persistence unit");
         TaskLog taskLog = taskLogMapper.map(taskLogMessage);
-        log.info("Saving 'task-log' entity to mongo persistence unit");
         taskLogRepository.save(taskLog);
     }
 }
