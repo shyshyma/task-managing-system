@@ -1,0 +1,156 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: task-manager-deployment
+  labels:
+    app: task-manager
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      app: task-manager
+  template:
+    metadata:
+      labels:
+        app: task-manager
+    spec:
+      containers:
+        - name: task-manager-container
+          image: ashyshyma/task-manager:latest
+          ports:
+            - containerPort: 8080
+          env:
+            - name: DATASOURCE_URL
+              valueFrom:
+                configMapKeyRef:
+                  name: mysql-configmap
+                  key: mysql_datasource_url
+            - name: DATASOURCE_USERNAME
+              valueFrom:
+                secretKeyRef:
+                  name: mysql-secret
+                  key: mysql_username
+            - name: DATASOURCE_PASSWORD
+              valueFrom:
+                secretKeyRef:
+                  name: mysql-secret
+                  key: mysql_password
+            - name: SMTP_MAIL_HOST
+              valueFrom:
+                configMapKeyRef:
+                  name: mail-configmap
+                  key: mail_host
+            - name: SMTP_MAIL_PORT
+              valueFrom:
+                configMapKeyRef:
+                  name: mail-configmap
+                  key: mail_port
+            - name: SMTP_MAIL_USERNAME
+              valueFrom:
+                secretKeyRef:
+                  name: mail-credentials-secret
+                  key: mail_username
+            - name: SMTP_MAIL_PASSWORD
+              valueFrom:
+                secretKeyRef:
+                  name: mail-credentials-secret
+                  key: mail_password
+            - name: REDIS_HOST
+              valueFrom:
+                configMapKeyRef:
+                  name: redis-configmap
+                  key: redis_host
+            - name: REDIS_PORT
+              valueFrom:
+                configMapKeyRef:
+                  name: redis-configmap
+                  key: redis_port
+            - name: REDIS_CACHE_TTL
+              valueFrom:
+                configMapKeyRef:
+                  name: redis-configmap
+                  key: redis_cache_ttl
+            - name: RABBITMQ_HOST
+              valueFrom:
+                configMapKeyRef:
+                  name: rabbitmq-configmap
+                  key: rabbitmq_host
+            - name: RABBITMQ_PORT
+              valueFrom:
+                configMapKeyRef:
+                  name: rabbitmq-configmap
+                  key: rabbitmq_port
+            - name: THREAD_POOL_CORE_SIZE
+              valueFrom:
+                configMapKeyRef:
+                  name: thread-pool-configmap
+                  key: thread_pool_core_size
+            - name: THREAD_POOL_ASYNC_MAX_SIZE
+              valueFrom:
+                configMapKeyRef:
+                  name: thread-pool-configmap
+                  key: thread_pool_async_max_size
+            - name: THREAD_POOL_QUEUE_CAPACITY
+              valueFrom:
+                configMapKeyRef:
+                  name: thread-pool-configmap
+                  key: thread_pool_queue_capacity
+
+---
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: audit-deployment
+  labels:
+    app: audit
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      app: audit
+  template:
+    metadata:
+      labels:
+        app: audit
+    spec:
+      containers:
+        - name: audit-container
+          image: ashyshyma/audit:latest
+          ports:
+            - containerPort: 8081
+          env:
+            - name: MONGO_PORT
+              valueFrom:
+                configMapKeyRef:
+                  name: mongo-configmap
+                  key: mongo_port
+            - name: MONGO_HOST
+              valueFrom:
+                configMapKeyRef:
+                  name: mongo-configmap
+                  key: mongo_host
+            - name: MONGO_DATABASE
+              valueFrom:
+                configMapKeyRef:
+                  name: mongo-configmap
+                  key: mongo_database
+            - name: MONGO_USERNAME
+              valueFrom:
+                secretKeyRef:
+                  name: mongo-secret
+                  key: mongo_username
+            - name: MONGO_PASSWORD
+              valueFrom:
+                secretKeyRef:
+                  name: mongo-secret
+                  key: mongo_password
+            - name: RABBITMQ_HOST
+              valueFrom:
+                configMapKeyRef:
+                  name: rabbitmq-configmap
+                  key: rabbitmq_host
+            - name: RABBITMQ_PORT
+              valueFrom:
+                configMapKeyRef:
+                  name: rabbitmq-configmap
+                  key: rabbitmq_port
