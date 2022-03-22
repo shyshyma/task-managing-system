@@ -1,0 +1,16 @@
+spring:
+  cloud:
+    kubernetes:
+      config:
+        namespace: default
+        sources:
+          - name: mongo-configmap
+          - name: rabbitmq-configmap
+      secrets:
+        enableApi: true
+        namespace: default
+        sources:
+          - name: mongo-secret
+      reload:
+        enabled: true
+        period: 1000
