@@ -4,13 +4,14 @@ spring:
       config:
         namespace: default
         sources:
-          - name: mongo-configmap
-          - name: rabbitmq-configmap
+          - name: spring-mongo-configmap
+          - name: spring-rabbitmq-configmap
       secrets:
         enableApi: true
         namespace: default
         sources:
-          - name: mongo-secret
+          - name: spring-mongo-secret
+          - name: spring-rabbitmq-secret
       reload:
         enabled: true
         period: 1000
