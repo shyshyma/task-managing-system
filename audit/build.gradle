@@ -3,4 +3,6 @@ description = "Listens messages from 'task-manager' service and performs auditin
 dependencies {
     implementation project(':common')
     implementation "org.springframework.boot:spring-boot-starter-data-mongodb"
+    implementation "org.springframework.boot:spring-boot-starter-actuator"
+    implementation "org.springframework.cloud:spring-cloud-starter-kubernetes-fabric8-config"
 }

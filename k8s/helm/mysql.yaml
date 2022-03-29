@@ -1,0 +1,13 @@
+image.tag: "8.0"
+
+auth:
+  database: "task_manager_db"
+  username: "mysql_username"
+  existingSecret: "helm-mysql-secret"
+
+volumePermissions:
+  enabled: true
+
+primary:
+  persistence:
+    enabled: true

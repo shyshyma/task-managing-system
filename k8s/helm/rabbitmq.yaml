@@ -1,0 +1,13 @@
+image.tag: "3.9"
+
+replicaCount: 1
+
+auth:
+  username: "rabbitmq_username"
+  existingPasswordSecret: "helm-rabbitmq-secret"
+
+volumePermissions:
+  enabled: true
+
+persistence:
+  enabled: true

@@ -1,0 +1,15 @@
+image.tag: "5.0"
+
+useStatefulSet: true
+replicaCount: 1
+
+auth:
+  database: "audit_db"
+  username: "mongo_username"
+  existingSecret: "helm-mongo-secret"
+
+volumePermissions:
+  enabled: true
+
+persistence:
+  enabled: true

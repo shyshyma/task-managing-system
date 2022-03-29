@@ -1,0 +1,22 @@
+spring:
+  cloud:
+    kubernetes:
+      config:
+        namespace: default
+        sources:
+          - name: spring-mysql-configmap
+          - name: spring-mail-configmap
+          - name: spring-redis-configmap
+          - name: spring-rabbitmq-configmap
+          - name: spring-thread-pool-configmap
+      secrets:
+        enableApi: true
+        namespace: default
+        sources:
+          - name: spring-mysql-secret
+          - name: spring-mail-credentials-secret
+          - name: spring-redis-secret
+          - name: spring-rabbitmq-secret
+      reload:
+        enabled: true
+        period: 1000
