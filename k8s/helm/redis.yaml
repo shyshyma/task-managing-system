@@ -1,0 +1,14 @@
+image.tag: "6.2.6"
+
+replica:
+  replicaCount: 1
+
+auth:
+  existingSecret: "helm-redis-secret"
+
+volumePermissions:
+  enabled: true
+
+master:
+  persistence:
+    enabled: true
