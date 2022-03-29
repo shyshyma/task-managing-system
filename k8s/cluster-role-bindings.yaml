@@ -4,7 +4,8 @@ metadata:
   name: allow-spring-to-access-cluster
 subjects:
   - kind: ServiceAccount
-    name: spring-service-account
+    name: default
+    namespace: default
 roleRef:
   kind: ClusterRole
   name: spring-roles
